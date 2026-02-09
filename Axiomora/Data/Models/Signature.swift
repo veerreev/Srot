@@ -23,6 +23,7 @@ enum SocialPlatform: String, Codable, CaseIterable {
     case glass = "Glass"
     case telegram = "Telegram"
     
+    
     var iconName: String {
         return self.rawValue.lowercased() // Useful for asset lookups, Self -> Refers to the specific case of the enum
     }
@@ -36,10 +37,11 @@ struct SocialHandle: Codable {
 
 // The main Signature Model
 struct Signature: Codable, Identifiable {
-    var id: String = UUID().uuidString // This ID will eventually map to the ML Watermark, Output like: "550e8400-e29b-41d4-a716-446655440000"
+    var id: String // This ID will eventually map to the ML Watermark, Output like: "550e8400-e29b-41d4-a716-446655440000"
     var title: String // e.g.: "Professional Profile" or "Personal"
     var handles: [SocialHandle]
     var createdAt: Date // Do we need this??
+    var personalPortfolio: URL?
     
     // Helper to get a specific handle if it exists
     func handle(for platform: SocialPlatform) -> String? {

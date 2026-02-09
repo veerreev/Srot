@@ -14,6 +14,7 @@ struct UserModel: Encodable {
     
     let username: String
     let email: String
+    let createdAt: Date
     
     // Explicit init strictly for decoding or testing
     init(userId: String,
@@ -23,5 +24,6 @@ struct UserModel: Encodable {
         self.userId = userId
         self.username = username
         self.email = email
+        self.createdAt = Date()
     }
 }
