@@ -10,7 +10,7 @@ import Foundation
 class MockDataBase {
     static let shared = MockDataBase()
     
-    var registeredUsers: [String: UserModel] = [:]
+    var registeredUsers: [String: User] = [:]
     
     private init() {}
 }

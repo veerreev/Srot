@@ -36,6 +36,11 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		D68A1C302F3DD34000E78634 /* Extensions */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		D69155082F2DBF2F004CE209 /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Resources;
@@ -79,6 +84,7 @@
 				D691552B2F2DDD76004CE209 /* Core */,
 				D69155482F2DDF32004CE209 /* Data */,
 				D691550A2F2DC5F9004CE209 /* Features */,
+				D68A1C302F3DD34000E78634 /* Extensions */,
 				D69155082F2DBF2F004CE209 /* Resources */,
 				D69154F12F2DBEAD004CE209 /* Products */,
 			);
@@ -109,6 +115,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				D62096B02F31F098004D1127 /* App */,
+				D68A1C302F3DD34000E78634 /* Extensions */,
 				D69155082F2DBF2F004CE209 /* Resources */,
 				D691550A2F2DC5F9004CE209 /* Features */,
 				D69155482F2DDF32004CE209 /* Data */,
@@ -128,7 +135,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					D69154EF2F2DBEAD004CE209 = {
 						CreatedOnToolsVersion = 26.0;
@@ -274,6 +281,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 75TRFG7HW8;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -297,6 +305,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -337,6 +346,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 75TRFG7HW8;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -353,6 +363,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};

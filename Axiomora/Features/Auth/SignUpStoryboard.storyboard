@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Sign Up View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" customClass="SignUpViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1EY-Ix-y93" customClass="FluidBackgroundView" customModule="Axiomora" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="264" height="852"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="gj7-w4-Rhh">
+                                <rect key="frame" x="32" y="213.99999999999997" width="200" height="424.33333333333326"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon" translatesAutoresizingMaskIntoConstraints="NO" id="8lO-16-l0M">
+                                        <rect key="frame" x="0.0" y="0.0" width="200" height="100"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="Gd5-ug-naS"/>
+                                            <constraint firstAttribute="width" constant="200" id="Ge0-jq-SVs"/>
+                                        </constraints>
+                                    </imageView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="pbj-Z6-OZ5">
+                                        <rect key="frame" x="0.0" y="164" width="200" height="82"/>
+                                        <subviews>
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" minimumFontSize="17" id="p9H-eT-eLc" customClass="RoundedTextField" customModule="Axiomora" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="200" height="0.0"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" name="auth_text_field_background"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="username"/>
+                                            </textField>
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" id="71H-WX-i2g" customClass="RoundedTextField" customModule="Axiomora" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="16" width="200" height="0.0"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" name="auth_text_field_background"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="email"/>
+                                            </textField>
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" id="9tP-tZ-xeK" customClass="RoundedTextField" customModule="Axiomora" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="32" width="200" height="0.0"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" name="auth_text_field_background"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="password"/>
+                                            </textField>
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Confirm Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sPf-PN-plv" customClass="RoundedTextField" customModule="Axiomora" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="48" width="200" height="34"/>
+                                                <color key="backgroundColor" name="auth_text_field_background"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" secureTextEntry="YES" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no" textContentType="password"/>
+                                            </textField>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="BlL-XY-htG">
+                                        <rect key="frame" x="0.0" y="310" width="200" height="114.33333333333331"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SST-tz-34a">
+                                                <rect key="frame" x="75" y="0.0" width="50" height="17"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="17" id="NLU-26-Dpc"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
+                                                <color key="textColor" systemColor="systemRedColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1t-6F-DUf">
+                                                <rect key="frame" x="4" y="33" width="192" height="32"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal" title="Sign Up"/>
+                                                <connections>
+                                                    <action selector="signUpTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="teA-tH-o5I"/>
+                                                </connections>
+                                            </button>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="One-Yy-qJa">
+                                                <rect key="frame" x="0.0" y="81" width="200" height="33.333333333333343"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Already have an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rmy-w9-Ktn">
+                                                        <rect key="frame" x="0.0" y="0.0" width="185.66666666666666" height="33.333333333333336"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TMe-FB-LT5">
+                                                        <rect key="frame" x="187.66666666666666" y="0.0" width="12.333333333333343" height="33.333333333333336"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title="Log In">
+                                                            <fontDescription key="titleFontDescription" style="UICTFontTextStyleCallout"/>
+                                                        </buttonConfiguration>
+                                                        <connections>
+                                                            <action selector="logInTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="pBh-Kf-kJE"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="G1t-6F-DUf" secondAttribute="trailing" constant="4" id="2t9-4o-mOC"/>
+                                            <constraint firstItem="G1t-6F-DUf" firstAttribute="leading" secondItem="BlL-XY-htG" secondAttribute="leading" constant="4" id="Tpz-eC-jSo"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="gj7-w4-Rhh" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="4Tt-tZ-4CH"/>
+                            <constraint firstAttribute="bottom" secondItem="1EY-Ix-y93" secondAttribute="bottom" id="8hh-eQ-Tnd"/>
+                            <constraint firstAttribute="trailing" secondItem="1EY-Ix-y93" secondAttribute="trailing" id="KDp-HR-HSz"/>
+                            <constraint firstItem="1EY-Ix-y93" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="KcF-33-qIl"/>
+                            <constraint firstItem="gj7-w4-Rhh" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="32" id="L33-vf-cDX"/>
+                            <constraint firstItem="gj7-w4-Rhh" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="Na0-jA-8DO"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="gj7-w4-Rhh" secondAttribute="trailing" constant="32" id="Pdg-L9-9Gx"/>
+                            <constraint firstItem="1EY-Ix-y93" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="tGi-Kf-ZYh"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="confirmPasswordTextField" destination="sPf-PN-plv" id="9dC-2f-CZi"/>
+                        <outlet property="emailTextField" destination="71H-WX-i2g" id="pE5-UP-NWu"/>
+                        <outlet property="errorLabel" destination="SST-tz-34a" id="716-GQ-Nfa"/>
+                        <outlet property="footerLabel" destination="Rmy-w9-Ktn" id="aGm-Rw-hOT"/>
+                        <outlet property="logInButton" destination="TMe-FB-LT5" id="6yo-ss-crh"/>
+                        <outlet property="passwordTextField" destination="9tP-tZ-xeK" id="1WI-pt-nUl"/>
+                        <outlet property="signUpButton" destination="G1t-6F-DUf" id="UsX-OT-jXs"/>
+                        <outlet property="usernameTextField" destination="p9H-eT-eLc" id="5yI-hK-cJO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="827" y="98"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="icon" width="1024" height="1024"/>
+        <namedColor name="auth_text_field_background">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.40000000596046448" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

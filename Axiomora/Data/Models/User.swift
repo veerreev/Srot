@@ -8,22 +8,23 @@
 import Foundation
 
 // Encodable is used for efficient conversion to JSON
-struct UserModel: Encodable {
+struct User: Encodable {
     
     let userId: String
-    
     let username: String
     let email: String
     let createdAt: Date
+    let password: String // To be removed later, only using for pseudoSignUp
     
     // Explicit init strictly for decoding or testing
     init(userId: String,
          username: String,
-         email: String) {
+         email: String, password: String) {
         
         self.userId = userId
         self.username = username
         self.email = email
+        self.password = password
         self.createdAt = Date()
     }
 }
