@@ -14,16 +14,16 @@ struct Theme {
         static let borderColor = UIColor.black
     }
     
-//    struct AuthGlassButton {
-////        static let backgroundColor = UIColor.systemBlue
-//
-//        static func apply(to button: UIButton, title: String) -> UIButton.Configuration {
-//            var config = UIButton.Configuration.glass()
-//            config.background.backgroundColor = UIColor.systemBlue
-//            config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
-//            config.title = title
-//            config.baseForegroundColor = .white
-//            return config
-//        }
-//    }
+    struct Button {
+        static func applyPrimaryStyle(to button: UIButton, title: String) {
+            
+            var config = UIButton.Configuration.glass()
+            config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
+            config.title = title
+            config.baseForegroundColor = .white
+            
+            button.backgroundColor = .systemBlue
+            button.configuration = config
+        }
+    }
 }

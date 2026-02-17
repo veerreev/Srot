@@ -115,7 +115,7 @@ class SignUpViewController: UIViewController {
         }
         
         loginVC.modalPresentationStyle = .fullScreen
-        loginVC.modalTransitionStyle = .crossDissolve
+        loginVC.modalTransitionStyle = .coverVertical
         
         self.present(loginVC, animated: true, completion: nil)
     }

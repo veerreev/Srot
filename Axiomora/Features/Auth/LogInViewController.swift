@@ -103,7 +103,7 @@ class LogInViewController: UIViewController {
         }
         
         signUpVC.modalPresentationStyle = .fullScreen
-        signUpVC.modalTransitionStyle = .crossDissolve
+        signUpVC.modalTransitionStyle = .coverVertical
         present(signUpVC, animated: true, completion: nil)
     }
     
