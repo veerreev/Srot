@@ -46,7 +46,7 @@ class BaseAuthViewController: UIViewController {
     func triggerErrorFeedback(on button: UIButton) {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.error)
-        button.shake() // Uses your UIView+Extension
+        button.shake() // Uses UIView+Extension
     }
 
     deinit {

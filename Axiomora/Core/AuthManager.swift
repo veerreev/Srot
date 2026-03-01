@@ -16,7 +16,7 @@ class AuthManager {
     
     private init() {}
     
-    func pseudoSignUp(username: String, password: String, email: String, completion: @escaping (Bool) -> Void) { // (Result<User, Error>) -> Void)
+    func pseudoRegister(username: String, password: String, email: String, completion: @escaping (Bool) -> Void) { // (Result<User, Error>) -> Void)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
             

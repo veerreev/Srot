@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LogInViewController: UIViewController {
+class LogInViewController: BaseAuthViewController {
 
     
     @IBOutlet var usernameTextField: UITextField!
@@ -15,7 +15,7 @@ class LogInViewController: UIViewController {
     @IBOutlet var errorLabel: UILabel!
     @IBOutlet var logInButton: UIButton!
     @IBOutlet var footerLabel: UILabel!
-    @IBOutlet var signUpButton: UIButton!
+    @IBOutlet var registerButton: UIButton!
     
     // MARK: - Lock In Portrait
     
@@ -34,12 +34,7 @@ class LogInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Listen for keyboard events
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        setupUI()
-        setupDismissKeyboardGesture()
+        setupUI(for: logInButton)
         
         // Set the delegates
         usernameTextField.delegate = self
@@ -54,7 +49,7 @@ class LogInViewController: UIViewController {
             return
         }
         
-        // Proceed with signup logic (Firebase/AuthManager)
+        // Proceed with register logic (Firebase/AuthManager)
 //        errorLabel.text = ""
         
         // Disable button to prevent multiple taps during "network" call
@@ -79,12 +74,8 @@ class LogInViewController: UIViewController {
     
     private func handleValidationError() {
         
-        // Trigger Haptic Feedback
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.error)
-        
-        // Visual Shake Animation
-        logInButton.shake()
+        // Use the base class method for error feedback!
+        triggerErrorFeedback(on: logInButton)
         
         if usernameTextField.text?.isEmpty == true {
             usernameTextField.placeholderColor = .translucentRed
@@ -94,69 +85,24 @@ class LogInViewController: UIViewController {
         }
     }
     
-    @IBAction func signUpTapped(_ sender: Any) {
-        let signUpStoryboard = UIStoryboard(name: "SignUpStoryboard", bundle: nil)
+    @IBAction func registerTapped(_ sender: Any) {
+        let registerStoryboard = UIStoryboard(name: "RegisterStoryboard", bundle: nil)
         
-        guard let signUpVC = signUpStoryboard.instantiateInitialViewController() else {
-            print ("Sign Up storyboard has no intial view controller")
+        guard let registerVC = registerStoryboard.instantiateInitialViewController() else {
+            print ("Register storyboard has no intial view controller")
             return
         }
         
-        signUpVC.modalPresentationStyle = .fullScreen
-        signUpVC.modalTransitionStyle = .coverVertical
-        present(signUpVC, animated: true, completion: nil)
+        registerVC.modalPresentationStyle = .fullScreen
+        registerVC.modalTransitionStyle = .crossDissolve
+        present(registerVC, animated: true, completion: nil)
     }
     
-    private func setupUI() {
+    private func setupUI(for button: UIButton) {
         
-        var config = UIButton.Configuration.glass()
-        
-        config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
-        config.title = "Log In"
-        config.baseForegroundColor = .white
-        
-        logInButton.backgroundColor = .systemBlue
-        logInButton.configuration = config
-        
-        // Container Glass Effect
-        // Note: Ensure containerView is a UIVisualEffectView in Storyboard
-//        containerView.effect = UIGlassEffect()
-//        containerView.layer.cornerRadius = 16
-//        containerView.clipsToBounds = true
+        Theme.Button.applyPrimaryBlueStyle(to: logInButton, title: "Log In")
     }
     
-    private func setupDismissKeyboardGesture() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-            // This ensures the tap doesn't interfere with button touches
-//            tap.cancelsTouchesInView = false
-            view.addGestureRecognizer(tap)
-    }
-
-    @objc func dismissKeyboard() {
-        // This forces the view (and any subview text fields) to stop editing
-        view.endEditing(true)
-    }
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            // Only shift if the view isn't already shifted
-            if self.view.frame.origin.y == 0 {
-                // We shift by about half the keyboard height to keep the fields centered in the remaining space
-                self.view.frame.origin.y -= (keyboardSize.height / 2)
-            }
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        // Reset the view to its original position
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
-        }
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 }
 
 extension LogInViewController: UITextFieldDelegate {
@@ -165,6 +111,7 @@ extension LogInViewController: UITextFieldDelegate {
         if textField == usernameTextField {
             // Move focus from Username -> Password
             passwordTextField.becomeFirstResponder()
+            
         } else if textField == passwordTextField {
             // Password finished -> Trigger Log In
             textField.resignFirstResponder()

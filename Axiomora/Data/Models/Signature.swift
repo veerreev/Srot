@@ -43,6 +43,7 @@ struct Signature: Codable, Identifiable {
     var createdAt: Date // Do we need this??
     var personalPortfolio: URL?
     
+    
     // Helper to get a specific handle if it exists
     func handle(for platform: SocialPlatform) -> String? {
         return handles.first(where: { $0.platform == platform })?.username

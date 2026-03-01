@@ -7,13 +7,13 @@
 
 import UIKit
 
-class SignUpViewController: UIViewController {
+class RegisterViewController: BaseAuthViewController {
 
 //    @IBOutlet var containerView: UIVisualEffectView!
     @IBOutlet var usernameTextField: UITextField!
     @IBOutlet var emailTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
-    @IBOutlet var signUpButton: UIButton!
+    @IBOutlet var registerButton: UIButton!
     @IBOutlet var errorLabel: UILabel!
     @IBOutlet var confirmPasswordTextField: UITextField!
     @IBOutlet var footerLabel: UILabel!
@@ -33,13 +33,8 @@ class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Listen for keyboard events
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        setupUI()
-        setupDismissKeyboardGesture()
+        setupUI(for: registerButton)
         
         // Set the delegates
         usernameTextField.delegate = self
@@ -50,7 +45,7 @@ class SignUpViewController: UIViewController {
     }
 
     // MARK: - Actions
-    @IBAction func signUpTapped(_ sender: Any) {
+    @IBAction func registerTapped(_ sender: Any) {
         
         guard let username = usernameTextField.text, !username.isEmpty,
               let email = emailTextField.text, !email.isEmpty,
@@ -60,23 +55,23 @@ class SignUpViewController: UIViewController {
             return
         }
         
-        // Proceed with signup logic (Firebase/AuthManager)
-//        errorLabel.text = ""
+        // Proceed with register logic (Firebase/AuthManager)
+        // errorLabel.text = ""
         
         // Disable button to prevent multiple taps during "network" call
-        signUpButton.isEnabled = false
+        registerButton.isEnabled = false
         
-        AuthManager.shared.pseudoSignUp(username: username, password: password, email: email) { [weak self] success in
+        AuthManager.shared.pseudoRegister(username: username, password: password, email: email) { [weak self] success in
             guard let self = self else { return }
             
             // Re-enable button on the main thread
-            self.signUpButton.isEnabled = true
+            self.registerButton.isEnabled = true
             
             if success {
-                print("Sign Up Successful!")
+                print("Registration Successful!")
                 // Proceed to the next screen (e.g., Home screen)
             } else {
-                print("Sign Up Failed.")
+                print("Registration Failed.")
                 // Show an error alert to the user
             }
         }
@@ -85,12 +80,8 @@ class SignUpViewController: UIViewController {
     
     private func handleValidationError() {
         
-        // Trigger Haptic Feedback
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.error)
-        
-        // Visual Shake Animation
-        signUpButton.shake()
+        // Use the base class method for error feedback!
+        triggerErrorFeedback(on: registerButton)
         
         if usernameTextField.text!.isEmpty {
             usernameTextField.placeholderColor = .translucentRed
@@ -115,79 +106,37 @@ class SignUpViewController: UIViewController {
         }
         
         loginVC.modalPresentationStyle = .fullScreen
-        loginVC.modalTransitionStyle = .coverVertical
+        loginVC.modalTransitionStyle = .crossDissolve
         
         self.present(loginVC, animated: true, completion: nil)
     }
     
-    private func setupUI() {
+    private func setupUI(for button: UIButton) {
         
-        var config = UIButton.Configuration.glass()
-        
-        config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
-        config.title = "Sign Up"
-        config.baseForegroundColor = .white
-        
-        signUpButton.backgroundColor = .systemBlue
-        signUpButton.configuration = config
-//        
-//        // Container Glass Effect
-//        // Note: Ensure containerView is a UIVisualEffectView in Storyboard
-//        containerView.effect = UIGlassEffect()
-//        containerView.layer.cornerRadius = 16
-//        containerView.clipsToBounds = true
+        Theme.Button.applyPrimaryBlueStyle(to: registerButton, title: "Register")
     }
     
-    private func setupDismissKeyboardGesture() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-            // This ensures the tap doesn't interfere with button touches
-//            tap.cancelsTouchesInView = false
-            view.addGestureRecognizer(tap)
-    }
-
-    @objc func dismissKeyboard() {
-        // This forces the view (and any subview text fields) to stop editing
-        view.endEditing(true)
-    }
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            // Only shift if the view isn't already shifted
-            if self.view.frame.origin.y == 0 {
-                // We shift by about half the keyboard height to keep the fields centered in the remaining space
-                self.view.frame.origin.y -= (keyboardSize.height / 2)
-            }
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        // Reset the view to its original position
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
-        }
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 }
 
-extension SignUpViewController: UITextFieldDelegate {
+extension RegisterViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == usernameTextField {
             // Move focus from Username -> Email
             emailTextField.becomeFirstResponder()
+            
         } else if textField == emailTextField {
             // Move focus from Email -> Password
             passwordTextField.becomeFirstResponder()
+            
         } else if textField == passwordTextField {
             // Move focus from Password -> ConfirmPassword
             confirmPasswordTextField.becomeFirstResponder()
+            
         } else if textField == confirmPasswordTextField {
-            // Password finished -> Trigger Sign Up
+            // Password finished -> Trigger Register
             textField.resignFirstResponder()
-            signUpTapped(signUpButton as Any)
+            registerTapped(registerButton as Any)
         }
         return true
     }

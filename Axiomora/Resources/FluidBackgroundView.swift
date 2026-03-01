@@ -8,16 +8,15 @@ class FluidBackgroundView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupGradients()
-        setupObservers() // Add this
+        setupObservers()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupGradients()
-        setupObservers() // Add this
+        setupObservers()
     }
     
-    // 1. Listen for the app returning to the foreground
     private func setupObservers() {
         NotificationCenter.default.addObserver(
             self,
@@ -27,13 +26,11 @@ class FluidBackgroundView: UIView {
         )
     }
 
-    // 2. Restart animations when the app is reopened
     @objc private func resumeAnimations() {
         startAnimations()
     }
 
     private func setupGradients() {
-        // ... (Keep your existing setupGradients code)
         let colors1 = [UIColor.blobBlue.cgColor, UIColor.clear.cgColor]
         let colors2 = [UIColor.blobPurple.cgColor, UIColor.clear.cgColor]
         
@@ -62,9 +59,7 @@ class FluidBackgroundView: UIView {
     private func startAnimations() {
         if UIAccessibility.isReduceMotionEnabled { return }
         
-        // This guard is important: it prevents adding duplicate animations
-        // if layoutSubviews is called while animations are already running.
-        guard blob1.animation(forKey: "antiClockwise") == nil else { return }
+        guard blob1.animation(forKey: "positionAnimation") == nil else { return }
 
         let w = bounds.width
         let h = bounds.height
@@ -75,28 +70,38 @@ class FluidBackgroundView: UIView {
         let topRight    = CGPoint(x: w, y: 0)
         
         let path1 = [topLeft, bottomLeft, bottomRight, topRight, topLeft]
-        animateEdgeToEdge(layer: blob1, points: path1, duration: 30)
+        animatePosition(layer: blob1, points: path1, duration: 60)
         
         let path2 = [bottomRight, topRight, topLeft, bottomLeft, bottomRight]
-        animateEdgeToEdge(layer: blob2, points: path2, duration: 25)
+        animatePosition(layer: blob2, points: path2, duration: 50)
+        
+        animateScale(layer: blob1, values: [1.0, 1.5, 0.8, 1.2, 1.0], duration: 37)
+        animateScale(layer: blob2, values: [1.2, 0.7, 1.4, 0.9, 1.2], duration: 53)
     }
 
-    private func animateEdgeToEdge(layer: CALayer, points: [CGPoint], duration: CFTimeInterval) {
+    private func animatePosition(layer: CALayer, points: [CGPoint], duration: CFTimeInterval) {
         let anim = CAKeyframeAnimation(keyPath: "position")
         anim.values = points.map { NSValue(cgPoint: $0) }
         anim.duration = duration
         anim.repeatCount = .infinity
-        
-        // 3. Prevent the animation from being automatically removed
         anim.isRemovedOnCompletion = false
-        
         anim.calculationMode = .paced
-        anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
-        layer.add(anim, forKey: "antiClockwise")
+        layer.add(anim, forKey: "positionAnimation")
     }
     
-    // 4. Clean up the observer
+    private func animateScale(layer: CALayer, values: [CGFloat], duration: CFTimeInterval) {
+        let anim = CAKeyframeAnimation(keyPath: "transform.scale")
+        anim.values = values
+        anim.duration = duration
+        anim.repeatCount = .infinity
+        anim.isRemovedOnCompletion = false
+        
+        anim.calculationMode = .cubic
+        
+        layer.add(anim, forKey: "scaleAnimation")
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
