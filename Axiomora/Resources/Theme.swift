@@ -22,7 +22,7 @@ struct Theme {
             config.title = title
             config.baseForegroundColor = .white
             
-            button.backgroundColor = .systemBlue
+            button.backgroundColor = .primaryBlue
             button.configuration = config
         }
     }

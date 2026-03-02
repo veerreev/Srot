@@ -13,7 +13,7 @@ struct User: Encodable {
     let userId: String
     let username: String
     let email: String
-    let createdAt: Date
+    let createdAt: Date?
     let password: String // To be removed later, only using for pseudoRegister
     
     // Explicit init strictly for decoding or testing

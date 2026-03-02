@@ -9,11 +9,13 @@ import Foundation
 
 class AuthManager {
     
+    // The shared variable is a constant that holds a single, globally accessible instance of the AuthManager class
     static let shared = AuthManager()
     
     // This tracks who is currently using the app
     var currentUser: User?
     
+    // Because the class has a private init(), no other part of the app can create a new instance of AuthManager using AuthManager(). This forces every view controller to use AuthManager.shared.
     private init() {}
     
     func pseudoRegister(username: String, password: String, email: String, completion: @escaping (Bool) -> Void) { // (Result<User, Error>) -> Void)
