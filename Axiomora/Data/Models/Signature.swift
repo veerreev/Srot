@@ -50,9 +50,9 @@ enum SocialPlatform: String, Codable, CaseIterable {
 struct SocialHandle: Codable {
     
     let platform: SocialPlatform
-    var userInput: String // e.g., "https://instagram.com/pappu_photus"
-    // using let handleURL: URL because decoding the object might cause errors if the URL is not perfect, e.g. the user missed https://
+    var userInput: String // The user input might not be a perfect URL
     
+    // Therefore we need to rectify it and make it a perfect URL
     var profileURL: URL? {
         // clean up accidental spaces and remove the "@" if they typed it
         var cleanInput = userInput.trimmingCharacters(in: .whitespacesAndNewlines)
