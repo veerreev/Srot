@@ -7,85 +7,127 @@
 
 import AVFoundation
 
+enum CameraError: Error {
+    case unauthorized
+    case configurationFailed
+    case deviceUnavailable
+}
+
+enum CameraMode {
+    case normal // Uses "Virtual Cameras"
+    case pro    // To be implemented in the future
+}
+
 final class CameraManager {
     
-//    // Singleton instance similar to Authmanager. One camera, so, one instance
-//    static let shared = CameraManager()
-//    
-//    // The core session tha coordinates data flow/data routing
-//    let captureSession = AVCaptureSession()
-//    // The output strictly for still photography
-//    let photoOutput = AVCapturePhotoOutput()
-//    
-//    // A dedicated background serial thread (dispatch queue) for camera operations to avoid UI freezing
-//    let sessionQueue = DispatchQueue(label: "com.axiomora.cameraManager.sessionQueue")
-//    
-//    private init() {}
-//    
-//    func setupSession(completion: @escaping (Bool) -> Void) {
-//        sessionQueue.async { [weak self] in
-//            guard let self = self else { return }
-//            
-//            // Lock the session for configuration
-//            self.captureSession.beginConfiguration()
-//            
-//            // 1. Set the preset specifically for high-quality photography
-//            self.captureSession.sessionPreset = .photo
-//            
-//            // 2. Configure the Input (Back Camera default)
-//            guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
-//                  let videoDeviceInput = try? AVCaptureDeviceInput(device: videoDevice),
-//                  self.captureSession.canAddInput(videoDeviceInput) else {
-//                print("Error: Could not configure camera input.")
-//                self.captureSession.commitConfiguration()
-//                DispatchQueue.main.async { completion(false) }
-//                return
-//            }
-//            self.captureSession.addInput(videoDeviceInput)
-//            
-//            // 3. Configure the Output (Photo capture)
-//            guard self.captureSession.canAddOutput(self.photoOutput) else {
-//                print("Error: Could not configure photo output.")
-//                self.captureSession.commitConfiguration()
-//                DispatchQueue.main.async { completion(false) }
-//                return
-//            }
-//            self.captureSession.addOutput(self.photoOutput)
-//            
-//            if #available(iOS 16.0, *) {
-//                // 1. Get the highest available dimensions from the current camera format
-//                if let maxDimensions = videoDevice.activeFormat.supportedMaxPhotoDimensions.last {
-//                    // 2. Explicitly set the output to handle these dimensions
-//                    self.photoOutput.maxPhotoDimensions = maxDimensions
-//                }
-//            } else {
-//                // Fallback for iOS 15 and older
-//                self.photoOutput.isHighResolutionCaptureEnabled = true
-//            }
-//            
-//            // Unlock and apply configuration
-//            self.captureSession.commitConfiguration()
-//            
-//            DispatchQueue.main.async { completion(true) }
-//        }
-//    }
-//    
-//    // Starts the flow of data from the camera to the session
-//    func startSession() {
-//        sessionQueue.async { [weak self] in
-//            guard let self = self, !self.captureSession.isRunning else { return }
-//            self.captureSession.startRunning()
-//        }
-//    }
-//    
-//    // Stops the flow of data to save battery when the view disappears
-//    func stopSession() {
-//        sessionQueue.async { [weak self] in
-//            guard let self = self, self.captureSession.isRunning else { return }
-//            self.captureSession.stopRunning()
-//        }
-//    }
+    let captureSession = AVCaptureSession()
+    let photoOutput = AVCapturePhotoOutput()
+
+    private var isConfigured = false
+    private(set) var currentMode: CameraMode = .normal // 'set' forces the controller to use configureSession to change to '.pro' mode
+    private var videoDeviceInput: AVCaptureDeviceInput? // Need to track for changing modes without error, will be useful when '.pro' mode is implemented
     
+    private let sessionQueue = DispatchQueue(label: "com.axiomora.invismark.cameraQueue", qos: .userInitiated)
+    
+    func configureSession(for mode: CameraMode = .normal) async throws {
+        guard let accessStatus = await requestCameraAccess() == .authorized else {
+            throw CameraError.unauthorized // Now the CameraViewControlelr catches this error and shows the user how to navigate to the settings and grant camera access
+        }
+
+        // could have used return try await here. It is a better approach.
+        // return serves the following purpose: 
+        // 1) Communicates intent - Anyone would know that this is the final statement of the function
+        // 2) Prevents others from adding extra functionalities at the end of this code block by throwing a compiler error:
+        // Error - "Code after 'return' will never be executed"
+        return try await withCheckedThrowingContinuation { continuation in
+            sessionQueue.async { [weak self] in
+                guard let self = self else { return }
+
+                self.currentMode = mode
+                self.captureSession.beginConfiguration()
+
+                // Note from Documentation:  You can nest beginConfiguration() and commitConfiguration() pairs, and the system applies the changes when you call the outermost commit.
+
+                self.captureSession.sessionPreset = .photo
+
+                do {
+                    try self.setupInput(for: mode)
+                    try self.setupOutput()
+
+                    self.captureSession.commitConfiguration()
+                    self.isConfigured = true
+                    continuation.resume()
+                } catch {
+                    self.captureSession.commitConfiguration()
+                    continuation.resume(throwing: error)
+                }
+
+            }
+        }
+    }
+
+    private func setupInput(for mode: CameraMode) throws {
+        // Remove existing input if we are switching modes, will be used later in '.pro' mode
+        if let existingInput = videoDeviceInput {
+            captureSession.removeInput(existingInput)
+        }
+
+        guard let videoDevice = discoverDevice(for: mode) else { throw CameraError.deviceUnavailable }
+
+        let newInput = try AVCaptureDeviceInput(device: videoDevice)
+        guard captureSession.canAddInput(newInput) else {
+            throw CameraError.configurationFailed
+        }
+
+        captureSession.addInput(newInput)
+        self.videoDeviceInput = newInput
+    }
+
+    private func setupOutput() throws {
+        guard !captureSession.outputs.contains(photoOutput) else { return }
+
+        guard captureSession.canAddOutput(photoOutput) else {
+            throw CameraError.configurationFailed
+        }
+        captureSession.addOutput(photoOutput)
+
+        // Need to look into this part further. This is where the image will be configured for best ML output (based on speed, quality and precision)
+        guard let activeDevice = videoDeviceInput?.device else { return }
+        if let maxDimensions = activeDevice.activeFormat.supportedMaxPhotoDimensions.last {
+            photoOutput.maxPhotoDimensions = maxDimensions
+        }
+        photoOutput.maxPhotoQualityPrioritization = .quality // This is default to .balanced, we might need it later (.qualilty, .balanced, .speed)
+    }
+
+    private func discoverDevice(for mode: CameraMode) -> AVCaptureDevice? {
+        switch mode {
+        case .normal:
+            if let triple = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back) {
+                return triple
+            } else if let dual = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) {
+                return dual
+            } else {
+                return AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+            }
+        case .pro:
+            // To be implemented later, return the default .builtInWideAngleCamera to avoid errors
+            return AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+        }
+    }
+
+    func startSession() {
+        sessionQueue.async { [weak self] in 
+            guard let self = self, self.isConfigured, !self.captureSession.isRunning else { return }
+            self.captureSession.startRunning()
+        }
+    }
+
+    func stopSession() {
+        sessionQueue.async { [weak self] in 
+            guard let self = self, self.captureSession.isRunning else { return }
+            self.captureSession.stopRunning()
+        }
+    }
 }
 
 enum CameraAccessStatus {
