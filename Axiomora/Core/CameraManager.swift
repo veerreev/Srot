@@ -30,7 +30,7 @@ final class CameraManager {
     private let sessionQueue = DispatchQueue(label: "com.axiomora.invismark.cameraQueue", qos: .userInitiated)
     
     func configureSession(for mode: CameraMode = .normal) async throws {
-        guard let accessStatus = await requestCameraAccess() == .authorized else {
+        guard await requestCameraAccess() == .authorized else {
             throw CameraError.unauthorized // Now the CameraViewControlelr catches this error and shows the user how to navigate to the settings and grant camera access
         }
 
