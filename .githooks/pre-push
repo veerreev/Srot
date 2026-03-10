@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Shows a blocking pop-up dialog on macOS
+osascript -e 'display dialog "Remember: Do not push Assets unzipped." buttons {"Got it!"} default button "Got it!" with title "Pre-Push Reminder"'
+
+# Prints to the terminal as a fallback
+echo "========================================="
+echo "REMINDER: Do not push Assets unzipped."
+echo "========================================="
+
+exit 0
