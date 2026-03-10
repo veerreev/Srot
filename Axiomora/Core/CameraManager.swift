@@ -34,12 +34,12 @@ final class CameraManager {
             throw CameraError.unauthorized // Now the CameraViewControlelr catches this error and shows the user how to navigate to the settings and grant camera access
         }
 
-        // could have used return try await here. It is a better approach.
-        // return serves the following purpose: 
+        /// could have used RETURN TRY AWAIT here. It is a better approach.
+        // return serves the following purpose:
         // 1) Communicates intent - Anyone would know that this is the final statement of the function
         // 2) Prevents others from adding extra functionalities at the end of this code block by throwing a compiler error:
         // Error - "Code after 'return' will never be executed"
-        return try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             sessionQueue.async { [weak self] in
                 guard let self = self else { return }
 

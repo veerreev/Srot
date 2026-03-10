@@ -21,6 +21,10 @@ class PhotoManager {
     
     private init() {}
     
+}
+
+extension PhotoManager {
+    
     func requestSavePhotoAccess() async -> PhotoLibraryAccessStatus {
         let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
         

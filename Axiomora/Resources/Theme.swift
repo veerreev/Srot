@@ -25,5 +25,6 @@ struct Theme {
             button.backgroundColor = .primaryBlue
             button.configuration = config
         }
+        
     }
 }
