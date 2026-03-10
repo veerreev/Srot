@@ -96,7 +96,7 @@ struct Signature: Codable, Identifiable {
     var title: String // e.g.: "Professional Profile" or "Personal"
     
     // Identity
-    var displayName: String
+    var displayName: String // The name of the user
     var copyrightText: String? // A photographing agency would want to add their copyright text, but a casual photographer might not want that
     
     // Contact
@@ -115,6 +115,7 @@ struct Signature: Codable, Identifiable {
         }
     var socialHandles: [SocialHandle]
     
+    var shouldIncludeLocation: Bool
 //    Moved this part to image model, because this is different for each image
 //
 //    // Metadata - Added at the exact moment of capture
