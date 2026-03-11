@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		368E016E2F610B4F00E255CD /* Remember.txt in Resources */ = {isa = PBXBuildFile; fileRef = 368E016D2F610B4200E255CD /* Remember.txt */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		368E016D2F610B4200E255CD /* Remember.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Remember.txt; sourceTree = "<group>"; };
 		D69154F02F2DBEAD004CE209 /* Axiomora.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Axiomora.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -82,6 +87,7 @@
 		D69154E72F2DBEAD004CE209 = {
 			isa = PBXGroup;
 			children = (
+				368E016D2F610B4200E255CD /* Remember.txt */,
 				D62096B02F31F098004D1127 /* App */,
 				D691552B2F2DDD76004CE209 /* Core */,
 				D69155482F2DDF32004CE209 /* Data */,
@@ -168,6 +174,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				368E016E2F610B4F00E255CD /* Remember.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
