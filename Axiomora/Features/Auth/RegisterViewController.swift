@@ -68,11 +68,12 @@ class RegisterViewController: BaseAuthViewController {
             self.registerButton.isEnabled = true
             
             if success {
-                print("Registration Successful!")
-                // Proceed to the next screen (e.g., Home screen)
+                
+                launchCameraStoryboard()
+                
             } else {
                 print("Registration Failed.")
-                // Show an error alert to the user
+                #warning("Show an error alert to the user")
             }
         }
             

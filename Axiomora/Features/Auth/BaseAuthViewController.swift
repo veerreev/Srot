@@ -54,3 +54,22 @@ class BaseAuthViewController: UIViewController {
     }
 
 }
+
+extension BaseAuthViewController {
+    
+    func launchCameraStoryboard() {
+        let cameraStoryboard = UIStoryboard(name: "CameraStoryboard", bundle: nil)
+        
+        guard let cameraVC = cameraStoryboard.instantiateInitialViewController() else {
+            print("Error instantiating CameraViewController")
+            #warning("Error handling not done here")
+            return
+        }
+        
+        cameraVC.modalPresentationStyle = .fullScreen
+        cameraVC.modalTransitionStyle = .crossDissolve
+        
+        self.present(cameraVC, animated: true, completion: nil)
+        
+    }
+}

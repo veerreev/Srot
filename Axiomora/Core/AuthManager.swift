@@ -48,6 +48,7 @@ extension AuthManager {
             
             guard let user = MockDataBase.shared.registeredUsers.values.first(where: { $0.username == username && $0.password == password }) else {
                 print("Invalid Username or Password")
+                #warning("Handle error here")
                 completion(false)
                 return
             }
