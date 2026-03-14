@@ -62,14 +62,21 @@ extension BaseAuthViewController {
         
         guard let cameraVC = cameraStoryboard.instantiateInitialViewController() else {
             print("Error instantiating CameraViewController")
-            #warning("Error handling not done here")
+#warning("Error handling not done here")
             return
         }
         
-        cameraVC.modalPresentationStyle = .fullScreen
-        cameraVC.modalTransitionStyle = .crossDissolve
+        guard let windowScene = self.view.window?.windowScene,
+              let sceneDelegate = windowScene.delegate as? SceneDelegate else {
+            print("Error: Could not access SceneDelegate.")
+            return
+        }
         
-        self.present(cameraVC, animated: true, completion: nil)
-        
+        UIView.transition(with: sceneDelegate.window!,
+                          duration: 0.4,
+                          options: .transitionCrossDissolve,
+                          animations: {
+            sceneDelegate.window?.rootViewController = cameraVC
+        })
     }
 }
