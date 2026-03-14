@@ -31,7 +31,7 @@ final class CameraManager {
     
     func configureSession(for mode: CameraMode = .normal) async throws {
         guard await requestCameraAccess() == .authorized else {
-            throw CameraError.unauthorized // Now the CameraViewControlelr catches this error and shows the user how to navigate to the settings and grant camera access
+            throw CameraError.unauthorized // Now the CameraViewController catches this error and shows the user how to navigate to the settings and grant camera access
         }
 
         /// could have used RETURN TRY AWAIT here. It is a better approach.

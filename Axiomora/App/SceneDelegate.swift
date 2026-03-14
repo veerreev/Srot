@@ -17,10 +17,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         let window = UIWindow(windowScene: windowscene)
         window.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
+        
+        let rootVC: UIViewController
+            
+            if AuthManager.shared.isLoggedIn {
+                let mainStoryboard = UIStoryboard(name: "CameraStoryboard", bundle: nil)
+                guard let mainVC = mainStoryboard.instantiateInitialViewController() else {
+                    fatalError("CameraStoryboard has no Initial View Controller set.")
+                }
+                rootVC = mainVC
+            } else {
+                let authStoryboard = UIStoryboard(name: "RegisterStoryboard", bundle: nil)
+                guard let registerVC = authStoryboard.instantiateInitialViewController() else {
+                    fatalError("RegisterStoryboard has no Initial View Controller set.")
+                }
+                rootVC = registerVC
+            }
+        
+        /* old hardcoded storyboard - issue with this is that it is redirecting to the registration page everytime the app is opened
+         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         let storyboard = UIStoryboard(name: "RegisterStoryboard", bundle: nil)
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         let rootVC = storyboard.instantiateInitialViewController()
+         */
         
         window.rootViewController = rootVC
         self.window = window
