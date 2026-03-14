@@ -62,11 +62,12 @@ class LogInViewController: BaseAuthViewController {
             self.logInButton.isEnabled = true
             
             if success {
-                print("Log In Successful!")
-                // Proceed to the next screen (e.g., Home screen)
+                
+                launchCameraStoryboard()
+                
             } else {
                 print("Log In Failed.")
-                // Show an error alert to the user
+                #warning("Show an error alert to the user")
             }
         }
         
