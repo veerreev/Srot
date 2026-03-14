@@ -15,11 +15,23 @@ struct Theme {
     }
     
     struct Button {
-        static func applyPrimaryBlueStyle(to button: UIButton, title: String) {
+        static func applyPrimaryBlueStyle(to button: UIButton, title: String?) {
             
             var config = UIButton.Configuration.glass()
             config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
-            config.title = title
+            if title != nil {
+                config.title = title
+            }
+            config.baseForegroundColor = .white
+            
+            button.backgroundColor = .primaryBlue
+            button.configuration = config
+        }
+        
+        static func applyPrimaryBlueStyle(to button: UIButton) {
+            
+            var config = UIButton.Configuration.glass()
+            config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
             config.baseForegroundColor = .white
             
             button.backgroundColor = .primaryBlue
