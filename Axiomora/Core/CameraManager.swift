@@ -6,6 +6,7 @@
 //
 
 import AVFoundation
+import UIKit
 
 enum CameraError: Error {
     case unauthorized
@@ -18,11 +19,18 @@ enum CameraMode {
     case pro    // To be implemented in the future
 }
 
+protocol CameraManagerDelegate: AnyObject {
+    func cameraManager(_ manager: CameraManager, didCapture photo: UIImage)
+    func cameraManager(_ manager: CameraManager, didFailWithError error: Error)
+    func cameraManagerWillProcessPhoto(_ manager: CameraManager)
+}
+
 final class CameraManager {
     
     let captureSession = AVCaptureSession()
     let photoOutput = AVCapturePhotoOutput()
-
+    weak var delegate: CameraManagerDelegate?
+    
     private var isConfigured = false
     private(set) var currentMode: CameraMode = .normal // 'set' forces the controller to use configureSession to change to '.pro' mode
     private var videoDeviceInput: AVCaptureDeviceInput? // Need to track for changing modes without error, will be useful when '.pro' mode is implemented
@@ -127,6 +135,12 @@ final class CameraManager {
             guard let self = self, self.captureSession.isRunning else { return }
             self.captureSession.stopRunning()
         }
+    }
+    
+    func createPreviewLayer() -> AVCaptureVideoPreviewLayer {
+        let layer = AVCaptureVideoPreviewLayer(session: captureSession)
+        layer.videoGravity = .resizeAspect // .resizeAspectFill cause unnecessary zoom
+        return layer
     }
 }
 

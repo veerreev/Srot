@@ -14,7 +14,20 @@ enum CameraAspectRatio: CGFloat {
     case widescreen = 1.7777777 // 16:9
 }
 
-class CameraViewController: UIViewController {
+class CameraViewController: UIViewController, CameraManagerDelegate {
+    
+    func cameraManager(_ manager: CameraManager, didCapture photo: UIImage) {
+        
+    }
+    
+    func cameraManager(_ manager: CameraManager, didFailWithError error: any Error) {
+        
+    }
+    
+    func cameraManagerWillProcessPhoto(_ manager: CameraManager) {
+        
+    }
+    
 
     @IBOutlet weak var tabBar: UITabBar!
     @IBOutlet weak var rotateCameraButton: UIButton!
@@ -31,6 +44,7 @@ class CameraViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        cameraManager.delegate = self
         setupUI()
         setupCamera()
     }
@@ -45,25 +59,26 @@ class CameraViewController: UIViewController {
     
     private func setupUI() {
         /// Setup signatureNumberButton theme
-        Theme.Button.applyPrimaryBlueStyle(to: signatureNumberButton, title: "1")
+        let symbolConfigSignatureButton = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium, scale: .large)
+        let imageSignatureButton = UIImage(systemName: "plus", withConfiguration: symbolConfigSignatureButton)
+        Theme.Button.applyGlassStyle(to: signatureNumberButton, image: imageSignatureButton, color: .primaryBlue)
         
         /// Setup captureButtonBackground theme
         let glassEffect = UIGlassEffect()
-        glassEffect.tintColor = .systemGray4
+        glassEffect.tintColor = .secondaryBlue
         captureButtonBackground.effect = glassEffect
         captureButtonBackground.layer.cornerRadius = captureButtonBackground.frame.height / 2
         
         setupTabBarAppearance()
         
         /// Setup rotateButton theme
-        var config = UIButton.Configuration.glass()
-        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .large)
-        let image = UIImage(systemName: "arrow.trianglehead.2.counterclockwise.rotate.90", withConfiguration: symbolConfig)
-        config.image = image
-        rotateCameraButton.configuration = config
+        let symbolConfigRotateButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .large)
+        let imageRotateButton = UIImage(systemName: "arrow.trianglehead.2.counterclockwise.rotate.90", withConfiguration: symbolConfigRotateButton)
+        Theme.Button.applyGlassStyle(to: rotateCameraButton, image: imageRotateButton)
         
         /// Setup captureButton theme
-        captureButton.tintColor = .white
+//        captureButton.tintColor = .white
+        captureButton.configuration?.baseBackgroundColor = .white
     }
     
     private func setupCamera() {
@@ -84,22 +99,13 @@ class CameraViewController: UIViewController {
     }
     
     private func setupPreviewLayer() {
-        
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
             
-            let layer = AVCaptureVideoPreviewLayer(session: self.cameraManager.captureSession)
+        let layer = cameraManager.createPreviewLayer()
+        layer.frame = livePreviewView.bounds
             
-            // Tell the layer to stretch/crop the video to fill the screen flawlessly without black bars
-            layer.videoGravity = .resizeAspectFill
-            layer.frame = self.livePreviewView.bounds
+        livePreviewView.layer.insertSublayer(layer, at: 0)
             
-            // Insert the video feed as the absolute bottom layer of the previewView
-            // This ensures your buttons and masks float ON TOP of the camera feed
-            self.livePreviewView.layer.insertSublayer(layer, at: 0)
-            
-            self.previewLayer = layer
-        }
+        previewLayer = layer
     }
     
     private func presentCameraSettingsAlert() {
