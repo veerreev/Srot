@@ -17,20 +17,6 @@ class LogInViewController: BaseAuthViewController {
     @IBOutlet var footerLabel: UILabel!
     @IBOutlet var registerButton: UIButton!
     
-    // MARK: - Lock In Portrait
-    
-    override var shouldAutorotate: Bool {
-        return false
-    }
-
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
-    }
-
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .portrait
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -101,7 +87,7 @@ class LogInViewController: BaseAuthViewController {
     
     private func setupUI(for button: UIButton) {
         
-        Theme.Button.applyPrimaryBlueStyle(to: logInButton, title: "Log In")
+        Theme.Button.applyGlassStyle(to: logInButton, title: "Log In", color: .primaryBlue)
     }
     
 }

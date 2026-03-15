@@ -15,7 +15,7 @@ struct Theme {
     }
     
     struct Button {
-        static func applyPrimaryBlueStyle(to button: UIButton, title: String?) {
+        static func applyGlassStyle(to button: UIButton, title: String?, color: UIColor = .clear) {
             
             var config = UIButton.Configuration.glass()
             config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
@@ -24,17 +24,20 @@ struct Theme {
             }
             config.baseForegroundColor = .white
             
-            button.backgroundColor = .primaryBlue
+            button.backgroundColor = color
             button.configuration = config
         }
         
-        static func applyPrimaryBlueStyle(to button: UIButton) {
+        static func applyGlassStyle(to button: UIButton, image: UIImage?, color: UIColor = .clear) {
             
             var config = UIButton.Configuration.glass()
             config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20)
+            if image != nil {
+                config.image = image
+            }
             config.baseForegroundColor = .white
             
-            button.backgroundColor = .primaryBlue
+            button.backgroundColor = color
             button.configuration = config
         }
         
