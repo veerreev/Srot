@@ -9,6 +9,9 @@ import Foundation
 
 class AuthManager {
     
+    /* Defines all UserDefaults keys as constants in one place.
+       Using a private enum (instead of plain strings) prevents typos and ensures these keys cannot be used or instantiated from outside AuthManager.
+    */
     private enum UDKeys {
             static let isLoggedIn       = "isLoggedIn"
             static let currentUserId    = "currentUserId"
@@ -24,6 +27,11 @@ class AuthManager {
     // Because the class has a private init(), no other part of the app can create a new instance of AuthManager using AuthManager(). This forces every view controller to use AuthManager.shared.
     private init() {}
     
+    /*
+     Computed property that reads the persisted login state from disk.
+     Returns true if the user has previously registered or logged in and has not logged out.
+     This survives app kills because UserDefaults is written to disk, not held in memory.
+    */
     var isLoggedIn: Bool {
         return UserDefaults.standard.bool(forKey: UDKeys.isLoggedIn)
     }
@@ -43,10 +51,16 @@ class AuthManager {
             
             self.currentUser = newUser
             
+            
+            /*
+             Persist the session to disk so the app remembers this user across kills and relaunches.
+             isLoggedIn is the gate checked by SceneDelegate on every launch.
+             currentUserId and currentUsername are stored for later use across the app.
+            */
             let defaults = UserDefaults.standard
-                    defaults.set(true,           forKey: UDKeys.isLoggedIn)
-                    defaults.set(newUser.userId, forKey: UDKeys.currentUserId)
-                    defaults.set(newUser.username, forKey: UDKeys.currentUsername)
+            defaults.set(true, forKey: UDKeys.isLoggedIn)
+            defaults.set(newUser.userId, forKey: UDKeys.currentUserId)
+            defaults.set(newUser.username, forKey: UDKeys.currentUsername)
             
             print("Registered New User: \(username), with User ID: \(newUser.userId)")
             completion(true)
@@ -70,10 +84,11 @@ extension AuthManager {
             
             self.currentUser = user
             
+            //same persistence as pseudoRegister
             let defaults = UserDefaults.standard
-                    defaults.set(true,          forKey: UDKeys.isLoggedIn)
-                    defaults.set(user.userId,   forKey: UDKeys.currentUserId)
-                    defaults.set(user.username, forKey: UDKeys.currentUsername)
+            defaults.set(true, forKey: UDKeys.isLoggedIn)
+            defaults.set(user.userId, forKey: UDKeys.currentUserId)
+            defaults.set(user.username, forKey: UDKeys.currentUsername)
             
             print("Successfully logged in as: \(user.username)")
             completion(true)
