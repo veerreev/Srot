@@ -137,10 +137,45 @@ final class CameraManager {
         }
     }
     
+}
+
+enum CameraAspectRatio: CGFloat {
+    case standard = 1.333333333 // 4:3 (Native Sensor)
+    case square = 1.0           // 1:1
+    case widescreen = 1.7777777 // 16:9
+}
+
+extension CameraManager {
+    
     func createPreviewLayer() -> AVCaptureVideoPreviewLayer {
         let layer = AVCaptureVideoPreviewLayer(session: captureSession)
         layer.videoGravity = .resizeAspect // .resizeAspectFill cause unnecessary zoom
         return layer
+    }
+    
+    func toggleVideoGravity(for layer: AVCaptureVideoPreviewLayer) {
+        
+        #warning("Ask Amit sir why do we need to explicitly set it to main thread? Does this not happen by default?")
+        DispatchQueue.main.async {
+//            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+                if layer.videoGravity == .resizeAspect {
+                    layer.videoGravity = .resizeAspectFill
+                } else {
+                    layer.videoGravity = .resizeAspect
+                }
+//            }
+        }
+    }
+    
+    func changeAspectRatio(from currentRatio: CameraAspectRatio) -> CameraAspectRatio {
+        switch currentRatio {
+        case .standard:
+            return .widescreen
+        case .widescreen:
+            return .square
+        case .square:
+            return .standard
+        }
     }
 }
 

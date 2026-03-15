@@ -8,12 +8,6 @@
 import UIKit
 import AVFoundation
 
-enum CameraAspectRatio: CGFloat {
-    case standard = 1.333333333 // 4:3 (Native Sensor)
-    case square = 1.0           // 1:1
-    case widescreen = 1.7777777 // 16:9
-}
-
 class CameraViewController: UIViewController, CameraManagerDelegate {
     
     func cameraManager(_ manager: CameraManager, didCapture photo: UIImage) {
@@ -35,16 +29,19 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
     @IBOutlet weak var captureButtonBackground: UIVisualEffectView!
     @IBOutlet weak var captureButton: UIButton!
     @IBOutlet weak var signatureNumberButton: UIButton!
-    @IBOutlet weak var cameraControlPillVisualEffectView: UIVisualEffectView!
-    @IBOutlet weak var topMaskViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bottomMaskViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var cameraControlPillVisualEffectView: CameraControlPill!
     
+    private var aspectRatioCount: Int = 0
     private let cameraManager = CameraManager()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        aspectRatioCount = 0
         cameraManager.delegate = self
+        rotateCameraButton.isEnabled = false
+        cameraControlPillVisualEffectView.delegate = self
         setupUI()
         setupCamera()
     }
@@ -59,7 +56,7 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
     
     private func setupUI() {
         /// Setup signatureNumberButton theme
-        let symbolConfigSignatureButton = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium, scale: .large)
+        let symbolConfigSignatureButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .small)
         let imageSignatureButton = UIImage(systemName: "plus", withConfiguration: symbolConfigSignatureButton)
         Theme.Button.applyGlassStyle(to: signatureNumberButton, image: imageSignatureButton, color: .primaryBlue)
         
@@ -108,6 +105,12 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         previewLayer = layer
     }
     
+    @IBAction func rotateButtonTapped(_ sender: Any) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.error)
+        rotateCameraButton.shake()
+    }
+    
     private func presentCameraSettingsAlert() {
         DispatchQueue.main.async {
             let alert = UIAlertController(
@@ -152,3 +155,16 @@ extension CameraViewController {
     }
     
 }
+
+extension CameraViewController: CameraControlPillDelegate {
+    
+    func didTapFlashButton() {
+        
+    }
+    
+    func didTapAspectRatioButton() {
+        cameraManager.changeAspectRatio(from: cameraManager.currentMode)
+    }
+}
+
+// button tapped ->

@@ -8,11 +8,18 @@
 
 import UIKit
 
+protocol CameraControlPillDelegate: AnyObject {
+    func didTapFlashButton()
+    func didTapAspectRatioButton()
+}
+
 @IBDesignable
 class CameraControlPill: UIVisualEffectView {
     
+    weak var delegate: CameraControlPillDelegate?
+    
     @IBOutlet weak var flashButton: UIButton!
-    @IBOutlet weak var expandButton: UIButton!
+    @IBOutlet weak var aspectRatioButton: UIButton!
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -25,5 +32,13 @@ class CameraControlPill: UIVisualEffectView {
         self.layer.cornerRadius = self.frame.height / 2
         self.clipsToBounds = true
         
+    }
+    
+    @IBAction func flashButtonTapped(_ sender: Any) {
+        delegate?.didTapFlashButton()
+    }
+    
+    @IBAction func aspectRatioButtonTapped(_ sender: Any) {
+        delegate?.didTapAspectRatioButton()
     }
 }

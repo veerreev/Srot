@@ -17,18 +17,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pqg-Tc-ze0" userLabel="LivePreviewView">
-                                <rect key="frame" x="0.0" y="0.0" width="436" height="852"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pOB-QB-rPk" userLabel="BackgroundView">
+                                <rect key="frame" x="0.0" y="0.0" width="428" height="852"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7AU-Aj-NFc" userLabel="TopMaskView">
-                                        <rect key="frame" x="0.0" y="0.0" width="436" height="116"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pqg-Tc-ze0" userLabel="LivePreviewView">
+                                        <rect key="frame" x="0.0" y="116" width="428" height="570.66666666666663"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="116" id="hTD-mO-bKC"/>
+                                            <constraint firstAttribute="width" secondItem="pqg-Tc-ze0" secondAttribute="height" multiplier="3:4" id="rrt-2C-763"/>
                                         </constraints>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-Eh-a5L">
-                                        <rect key="frame" x="309" y="72" width="111" height="34"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-Eh-a5L" userLabel="Top Controls Stack View">
+                                        <rect key="frame" x="301" y="72" width="111" height="34"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BbR-tt-HSx">
                                                 <rect key="frame" x="0.0" y="1.6666666666666714" width="31" height="31"/>
@@ -55,14 +55,20 @@
                                                                     <buttonConfiguration key="configuration" style="plain">
                                                                         <imageReference key="image" image="bolt.fill" catalog="system" symbolScale="small"/>
                                                                     </buttonConfiguration>
+                                                                    <connections>
+                                                                        <action selector="flashButtonTapped:" destination="5Bk-j0-XLU" eventType="touchUpInside" id="6ZS-Ym-lEe"/>
+                                                                    </connections>
                                                                 </button>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NMZ-Oi-L9g">
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NMZ-Oi-L9g" userLabel="Aspect Ratio Button">
                                                                     <rect key="frame" x="33" y="0.0" width="39" height="34"/>
                                                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" title="Button"/>
                                                                     <buttonConfiguration key="configuration" style="plain">
-                                                                        <imageReference key="image" image="ellipsis" catalog="system" symbolScale="medium"/>
+                                                                        <imageReference key="image" image="aspectratio" catalog="system" symbolScale="medium"/>
                                                                     </buttonConfiguration>
+                                                                    <connections>
+                                                                        <action selector="aspectRatioButtonTapped:" destination="5Bk-j0-XLU" eventType="touchUpInside" id="C4F-2B-CPL"/>
+                                                                    </connections>
                                                                 </button>
                                                             </subviews>
                                                         </stackView>
@@ -80,44 +86,14 @@
                                                 </constraints>
                                                 <blurEffect style="regular"/>
                                                 <connections>
-                                                    <outlet property="expandButton" destination="NMZ-Oi-L9g" id="EHf-pt-S1E"/>
+                                                    <outlet property="aspectRatioButton" destination="NMZ-Oi-L9g" id="EHf-pt-S1E"/>
                                                     <outlet property="flashButton" destination="5gN-Rl-Jez" id="H1X-Sf-fwb"/>
                                                 </connections>
                                             </visualEffectView>
                                         </subviews>
                                     </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s0f-db-0rI" userLabel="BottomMaskView">
-                                        <rect key="frame" x="0.0" y="636" width="436" height="216"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="216" id="hBt-F2-WC3"/>
-                                        </constraints>
-                                    </view>
-                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IPn-ia-8kF" userLabel="Capture Button Background Visual Effect View">
-                                        <rect key="frame" x="177" y="655" width="82" height="82"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="inG-oq-Rw0">
-                                            <rect key="frame" x="0.0" y="0.0" width="82" height="82"/>
-                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        </view>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="IPn-ia-8kF" secondAttribute="height" multiplier="1:1" id="e75-FN-3Nn"/>
-                                            <constraint firstAttribute="width" constant="82" id="rHm-cV-x20"/>
-                                        </constraints>
-                                        <blurEffect style="regular"/>
-                                    </visualEffectView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ME6-tp-Nvf" userLabel="Capture Button">
-                                        <rect key="frame" x="182" y="660" width="72" height="72"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="ME6-tp-Nvf" secondAttribute="height" multiplier="1:1" id="Ch6-dO-dKO"/>
-                                            <constraint firstAttribute="width" constant="72" id="SWt-E4-h0f"/>
-                                        </constraints>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" cornerStyle="capsule"/>
-                                    </button>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="IJr-7p-w6x">
-                                        <rect key="frame" x="28" y="768" width="380" height="72"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="IJr-7p-w6x" userLabel="Bottom Controls Stack View">
+                                        <rect key="frame" x="24" y="768" width="380" height="72"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRr-uY-0ZM" userLabel="Gallery Button">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -156,42 +132,67 @@
                                                 <buttonConfiguration key="configuration" style="plain">
                                                     <imageReference key="image" image="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" symbolScale="large"/>
                                                 </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="rotateButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Vvl-6F-Hbb"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                     </stackView>
+                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IPn-ia-8kF" userLabel="Capture Button Background Visual Effect View">
+                                        <rect key="frame" x="173" y="662" width="82" height="82"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="inG-oq-Rw0">
+                                            <rect key="frame" x="0.0" y="0.0" width="82" height="82"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ME6-tp-Nvf" userLabel="Capture Button">
+                                                    <rect key="frame" x="5" y="5" width="72" height="72"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="ME6-tp-Nvf" secondAttribute="height" multiplier="1:1" id="Ch6-dO-dKO"/>
+                                                        <constraint firstAttribute="width" constant="72" id="SWt-E4-h0f"/>
+                                                    </constraints>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" cornerStyle="capsule"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ME6-tp-Nvf" firstAttribute="centerX" secondItem="inG-oq-Rw0" secondAttribute="centerX" id="lrh-2p-qHh"/>
+                                                <constraint firstItem="ME6-tp-Nvf" firstAttribute="centerY" secondItem="inG-oq-Rw0" secondAttribute="centerY" id="wXJ-ob-g31"/>
+                                            </constraints>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="IPn-ia-8kF" secondAttribute="height" multiplier="1:1" id="e75-FN-3Nn"/>
+                                            <constraint firstAttribute="width" constant="82" id="rHm-cV-x20"/>
+                                        </constraints>
+                                        <blurEffect style="regular"/>
+                                    </visualEffectView>
                                 </subviews>
-                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="J1F-Eh-a5L" secondAttribute="trailing" constant="16" id="1hK-wb-91V"/>
-                                    <constraint firstItem="IPn-ia-8kF" firstAttribute="centerY" secondItem="ME6-tp-Nvf" secondAttribute="centerY" id="6Lp-kj-Mky"/>
-                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="centerX" secondItem="pqg-Tc-ze0" secondAttribute="centerX" id="Aug-4K-mCB"/>
-                                    <constraint firstAttribute="bottom" secondItem="IJr-7p-w6x" secondAttribute="bottom" constant="12" id="Et9-z1-rn4"/>
-                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="leading" secondItem="pqg-Tc-ze0" secondAttribute="leading" constant="28" id="N6j-2B-DHZ"/>
-                                    <constraint firstAttribute="trailing" secondItem="7AU-Aj-NFc" secondAttribute="trailing" id="Sfr-7K-kxp"/>
-                                    <constraint firstItem="7AU-Aj-NFc" firstAttribute="leading" secondItem="pqg-Tc-ze0" secondAttribute="leading" id="Tu7-s7-j2X"/>
-                                    <constraint firstItem="s0f-db-0rI" firstAttribute="leading" secondItem="pqg-Tc-ze0" secondAttribute="leading" id="aeS-mf-Lbm"/>
-                                    <constraint firstItem="7AU-Aj-NFc" firstAttribute="top" secondItem="pqg-Tc-ze0" secondAttribute="top" id="bXO-BG-j8y"/>
-                                    <constraint firstItem="J1F-Eh-a5L" firstAttribute="top" secondItem="pqg-Tc-ze0" secondAttribute="top" constant="72" id="cD4-P7-qxv"/>
-                                    <constraint firstAttribute="trailing" secondItem="IJr-7p-w6x" secondAttribute="trailing" constant="28" id="dfN-gQ-IW8"/>
-                                    <constraint firstAttribute="trailing" secondItem="s0f-db-0rI" secondAttribute="trailing" id="h3Y-TC-thf"/>
-                                    <constraint firstItem="IPn-ia-8kF" firstAttribute="centerX" secondItem="ME6-tp-Nvf" secondAttribute="centerX" id="n1C-7s-tG5"/>
-                                    <constraint firstAttribute="bottom" secondItem="s0f-db-0rI" secondAttribute="bottom" id="qmH-nf-jG5"/>
-                                    <constraint firstAttribute="bottom" secondItem="ME6-tp-Nvf" secondAttribute="bottom" constant="120" id="s3a-2o-YF7"/>
-                                    <constraint firstItem="ME6-tp-Nvf" firstAttribute="centerX" secondItem="pqg-Tc-ze0" secondAttribute="centerX" id="tu2-qa-gJj"/>
+                                    <constraint firstAttribute="trailing" secondItem="pqg-Tc-ze0" secondAttribute="trailing" id="J1c-Ck-BHJ"/>
+                                    <constraint firstItem="J1F-Eh-a5L" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="72" id="VXz-ve-Ffo"/>
+                                    <constraint firstItem="pqg-Tc-ze0" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" id="a8l-AX-DV7"/>
+                                    <constraint firstItem="pqg-Tc-ze0" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="116" id="c5w-Pq-cEg"/>
+                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="top" secondItem="IPn-ia-8kF" secondAttribute="bottom" constant="24" id="e2r-Ik-jMW"/>
+                                    <constraint firstAttribute="trailing" secondItem="J1F-Eh-a5L" secondAttribute="trailing" constant="16" id="eXa-zt-b41"/>
+                                    <constraint firstAttribute="trailing" secondItem="IJr-7p-w6x" secondAttribute="trailing" constant="24" id="izw-dL-YHU"/>
+                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" constant="24" id="jFA-Qa-KHt"/>
+                                    <constraint firstAttribute="bottom" secondItem="IJr-7p-w6x" secondAttribute="bottom" constant="12" id="m6f-Gs-9jc"/>
+                                    <constraint firstItem="IPn-ia-8kF" firstAttribute="centerX" secondItem="pOB-QB-rPk" secondAttribute="centerX" id="uNb-2Q-lR0"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="pqg-Tc-ze0" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="b9a-8u-vIJ"/>
-                            <constraint firstAttribute="trailing" secondItem="pqg-Tc-ze0" secondAttribute="trailing" id="lRD-wY-6B7"/>
-                            <constraint firstItem="pqg-Tc-ze0" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="pOe-r4-VoX"/>
-                            <constraint firstAttribute="bottom" secondItem="pqg-Tc-ze0" secondAttribute="bottom" id="sTJ-vl-hJm"/>
+                            <constraint firstItem="pOB-QB-rPk" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="L2E-6O-8aS"/>
+                            <constraint firstAttribute="trailing" secondItem="pOB-QB-rPk" secondAttribute="trailing" id="e2b-2Z-Il9"/>
+                            <constraint firstItem="pOB-QB-rPk" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="hFF-iR-fkl"/>
+                            <constraint firstAttribute="bottom" secondItem="pOB-QB-rPk" secondAttribute="bottom" id="hxq-Jk-HYS"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="bottomMaskViewHeightConstraint" destination="hBt-F2-WC3" id="O6h-Ic-atM"/>
                         <outlet property="cameraControlPillVisualEffectView" destination="db7-91-BSr" id="eR1-Ti-rsB"/>
                         <outlet property="captureButton" destination="ME6-tp-Nvf" id="J3a-ut-jlc"/>
                         <outlet property="captureButtonBackground" destination="IPn-ia-8kF" id="80o-aW-a6A"/>
@@ -199,10 +200,10 @@
                         <outlet property="rotateCameraButton" destination="9oL-DO-DY9" id="pkG-zj-p5n"/>
                         <outlet property="signatureNumberButton" destination="BbR-tt-HSx" id="bwV-EC-AeG"/>
                         <outlet property="tabBar" destination="N4p-u9-P45" id="tqT-LF-0s7"/>
-                        <outlet property="topMaskViewHeightConstraint" destination="hTD-mO-bKC" id="MwU-GL-tou"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="5Bk-j0-XLU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="135.1145038167939" y="136.61971830985917"/>
         </scene>
@@ -211,8 +212,8 @@
         <image name="Camera" width="128" height="128"/>
         <image name="WhatsApp Image 2025-09-15 at 13.09.36" width="899" height="1599"/>
         <image name="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" width="128" height="117"/>
+        <image name="aspectratio" catalog="system" width="128" height="93"/>
         <image name="bolt.fill" catalog="system" width="100" height="128"/>
-        <image name="ellipsis" catalog="system" width="128" height="37"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
