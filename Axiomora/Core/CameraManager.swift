@@ -6,6 +6,7 @@
 //
 
 import AVFoundation
+import UIKit
 
 enum CameraError: Error {
     case unauthorized
@@ -18,14 +19,22 @@ enum CameraMode {
     case pro    // To be implemented in the future
 }
 
+protocol CameraManagerDelegate: AnyObject {
+    func cameraManager(_ manager: CameraManager, didCapture photo: UIImage)
+    func cameraManager(_ manager: CameraManager, didFailWithError error: Error)
+    func cameraManagerWillProcessPhoto(_ manager: CameraManager)
+}
+
 final class CameraManager {
     
     let captureSession = AVCaptureSession()
     let photoOutput = AVCapturePhotoOutput()
-
+    weak var delegate: CameraManagerDelegate?
+    
     private var isConfigured = false
     private(set) var currentMode: CameraMode = .normal // 'set' forces the controller to use configureSession to change to '.pro' mode
     private var videoDeviceInput: AVCaptureDeviceInput? // Need to track for changing modes without error, will be useful when '.pro' mode is implemented
+    private(set) var currentAspectRatio: CameraAspectRatio = .standard
     
     private let sessionQueue = DispatchQueue(label: "com.axiomora.invismark.cameraQueue", qos: .userInitiated)
     
@@ -127,6 +136,34 @@ final class CameraManager {
             guard let self = self, self.captureSession.isRunning else { return }
             self.captureSession.stopRunning()
         }
+    }
+    
+}
+
+enum CameraAspectRatio: CGFloat {
+    case standard = 1.3333333333333333 // 4:3 (Native Sensor)
+    case square = 1.0           // 1:1
+    case widescreen = 1.7777777777777777 // 16:9
+}
+
+extension CameraManager {
+    
+    func createPreviewLayer() -> AVCaptureVideoPreviewLayer {
+        let layer = AVCaptureVideoPreviewLayer(session: captureSession)
+        layer.videoGravity = .resizeAspect // .resizeAspectFill cause unnecessary zoom
+        return layer
+    }
+    
+    func changeAspectRatio() -> CameraAspectRatio {
+        switch currentAspectRatio {
+        case .standard:
+            currentAspectRatio = .widescreen
+        case .widescreen:
+            currentAspectRatio = .square
+        case .square:
+            currentAspectRatio = .standard
+        }
+        return currentAspectRatio
     }
 }
 
