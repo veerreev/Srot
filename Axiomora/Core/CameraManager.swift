@@ -34,6 +34,7 @@ final class CameraManager {
     private var isConfigured = false
     private(set) var currentMode: CameraMode = .normal // 'set' forces the controller to use configureSession to change to '.pro' mode
     private var videoDeviceInput: AVCaptureDeviceInput? // Need to track for changing modes without error, will be useful when '.pro' mode is implemented
+    private(set) var currentAspectRatio: CameraAspectRatio = .standard
     
     private let sessionQueue = DispatchQueue(label: "com.axiomora.invismark.cameraQueue", qos: .userInitiated)
     
@@ -140,9 +141,9 @@ final class CameraManager {
 }
 
 enum CameraAspectRatio: CGFloat {
-    case standard = 1.333333333 // 4:3 (Native Sensor)
+    case standard = 1.3333333333333333 // 4:3 (Native Sensor)
     case square = 1.0           // 1:1
-    case widescreen = 1.7777777 // 16:9
+    case widescreen = 1.7777777777777777 // 16:9
 }
 
 extension CameraManager {
@@ -153,29 +154,16 @@ extension CameraManager {
         return layer
     }
     
-    func toggleVideoGravity(for layer: AVCaptureVideoPreviewLayer) {
-        
-        #warning("Ask Amit sir why do we need to explicitly set it to main thread? Does this not happen by default?")
-        DispatchQueue.main.async {
-//            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
-                if layer.videoGravity == .resizeAspect {
-                    layer.videoGravity = .resizeAspectFill
-                } else {
-                    layer.videoGravity = .resizeAspect
-                }
-//            }
-        }
-    }
-    
-    func changeAspectRatio(from currentRatio: CameraAspectRatio) -> CameraAspectRatio {
-        switch currentRatio {
+    func changeAspectRatio() -> CameraAspectRatio {
+        switch currentAspectRatio {
         case .standard:
-            return .widescreen
+            currentAspectRatio = .widescreen
         case .widescreen:
-            return .square
+            currentAspectRatio = .square
         case .square:
-            return .standard
+            currentAspectRatio = .standard
         }
+        return currentAspectRatio
     }
 }
 

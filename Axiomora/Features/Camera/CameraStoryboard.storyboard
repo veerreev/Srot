@@ -18,17 +18,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pOB-QB-rPk" userLabel="BackgroundView">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pqg-Tc-ze0" userLabel="LivePreviewView">
-                                        <rect key="frame" x="0.0" y="116" width="428" height="570.66666666666663"/>
+                                        <rect key="frame" x="0.0" y="116" width="393" height="524"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="pqg-Tc-ze0" secondAttribute="height" multiplier="3:4" id="rrt-2C-763"/>
                                         </constraints>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-Eh-a5L" userLabel="Top Controls Stack View">
-                                        <rect key="frame" x="301" y="72" width="111" height="34"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-Eh-a5L" userLabel="Top Controls Stack View">
+                                        <rect key="frame" x="262" y="72" width="115" height="34"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BbR-tt-HSx">
                                                 <rect key="frame" x="0.0" y="1.6666666666666714" width="31" height="31"/>
@@ -40,39 +40,42 @@
                                                 <buttonConfiguration key="configuration" style="tinted" title="1"/>
                                             </button>
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="db7-91-BSr" customClass="CameraControlPill" customModule="Axiomora" customModuleProvider="target">
-                                                <rect key="frame" x="39" y="0.0" width="72" height="34"/>
-                                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="vjB-An-7ba" userLabel="ControlContainerView">
+                                                <rect key="frame" x="43" y="0.0" width="72" height="34"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="vjB-An-7ba">
                                                     <rect key="frame" x="0.0" y="0.0" width="72" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="-6" translatesAutoresizingMaskIntoConstraints="NO" id="72F-zj-5VR">
+                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="-6" translatesAutoresizingMaskIntoConstraints="NO" id="72F-zj-5VR">
                                                             <rect key="frame" x="0.0" y="0.0" width="72" height="34"/>
                                                             <subviews>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gN-Rl-Jez">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="39" height="34"/>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gN-Rl-Jez">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="36" height="34"/>
                                                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" title="Button"/>
                                                                     <buttonConfiguration key="configuration" style="plain">
                                                                         <imageReference key="image" image="bolt.fill" catalog="system" symbolScale="small"/>
                                                                     </buttonConfiguration>
                                                                     <connections>
-                                                                        <action selector="flashButtonTapped:" destination="5Bk-j0-XLU" eventType="touchUpInside" id="6ZS-Ym-lEe"/>
+                                                                        <action selector="flashButtonTapped:" destination="db7-91-BSr" eventType="touchUpInside" id="uPr-Ia-KaM"/>
                                                                     </connections>
                                                                 </button>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NMZ-Oi-L9g" userLabel="Aspect Ratio Button">
-                                                                    <rect key="frame" x="33" y="0.0" width="39" height="34"/>
+                                                                    <rect key="frame" x="30" y="0.0" width="42" height="34"/>
                                                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" title="Button"/>
                                                                     <buttonConfiguration key="configuration" style="plain">
-                                                                        <imageReference key="image" image="aspectratio" catalog="system" symbolScale="medium"/>
+                                                                        <imageReference key="image" image="aspectratio" catalog="system" symbolScale="small"/>
                                                                     </buttonConfiguration>
                                                                     <connections>
-                                                                        <action selector="aspectRatioButtonTapped:" destination="5Bk-j0-XLU" eventType="touchUpInside" id="C4F-2B-CPL"/>
+                                                                        <action selector="aspectRatioButtonTapped:" destination="db7-91-BSr" eventType="touchUpInside" id="Ox4-z6-lhf"/>
                                                                     </connections>
                                                                 </button>
                                                             </subviews>
                                                         </stackView>
                                                     </subviews>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <accessibilityTraits key="traits" notEnabled="YES"/>
+                                                    </accessibility>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="72F-zj-5VR" secondAttribute="trailing" id="9fz-zu-y1H"/>
                                                         <constraint firstItem="72F-zj-5VR" firstAttribute="leading" secondItem="vjB-An-7ba" secondAttribute="leading" id="PCX-M7-2eH"/>
@@ -93,7 +96,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="IJr-7p-w6x" userLabel="Bottom Controls Stack View">
-                                        <rect key="frame" x="24" y="768" width="380" height="72"/>
+                                        <rect key="frame" x="24" y="768" width="345" height="72"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRr-uY-0ZM" userLabel="Gallery Button">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -106,7 +109,7 @@
                                                 </buttonConfiguration>
                                             </button>
                                             <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
-                                                <rect key="frame" x="50" y="0.0" width="280" height="72"/>
+                                                <rect key="frame" x="50" y="0.0" width="245" height="72"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="72" id="4ps-D5-fbN"/>
@@ -119,7 +122,7 @@
                                                 <tabBarAppearance key="scrollEdgeAppearance"/>
                                             </tabBar>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9oL-DO-DY9" userLabel="Rotate Camera Button">
-                                                <rect key="frame" x="330" y="0.0" width="50" height="50"/>
+                                                <rect key="frame" x="295" y="0.0" width="50" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="9oL-DO-DY9" secondAttribute="height" multiplier="1:1" id="Q5l-DD-CI9"/>
                                                     <constraint firstAttribute="width" constant="50" id="w7K-w6-kD6"/>
@@ -139,7 +142,7 @@
                                         </subviews>
                                     </stackView>
                                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IPn-ia-8kF" userLabel="Capture Button Background Visual Effect View">
-                                        <rect key="frame" x="173" y="662" width="82" height="82"/>
+                                        <rect key="frame" x="155.66666666666666" y="666" width="82" height="82"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="inG-oq-Rw0">
                                             <rect key="frame" x="0.0" y="0.0" width="82" height="82"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -174,7 +177,7 @@
                                     <constraint firstItem="J1F-Eh-a5L" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="72" id="VXz-ve-Ffo"/>
                                     <constraint firstItem="pqg-Tc-ze0" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" id="a8l-AX-DV7"/>
                                     <constraint firstItem="pqg-Tc-ze0" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="116" id="c5w-Pq-cEg"/>
-                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="top" secondItem="IPn-ia-8kF" secondAttribute="bottom" constant="24" id="e2r-Ik-jMW"/>
+                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="top" secondItem="IPn-ia-8kF" secondAttribute="bottom" constant="20" id="e2r-Ik-jMW"/>
                                     <constraint firstAttribute="trailing" secondItem="J1F-Eh-a5L" secondAttribute="trailing" constant="16" id="eXa-zt-b41"/>
                                     <constraint firstAttribute="trailing" secondItem="IJr-7p-w6x" secondAttribute="trailing" constant="24" id="izw-dL-YHU"/>
                                     <constraint firstItem="IJr-7p-w6x" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" constant="24" id="jFA-Qa-KHt"/>
@@ -196,6 +199,8 @@
                         <outlet property="cameraControlPillVisualEffectView" destination="db7-91-BSr" id="eR1-Ti-rsB"/>
                         <outlet property="captureButton" destination="ME6-tp-Nvf" id="J3a-ut-jlc"/>
                         <outlet property="captureButtonBackground" destination="IPn-ia-8kF" id="80o-aW-a6A"/>
+                        <outlet property="livePreviewAspectRatioConstraint" destination="rrt-2C-763" id="XDK-yZ-oDJ"/>
+                        <outlet property="livePreviewTopConstraint" destination="c5w-Pq-cEg" id="ltp-kM-Mgr"/>
                         <outlet property="livePreviewView" destination="pqg-Tc-ze0" id="jmZ-zZ-Zgf"/>
                         <outlet property="rotateCameraButton" destination="9oL-DO-DY9" id="pkG-zj-p5n"/>
                         <outlet property="signatureNumberButton" destination="BbR-tt-HSx" id="bwV-EC-AeG"/>
@@ -203,9 +208,8 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="5Bk-j0-XLU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="135.1145038167939" y="136.61971830985917"/>
+            <point key="canvasLocation" x="156" y="192"/>
         </scene>
     </scenes>
     <resources>

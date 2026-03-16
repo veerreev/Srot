@@ -21,15 +21,21 @@ class CameraControlPill: UIVisualEffectView {
     @IBOutlet weak var flashButton: UIButton!
     @IBOutlet weak var aspectRatioButton: UIButton!
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setupAppearance()
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
-        setupAppearance()
+        self.layer.cornerRadius = self.frame.height / 2
     }
     
     private func setupAppearance() {
         
-        self.effect = UIGlassEffect()
-        self.layer.cornerRadius = self.frame.height / 2
+        let glassEffect = UIGlassEffect()
+        glassEffect.isInteractive = true
+        self.effect = glassEffect
         self.clipsToBounds = true
         
     }

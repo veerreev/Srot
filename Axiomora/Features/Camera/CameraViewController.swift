@@ -22,7 +22,8 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         
     }
     
-
+    @IBOutlet weak var livePreviewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var livePreviewAspectRatioConstraint: NSLayoutConstraint!
     @IBOutlet weak var tabBar: UITabBar!
     @IBOutlet weak var rotateCameraButton: UIButton!
     @IBOutlet weak var livePreviewView: UIView!
@@ -31,16 +32,13 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
     @IBOutlet weak var signatureNumberButton: UIButton!
     @IBOutlet weak var cameraControlPillVisualEffectView: CameraControlPill!
     
-    private var aspectRatioCount: Int = 0
     private let cameraManager = CameraManager()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        aspectRatioCount = 0
         cameraManager.delegate = self
-        rotateCameraButton.isEnabled = false
         cameraControlPillVisualEffectView.delegate = self
         setupUI()
         setupCamera()
@@ -95,16 +93,6 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         }
     }
     
-    private func setupPreviewLayer() {
-            
-        let layer = cameraManager.createPreviewLayer()
-        layer.frame = livePreviewView.bounds
-            
-        livePreviewView.layer.insertSublayer(layer, at: 0)
-            
-        previewLayer = layer
-    }
-    
     @IBAction func rotateButtonTapped(_ sender: Any) {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.error)
@@ -127,6 +115,63 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
             })
             
             self.present(alert, animated: true)
+        }
+    }
+}
+
+/// Preview Layer
+extension CameraViewController {
+    
+    @MainActor
+    private func setupPreviewLayer() {
+            
+        let layer = cameraManager.createPreviewLayer()
+        layer.frame = livePreviewView.bounds
+            
+        livePreviewView.layer.insertSublayer(layer, at: 0)
+            
+        previewLayer = layer
+    }
+    
+    @MainActor
+    private func applyAspectRatio(_ ratio: CameraAspectRatio) {
+        guard let previewLayer = previewLayer else { return }
+
+        livePreviewAspectRatioConstraint.isActive = false
+        livePreviewTopConstraint.isActive = false
+        
+        let videoGravity: AVLayerVideoGravity
+        let constant: CGFloat
+        switch ratio {
+        case .standard:
+            constant = 116
+            videoGravity = .resizeAspect
+        case .widescreen:
+            constant = 56
+            videoGravity = .resizeAspectFill
+        case .square:
+            constant = 160
+            videoGravity = .resizeAspectFill
+        }
+        
+        
+        previewLayer.videoGravity = videoGravity
+        
+        livePreviewAspectRatioConstraint = livePreviewView.heightAnchor.constraint(
+            equalTo: livePreviewView.widthAnchor,
+            multiplier: ratio.rawValue
+        )
+        
+        livePreviewTopConstraint = livePreviewView.topAnchor.constraint( equalTo: view.topAnchor,
+            constant: constant
+        )
+        
+        livePreviewTopConstraint.isActive = true
+        livePreviewAspectRatioConstraint.isActive = true
+
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+            self.view.layoutIfNeeded()
+            self.previewLayer?.frame = self.livePreviewView.bounds
         }
     }
 }
@@ -163,8 +208,7 @@ extension CameraViewController: CameraControlPillDelegate {
     }
     
     func didTapAspectRatioButton() {
-        cameraManager.changeAspectRatio(from: cameraManager.currentMode)
+        let newAspectRatio = cameraManager.changeAspectRatio()
+        applyAspectRatio(newAspectRatio)
     }
 }
-
-// button tapped ->
