@@ -31,6 +31,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         let blurView = UIVisualEffectView(effect: blur)
         blurView.frame = view.bounds
         blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
 
         view.insertSubview(blurView, at: 0)
     }
@@ -87,10 +88,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         let title = sections[indexPath.section][indexPath.row]
 
         cell.textLabel?.text = title
-        cell.accessoryType = .disclosureIndicator
-
-        cell.textLabel?.textColor = .label
         cell.detailTextLabel?.text = nil
+        cell.accessoryType = .disclosureIndicator
 
         if title == "Email address" {
             cell.detailTextLabel?.text = "john@gmail.com"
@@ -98,10 +97,26 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 
         if title == "Delete your data and account" {
             cell.textLabel?.textColor = .systemRed
+        } else {
+            cell.textLabel?.textColor = .white
         }
 
         cell.backgroundColor = UIColor(white: 0.15, alpha: 1)
-        cell.layer.cornerRadius = 12
+
+        let totalRows = tableView.numberOfRows(inSection: indexPath.section)
+
+        if indexPath.row == 0 {
+            cell.layer.cornerRadius = 16
+            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        }
+        else if indexPath.row == totalRows - 1 {
+            cell.layer.cornerRadius = 16
+            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        }
+        else {
+            cell.layer.cornerRadius = 0
+        }
+
         cell.layer.masksToBounds = true
 
         return cell
@@ -109,6 +124,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
+
     func tableView(_ tableView: UITableView,
                    titleForHeaderInSection section: Int) -> String? {
 
