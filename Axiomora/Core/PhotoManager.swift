@@ -32,7 +32,10 @@ extension PhotoManager {
         case .authorized:
             return .authorized
             
-        case .notDetermined, .denied, .restricted:
+        case .notDetermined:
+            return .denied
+            
+        case .denied, .restricted:
             return .denied
             
         case .limited:

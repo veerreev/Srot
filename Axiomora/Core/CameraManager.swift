@@ -25,7 +25,7 @@ protocol CameraManagerDelegate: AnyObject {
     func cameraManagerWillProcessPhoto(_ manager: CameraManager)
 }
 
-final class CameraManager {
+final class CameraManager: NSObject {
     
     let captureSession = AVCaptureSession()
     let photoOutput = AVCapturePhotoOutput()
@@ -42,7 +42,7 @@ final class CameraManager {
         guard await requestCameraAccess() == .authorized else {
             throw CameraError.unauthorized // Now the CameraViewControlelr catches this error and shows the user how to navigate to the settings and grant camera access
         }
-
+        
         /// could have used RETURN TRY AWAIT here. It is a better approach.
         // return serves the following purpose:
         // 1) Communicates intent - Anyone would know that this is the final statement of the function
@@ -51,18 +51,18 @@ final class CameraManager {
         try await withCheckedThrowingContinuation { continuation in
             sessionQueue.async { [weak self] in
                 guard let self = self else { return }
-
+                
                 self.currentMode = mode
                 self.captureSession.beginConfiguration()
-
+                
                 // Note from Documentation:  You can nest beginConfiguration() and commitConfiguration() pairs, and the system applies the changes when you call the outermost commit.
-
+                
                 self.captureSession.sessionPreset = .photo
-
+                
                 do {
                     try self.setupInput(for: mode)
                     try self.setupOutput()
-
+                    
                     self.captureSession.commitConfiguration()
                     self.isConfigured = true
                     continuation.resume()
@@ -70,36 +70,36 @@ final class CameraManager {
                     self.captureSession.commitConfiguration()
                     continuation.resume(throwing: error)
                 }
-
+                
             }
         }
     }
-
+    
     private func setupInput(for mode: CameraMode) throws {
         // Remove existing input if we are switching modes, will be used later in '.pro' mode
         if let existingInput = videoDeviceInput {
             captureSession.removeInput(existingInput)
         }
-
+        
         guard let videoDevice = discoverDevice(for: mode) else { throw CameraError.deviceUnavailable }
-
+        
         let newInput = try AVCaptureDeviceInput(device: videoDevice)
         guard captureSession.canAddInput(newInput) else {
             throw CameraError.configurationFailed
         }
-
+        
         captureSession.addInput(newInput)
         self.videoDeviceInput = newInput
     }
-
+    
     private func setupOutput() throws {
         guard !captureSession.outputs.contains(photoOutput) else { return }
-
+        
         guard captureSession.canAddOutput(photoOutput) else {
             throw CameraError.configurationFailed
         }
         captureSession.addOutput(photoOutput)
-
+        
         // Need to look into this part further. This is where the image will be configured for best ML output (based on speed, quality and precision)
         guard let activeDevice = videoDeviceInput?.device else { return }
         if let maxDimensions = activeDevice.activeFormat.supportedMaxPhotoDimensions.last {
@@ -107,7 +107,7 @@ final class CameraManager {
         }
         photoOutput.maxPhotoQualityPrioritization = .quality // This is default to .balanced, we might need it later (.qualilty, .balanced, .speed)
     }
-
+    
     private func discoverDevice(for mode: CameraMode) -> AVCaptureDevice? {
         switch mode {
         case .normal:
@@ -123,21 +123,71 @@ final class CameraManager {
             return AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
         }
     }
-
+    
     func startSession() {
-        sessionQueue.async { [weak self] in 
+        sessionQueue.async { [weak self] in
             guard let self = self, self.isConfigured, !self.captureSession.isRunning else { return }
             self.captureSession.startRunning()
         }
     }
-
+    
     func stopSession() {
-        sessionQueue.async { [weak self] in 
+        sessionQueue.async { [weak self] in
             guard let self = self, self.captureSession.isRunning else { return }
             self.captureSession.stopRunning()
         }
     }
     
+    func configurePhotoCaptureSettings() -> AVCapturePhotoSettings {
+        
+        let photoSettings: AVCapturePhotoSettings
+        if self.photoOutput.availablePhotoCodecTypes.contains(.hevc) {
+            photoSettings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc])
+        } else {
+            photoSettings = AVCapturePhotoSettings()
+        }
+        return photoSettings
+    }
+    
+    func capturePhoto() {
+        sessionQueue.async { [weak self] in
+            guard let self = self, self.isConfigured else { return }
+            
+            let settings = configurePhotoCaptureSettings()
+            
+            self.photoOutput.capturePhoto(with: settings, delegate: self)
+        }
+    }
+    
+}
+
+extension CameraManager: AVCapturePhotoCaptureDelegate {
+    
+    nonisolated func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        DispatchQueue.main.async {
+            self.delegate?.cameraManagerWillProcessPhoto(self)
+        }
+    }
+    
+    nonisolated func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if let error = error {
+            DispatchQueue.main.async {
+                self.delegate?.cameraManager(self, didFailWithError: error)
+            }
+            return
+        }
+        
+        guard let photoData = photo.fileDataRepresentation(),
+              let image = UIImage(data: photoData) else {
+            // Handle data conversion error
+            return
+        }
+        
+        // Pass the raw image back to the VC
+        DispatchQueue.main.async {
+            self.delegate?.cameraManager(self, didCapture: image)
+        }
+    }
 }
 
 enum CameraAspectRatio: CGFloat {
