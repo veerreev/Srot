@@ -29,6 +29,7 @@
 				AuthManager.swift,
 				CameraManager.swift,
 				PhotoManager.swift,
+				WatermarkEmbedder.swift,
 			);
 			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
 		};
