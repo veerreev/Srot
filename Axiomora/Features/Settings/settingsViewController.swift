@@ -27,13 +27,13 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 
         view.backgroundColor = .black
 
-        let blur = UIBlurEffect(style: .systemUltraThinMaterialDark)
-        let blurView = UIVisualEffectView(effect: blur)
-        blurView.frame = view.bounds
-        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        let blur = UIBlurEffect(style: .systemUltraThinMaterialDark)
+//        let blurView = UIVisualEffectView(effect: blur)
+//        blurView.frame = view.bounds
+//        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
 
-        view.insertSubview(blurView, at: 0)
+        //view.insertSubview(blurView, at: 0)
     }
     func deleteAccount() {
         

@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowscene)
         window.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        let storyboard = UIStoryboard(name: "SettingsStoryboard", bundle: nil)
+        let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         let rootVC = storyboard.instantiateInitialViewController()
         
