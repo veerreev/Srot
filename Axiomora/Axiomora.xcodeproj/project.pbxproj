@@ -36,6 +36,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		36E67C6A2F6ADCF4002471CB /* MLAssets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MLAssets;
+			sourceTree = "<group>";
+		};
 		D62096B02F31F098004D1127 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -88,6 +93,7 @@
 		D69154E72F2DBEAD004CE209 = {
 			isa = PBXGroup;
 			children = (
+				36E67C6A2F6ADCF4002471CB /* MLAssets */,
 				368E016D2F610B4200E255CD /* Remember.txt */,
 				D62096B02F31F098004D1127 /* App */,
 				D691552B2F2DDD76004CE209 /* Core */,
@@ -123,6 +129,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				36E67C6A2F6ADCF4002471CB /* MLAssets */,
 				D62096B02F31F098004D1127 /* App */,
 				D68A1C302F3DD34000E78634 /* Extensions */,
 				D69155082F2DBF2F004CE209 /* Resources */,

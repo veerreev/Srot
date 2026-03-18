@@ -23,15 +23,37 @@ class PhotoManager {
     
     func applyWatermarkAndSave(image: UIImage, completion: @escaping (Bool, Error?) -> Void) {
         
+        // 1. Hop onto a background thread so we don't freeze the camera UI
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             
-            let watermarkedImage = image
-            
-            self.saveToLibrary(image: watermarkedImage) { success, error in
+            do {
+                // 2. Prepare the signature
+                let dummySignature = Signature(
+                    id: UUID().uuidString,
+                    creatorID: "4321",
+                    title: "Sign",
+                    displayName: "John Doe",
+                    socialHandles: [],
+                    shouldIncludeLocation: false
+                )
+                
+                // 3. Mark the call with 'try' inside the 'do' block
+                let watermarkedImage = try WatermarkEmbedder.shared.embed(image, signature: dummySignature)
+                
+                // 4. If successful, proceed to save to the library
+                self.saveToLibrary(image: watermarkedImage) { success, error in
+                    DispatchQueue.main.async {
+                        completion(success, error)
+                    }
+                }
+                
+            } catch {
+                // 5. If the embedder throws an error, catch it here and pass it to the completion handler
+                print("WatermarkEngine Error: \(error.localizedDescription)")
                 
                 DispatchQueue.main.async {
-                    completion(success, error)
+                    completion(false, error)
                 }
             }
         }
