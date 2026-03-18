@@ -9,7 +9,7 @@
 import UIKit
 
 protocol CameraControlPillDelegate: AnyObject {
-    func didTapFlashButton()
+    func didTapFlashButton() -> String
     func didTapAspectRatioButton()
 }
 
@@ -41,7 +41,12 @@ class CameraControlPill: UIVisualEffectView {
     }
     
     @IBAction func flashButtonTapped(_ sender: Any) {
-        delegate?.didTapFlashButton()
+        guard let symbolName = delegate?.didTapFlashButton() else { return }
+        
+        let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .small)
+        
+        let symbolImage = UIImage(systemName: symbolName, withConfiguration: symbolConfiguration)
+        flashButton.configuration?.image = symbolImage
     }
     
     @IBAction func aspectRatioButtonTapped(_ sender: Any) {

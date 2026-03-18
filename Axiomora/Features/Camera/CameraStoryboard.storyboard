@@ -53,7 +53,7 @@
                                                                     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <state key="normal" title="Button"/>
                                                                     <buttonConfiguration key="configuration" style="plain">
-                                                                        <imageReference key="image" image="bolt.fill" catalog="system" symbolScale="small"/>
+                                                                        <imageReference key="image" image="bolt.slash.fill" catalog="system" symbolScale="small"/>
                                                                     </buttonConfiguration>
                                                                     <connections>
                                                                         <action selector="flashButtonTapped:" destination="db7-91-BSr" eventType="touchUpInside" id="uPr-Ia-KaM"/>
@@ -108,7 +108,7 @@
                                                     <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
                                                 </buttonConfiguration>
                                             </button>
-                                            <tabBar contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
+                                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
                                                 <rect key="frame" x="50" y="0.0" width="245" height="72"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -220,7 +220,7 @@
         <image name="WhatsApp Image 2025-09-15 at 13.09.36" width="899" height="1599"/>
         <image name="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" width="128" height="117"/>
         <image name="aspectratio" catalog="system" width="128" height="93"/>
-        <image name="bolt.fill" catalog="system" width="100" height="128"/>
+        <image name="bolt.slash.fill" catalog="system" width="98" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

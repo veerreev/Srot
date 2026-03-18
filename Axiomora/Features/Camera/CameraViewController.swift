@@ -235,8 +235,8 @@ extension CameraViewController {
 
 extension CameraViewController: CameraControlPillDelegate {
     
-    func didTapFlashButton() {
-        
+    func didTapFlashButton() -> String {
+        cameraManager.toggleFlash()
     }
     
     func didTapAspectRatioButton() {

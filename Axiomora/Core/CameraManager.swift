@@ -36,6 +36,8 @@ final class CameraManager: NSObject {
     private var videoDeviceInput: AVCaptureDeviceInput? // Need to track for changing modes without error, will be useful when '.pro' mode is implemented
     private(set) var currentAspectRatio: CameraAspectRatio = .standard
     
+    var isFlashEnabled: Bool = false
+    
     private let sessionQueue = DispatchQueue(label: "com.axiomora.invismark.cameraQueue", qos: .userInitiated)
     
     func configureSession(for mode: CameraMode = .normal) async throws {
@@ -146,6 +148,9 @@ final class CameraManager: NSObject {
         } else {
             photoSettings = AVCapturePhotoSettings()
         }
+        if isFlashEnabled {
+            photoSettings.flashMode = .on
+        }
         return photoSettings
     }
     
@@ -157,6 +162,12 @@ final class CameraManager: NSObject {
             
             self.photoOutput.capturePhoto(with: settings, delegate: self)
         }
+    }
+    
+    /// Flash
+    func toggleFlash() -> String {
+        isFlashEnabled = !isFlashEnabled
+        return isFlashEnabled ? "bolt.fill" : "bolt.slash.fill"
     }
     
 }
