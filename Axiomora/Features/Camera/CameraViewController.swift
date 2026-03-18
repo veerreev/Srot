@@ -126,19 +126,18 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         
         self.livePreviewView.addSubview(flashView)
         
+        #warning("Learn what is 'completion'")
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
             flashView.alpha = 0.0
         }, completion: { _ in
             flashView.removeFromSuperview()
         })
         
+        #warning("Learn Animate")
         UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
-            // Scale down to 85% of its original size
             self.captureButton.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
         }, completion: { _ in
-            // 3. Animate it springing back to normal
             UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: {
-                // .identity resets the transform back to the original layout size
                 self.captureButton.transform = .identity
             })
         })

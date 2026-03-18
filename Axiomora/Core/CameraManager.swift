@@ -170,23 +170,75 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
     }
     
     nonisolated func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        if let error = error {
-            DispatchQueue.main.async {
-                self.delegate?.cameraManager(self, didFailWithError: error)
+        guard let imageData = photo.fileDataRepresentation(),
+              let capturedImage = UIImage(data: imageData) else {
+            print("Error converting photo data")
+            return
+        }
+        
+        // Disable shutter button here to prevent spamming if needed
+        
+        // Capture ratio here so we don't access `self` across an isolation boundary below
+        let ratio = currentAspectRatio
+        let finalImage = CameraManager.crop(capturedImage, to: ratio)
+        
+        PhotoManager.shared.applyWatermarkAndSave(image: finalImage) { /*[weak self]*/ success, error in
+            // Re-enable shutter button here
+            
+            if success {
+                print("Successfully watermarked and saved to library!")
+                // Update UI: e.g., show a small thumbnail in the corner of your CameraStoryboard
+            } else {
+                print("Failed to save: \(String(describing: error?.localizedDescription))")
+                // Show UIAlertController error to user
             }
-            return
         }
-        
-        guard let photoData = photo.fileDataRepresentation(),
-              let image = UIImage(data: photoData) else {
-            // Handle data conversion error
-            return
+    }
+    
+    /// Crops `image` to match the given `CameraAspectRatio`.
+    /// - `.standard` (4:3): returns the image unchanged — it's already native sensor size.
+    /// - `.widescreen` (9:16 portrait): trims left & right, producing a taller, zoomed-in result.
+    /// - `.square` (1:1): trims top & bottom equally, producing a centered square.
+    private static func crop(_ image: UIImage, to ratio: CameraAspectRatio) -> UIImage {
+        guard ratio != .standard else { return image } // 4:3 is native — no crop needed
+
+        // Normalize to .up orientation first.
+        // cgImage.cropping(to:) works in raw CGImage pixel space, which ignores imageOrientation.
+        // Portrait photos from AVFoundation are typically .right (sensor is landscape),
+        // so without normalization the crop rect would be applied to the wrong axis.
+        let normalized = image.normalized()
+
+        let w = normalized.size.width
+        let h = normalized.size.height
+
+        let cropRect: CGRect
+        switch ratio {
+        case .standard:
+            return image
+        case .widescreen:
+            // Target h/w = 16/9 ≈ 1.777 — taller than the native 4/3 sensor.
+            // Trim the width (left & right) to make the image taller relative to its width.
+            let newWidth = h / ratio.rawValue
+            cropRect = CGRect(x: (w - newWidth) / 2, y: 0, width: newWidth, height: h)
+        case .square:
+            // Target h/w = 1.0 — shorter than the native 4/3 sensor.
+            // Trim the height (top & bottom) to make the image square.
+            let newHeight = w // rawValue is 1.0, so newHeight == width
+            cropRect = CGRect(x: 0, y: (h - newHeight) / 2, width: w, height: newHeight)
         }
-        
-        // Pass the raw image back to the VC
-        DispatchQueue.main.async {
-            self.delegate?.cameraManager(self, didCapture: image)
-        }
+
+        // UIImage.size is in points; CGImage works in pixels — scale accordingly.
+        let scale = normalized.scale
+        let pixelCropRect = CGRect(
+            x: cropRect.origin.x * scale,
+            y: cropRect.origin.y * scale,
+            width: cropRect.width * scale,
+            height: cropRect.height * scale
+        )
+
+        guard let cgImage = normalized.cgImage?.cropping(to: pixelCropRect) else { return image }
+        // Orientation is .up because we normalized above
+        return UIImage(cgImage: cgImage, scale: scale, orientation: .up)
     }
 }
 
