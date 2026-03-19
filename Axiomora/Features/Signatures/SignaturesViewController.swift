@@ -40,7 +40,7 @@ class SignaturesViewController: UIViewController {
 extension SignaturesViewController {
     
     func setupNavigationBar() {
-        title = "Signatures"
+       // title = "Signatures"
         
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = .white
@@ -110,21 +110,8 @@ extension SignaturesViewController: UITableViewDelegate, UITableViewDataSource {
             let storyboard = UIStoryboard(name: "AddEditSignatureStoryboard", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "AddEditSignatureViewController") as! AddEditSignatureViewController
             
-            vc.isEditMode = true
-            vc.existingSignature = signature
-            
-            vc.onSave = { updatedSignature in
-                if let index = self.signatures.firstIndex(where: { $0.id == updatedSignature.id }) {
-                    self.signatures[index] = updatedSignature
-                    self.tableView.reloadData()
-                }
-            }
-            
-            // 🔥 DELETE HANDLER
-            vc.onDelete = { id in
-                self.signatures.removeAll { $0.id == id }
-                self.tableView.reloadData()
-            }
+            vc.existingSignature = signature   // ✅ THIS decides edit mode
+            vc.delegate = self
             
             self.navigationController?.pushViewController(vc, animated: true)
         }
@@ -160,11 +147,26 @@ extension SignaturesViewController {
         let storyboard = UIStoryboard(name: "AddEditSignatureStoryboard", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "AddEditSignatureViewController") as! AddEditSignatureViewController
         
-        vc.onSave = { [weak self] newSignature in
-            self?.signatures.append(newSignature)
-            self?.tableView.reloadData()
-        }
+        vc.delegate = self   // ✅ IMPORTANT
         
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+// MARK: - DELEGATE
+extension SignaturesViewController: AddEditSignatureDelegate {
+    
+    func didSaveSignature(_ signature: Signature) {
+        if let index = signatures.firstIndex(where: { $0.id == signature.id }) {
+            signatures[index] = signature
+        } else {
+            signatures.append(signature)
+        }
+        tableView.reloadData()
+    }
+    
+    func didDeleteSignature(_ id: String) {
+        signatures.removeAll { $0.id == id }
+        tableView.reloadData()
     }
 }

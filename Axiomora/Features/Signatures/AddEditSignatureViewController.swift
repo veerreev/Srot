@@ -1,8 +1,14 @@
 import UIKit
 
+protocol AddEditSignatureDelegate: AnyObject {
+    func didSaveSignature(_ signature: Signature)
+    func didDeleteSignature(_ id: String)
+}
+
 class AddEditSignatureViewController: UIViewController {
 
     @IBOutlet weak var titleTextField: UITextField!
+    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var websiteTextField: UITextField!
     @IBOutlet weak var copyrightTextField: UITextField!
@@ -13,15 +19,12 @@ class AddEditSignatureViewController: UIViewController {
     var selectedPlatforms: [SocialPlatform] = []
     var platformTextFields: [SocialPlatform: UITextField] = [:]
     
-    var isEditMode: Bool = false
     var existingSignature: Signature?
     
-    var onSave: ((Signature) -> Void)?
-    var onDelete: ((String) -> Void)?   // 🔥 DELETE CALLBACK
+    weak var delegate: AddEditSignatureDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         populateIfEdit()
     }
@@ -31,18 +34,28 @@ class AddEditSignatureViewController: UIViewController {
 extension AddEditSignatureViewController {
     
     func setupUI() {
-        title = isEditMode ? "Edit Signature" : "Add Signature"
+        
         view.backgroundColor = .black
+        
+        // 🔥 FORCE TITLE VISIBILITY
+        titleLabel.text = existingSignature != nil ? "Edit Signature" : "Add Signature"
+        titleLabel.textColor = .white
+        titleLabel.font = UIFont.systemFont(ofSize: 30, weight: .bold)
+        titleLabel.alpha = 1
+        titleLabel.isHidden = false
+        titleLabel.numberOfLines = 1
+        
+        // Optional: debug background (remove later if needed)
+        // titleLabel.backgroundColor = .red
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Save",
-            style: .done,
+            style: .prominent,
             target: self,
             action: #selector(saveTapped)
         )
         
-        
-        if isEditMode {
+        if existingSignature != nil {
             navigationItem.leftBarButtonItem = UIBarButtonItem(
                 title: "Delete",
                 style: .plain,
@@ -61,10 +74,8 @@ extension AddEditSignatureViewController {
         
         let alert = UIAlertController(title: "Select Platform", message: nil, preferredStyle: .actionSheet)
         
-        
         let availablePlatforms = SocialPlatform.allCases.filter { !selectedPlatforms.contains($0) }
         
-        // If all platforms already selected
         if availablePlatforms.isEmpty {
             let noMore = UIAlertController(title: "All platforms added", message: nil, preferredStyle: .alert)
             noMore.addAction(UIAlertAction(title: "OK", style: .default))
@@ -89,7 +100,6 @@ extension AddEditSignatureViewController {
         
         selectedPlatforms.append(platform)
         
-        // 🔥 HORIZONTAL CONTAINER (Label + Delete Button)
         let headerStack = UIStackView()
         headerStack.axis = .horizontal
         headerStack.distribution = .equalSpacing
@@ -102,24 +112,22 @@ extension AddEditSignatureViewController {
         let deleteButton = UIButton(type: .system)
         deleteButton.setTitle("✕", for: .normal)
         deleteButton.setTitleColor(.red, for: .normal)
-        deleteButton.tag = selectedPlatforms.count - 1   // temporary tag
         
         headerStack.addArrangedSubview(label)
         headerStack.addArrangedSubview(deleteButton)
         
-        // TEXTFIELD
         let textField = UITextField()
-        textField.placeholder = "Enter \(platform.rawValue) username"
+        textField.placeholder = "  Enter \(platform.rawValue) username"
         textField.backgroundColor = .clear
         textField.textColor = .white
-
         textField.layer.cornerRadius = 8
-        textField.layer.borderWidth = 1
+        textField.layer.borderWidth = 0.5
         textField.layer.borderColor = UIColor.systemGray2.cgColor
+        textField.returnKeyType = .done
+        textField.clearButtonMode = .whileEditing
         textField.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         platformTextFields[platform] = textField
-        
         
         let container = UIStackView()
         container.axis = .vertical
@@ -128,20 +136,17 @@ extension AddEditSignatureViewController {
         container.addArrangedSubview(headerStack)
         container.addArrangedSubview(textField)
         
-        
         deleteButton.addAction(UIAction(handler: { [weak self] _ in
             self?.removePlatform(platform, container: container)
         }), for: .touchUpInside)
         
         mainStackView.addArrangedSubview(container)
     }
+    
     func removePlatform(_ platform: SocialPlatform, container: UIStackView) {
-        
-        // remove from UI
         mainStackView.removeArrangedSubview(container)
         container.removeFromSuperview()
         
-        // remove from data
         selectedPlatforms.removeAll { $0 == platform }
         platformTextFields.removeValue(forKey: platform)
     }
@@ -170,28 +175,41 @@ extension AddEditSignatureViewController {
     
     @objc func saveTapped() {
         
-        let title = titleTextField.text ?? ""
-        let name = nameTextField.text ?? ""
-        let website = websiteTextField.text
-        let copyright = copyrightTextField.text
+        let title = titleTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let name = nameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        
+        if title.isEmpty {
+            showAlert(message: "Please enter a signature title")
+            return
+        }
+        
+        if name.isEmpty {
+            showAlert(message: "Please enter your name")
+            return
+        }
+        
+        let website = websiteTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let copyright = copyrightTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         var handles: [SocialHandle] = []
         
         for (platform, textField) in platformTextFields {
-            if let text = textField.text, !text.isEmpty {
+            if let text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+               !text.isEmpty {
                 handles.append(SocialHandle(platform: platform, userInput: text))
             }
         }
         
-        if isEditMode, var existing = existingSignature {
+        if let existing = existingSignature {
             
-            existing.title = title
-            existing.displayName = name
-            existing.website = website
-            existing.copyrightText = copyright
-            existing.socialHandles = handles
+            var updated = existing
+            updated.title = title
+            updated.displayName = name
+            updated.website = website
+            updated.copyrightText = copyright
+            updated.socialHandles = handles
             
-            onSave?(existing)
+            delegate?.didSaveSignature(updated)
             
         } else {
             
@@ -207,10 +225,22 @@ extension AddEditSignatureViewController {
                 shouldIncludeLocation: false
             )
             
-            onSave?(newSignature)
+            delegate?.didSaveSignature(newSignature)
         }
         
         navigationController?.popViewController(animated: true)
+    }
+    
+    func showAlert(message: String) {
+        let alert = UIAlertController(
+            title: "Missing Information",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        present(alert, animated: true)
     }
 }
 
@@ -230,8 +260,7 @@ extension AddEditSignatureViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
-            
-            self.onDelete?(id)
+            self.delegate?.didDeleteSignature(id)
             self.navigationController?.popViewController(animated: true)
         }))
         
