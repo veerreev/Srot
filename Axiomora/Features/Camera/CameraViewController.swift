@@ -8,19 +8,7 @@
 import UIKit
 import AVFoundation
 
-class CameraViewController: UIViewController, CameraManagerDelegate {
-    
-    func cameraManager(_ manager: CameraManager, didCapture photo: UIImage) {
-        
-    }
-    
-    func cameraManager(_ manager: CameraManager, didFailWithError error: any Error) {
-        
-    }
-    
-    func cameraManagerWillProcessPhoto(_ manager: CameraManager) {
-        
-    }
+class CameraViewController: UIViewController {
     
     @IBOutlet weak var livePreviewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var livePreviewAspectRatioConstraint: NSLayoutConstraint!
@@ -38,7 +26,6 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        cameraManager.delegate = self
         cameraControlPillVisualEffectView.delegate = self
         setupUI()
         setupCamera()

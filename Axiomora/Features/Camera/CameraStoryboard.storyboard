@@ -108,7 +108,7 @@
                                                     <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
                                                 </buttonConfiguration>
                                             </button>
-                                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
+                                            <tabBar contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
                                                 <rect key="frame" x="50" y="0.0" width="245" height="72"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -198,6 +198,7 @@
                             <constraint firstAttribute="bottom" secondItem="pOB-QB-rPk" secondAttribute="bottom" id="hxq-Jk-HYS"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="zGY-Lo-5zV"/>
                     <connections>
                         <outlet property="cameraControlPillVisualEffectView" destination="db7-91-BSr" id="eR1-Ti-rsB"/>
                         <outlet property="captureButton" destination="ME6-tp-Nvf" id="J3a-ut-jlc"/>
@@ -212,7 +213,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="156" y="192"/>
+            <point key="canvasLocation" x="1081.679389312977" y="191.5492957746479"/>
         </scene>
     </scenes>
     <resources>

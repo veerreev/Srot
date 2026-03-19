@@ -19,17 +19,10 @@ enum CameraMode {
     case pro    // To be implemented in the future
 }
 
-protocol CameraManagerDelegate: AnyObject {
-    func cameraManager(_ manager: CameraManager, didCapture photo: UIImage)
-    func cameraManager(_ manager: CameraManager, didFailWithError error: Error)
-    func cameraManagerWillProcessPhoto(_ manager: CameraManager)
-}
-
 final class CameraManager: NSObject {
     
     let captureSession = AVCaptureSession()
     let photoOutput = AVCapturePhotoOutput()
-    weak var delegate: CameraManagerDelegate?
     
     private var isConfigured = false
     private(set) var currentMode: CameraMode = .normal // 'set' forces the controller to use configureSession to change to '.pro' mode
@@ -38,7 +31,7 @@ final class CameraManager: NSObject {
     
     var isFlashEnabled: Bool = false
     
-    private let sessionQueue = DispatchQueue(label: "com.axiomora.invismark.cameraQueue", qos: .userInitiated)
+    private let sessionQueue = DispatchQueue(label: "com.signit.cameraQueue", qos: .userInitiated)
     
     func configureSession(for mode: CameraMode = .normal) async throws {
         guard await requestCameraAccess() == .authorized else {
@@ -173,12 +166,6 @@ final class CameraManager: NSObject {
 }
 
 extension CameraManager: AVCapturePhotoCaptureDelegate {
-    
-    nonisolated func photoOutput(_ output: AVCapturePhotoOutput, willCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
-        DispatchQueue.main.async {
-            self.delegate?.cameraManagerWillProcessPhoto(self)
-        }
-    }
     
     nonisolated func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation(),
