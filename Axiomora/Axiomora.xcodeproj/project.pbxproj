@@ -33,7 +33,24 @@
 			);
 			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
 		};
+		D6A2406C2F6BFE43001E7B9F /* Exceptions for "Resources" folder in "Axiomora" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ZippableAssets/AxiomarkEncoder.mlpackage,
+			);
+			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		D6A2406B2F6BFE3F001E7B9F /* Exceptions for "Resources" folder in "Copy Bundle Resources" phase from "Axiomora" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = D69154EE2F2DBEAD004CE209 /* Resources */;
+			membershipExceptions = (
+				ZippableAssets/AxiomarkEncoder.mlpackage,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D62096B02F31F098004D1127 /* App */ = {
@@ -51,6 +68,10 @@
 		};
 		D69155082F2DBF2F004CE209 /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D6A2406C2F6BFE43001E7B9F /* Exceptions for "Resources" folder in "Axiomora" target */,
+				D6A2406B2F6BFE3F001E7B9F /* Exceptions for "Resources" folder in "Copy Bundle Resources" phase from "Axiomora" target */,
+			);
 			path = Resources;
 			sourceTree = "<group>";
 		};

@@ -15,7 +15,6 @@ enum WatermarkError: LocalizedError {
     case inferenceFailed(Error)
     case outputMissing(String)
     case imageTooSmall(width: Int, height: Int)
-    case modelCompilationFailed(Error)
 
     var errorDescription: String? {
         switch self {
@@ -29,8 +28,6 @@ enum WatermarkError: LocalizedError {
             return "CoreML output '\(k)' missing"
         case .imageTooSmall(let w, let h):
             return "Image \(w)×\(h) is smaller than one tile (\(WatermarkEmbedder.tileSize)×\(WatermarkEmbedder.tileSize))."
-        case .modelCompilationFailed(let e):
-            return "Failed to compile model: \(e.localizedDescription)"
         }
     }
 }
@@ -123,10 +120,13 @@ class WatermarkEmbedder {
 
     static let shared  = WatermarkEmbedder()
     static let tileSize = 256
+    
+    private let residualScale: Float = 0.15
 
     private init() {}
 
     private let bch = BCHWatermarkCoder()
+
     private enum ModelIO {
         static let image     = "image"
         static let watermark = "watermark"
@@ -138,7 +138,6 @@ class WatermarkEmbedder {
         
         guard let url = Bundle.main.url(forResource: "AxiomarkEncoder",
                                         withExtension: "mlmodelc") else {
-            // Debug: Print what's actually in the bundle
             if let resourcePath = Bundle.main.resourcePath {
                 print("[WatermarkEmbedder] Bundle resources:")
                 if let files = try? FileManager.default.contentsOfDirectory(atPath: resourcePath) {
@@ -147,7 +146,7 @@ class WatermarkEmbedder {
                     }
                 }
             }
-            fatalError("[WatermarkEmbedder] AxiomarkEncoder.mlpackage not found in bundle")
+            fatalError("[WatermarkEmbedder] AxiomarkEncoder.mlmodelc not found in bundle")
         }
         
         print("[WatermarkEmbedder] Found model at: \(url.path)")
@@ -158,6 +157,7 @@ class WatermarkEmbedder {
         do {
             let loadedModel = try MLModel(contentsOf: url, configuration: cfg)
             print("[WatermarkEmbedder] ✓ Model loaded successfully")
+            print("[WatermarkEmbedder] ✓ Residual scale: \(residualScale) (15% strength)")
             return loadedModel
         } catch {
             print("[WatermarkEmbedder] ✗ Failed to load model: \(error)")
@@ -170,6 +170,8 @@ class WatermarkEmbedder {
     }
 
     private func embedBits(_ bits: [Float], into image: UIImage) throws -> UIImage {
+        let originalOrientation = image.imageOrientation
+        
         guard let cg = orientedCGImage(from: image) else { throw WatermarkError.pixelBufferFailed }
         let W = cg.width, H = cg.height, T = Self.tileSize
         guard W >= T, H >= T else { throw WatermarkError.imageTooSmall(width: W, height: H) }
@@ -180,15 +182,22 @@ class WatermarkEmbedder {
 
         let wmArray = try makeWatermarkArray(bits)
 
-        for row in 0..<(H / T) {
-            for col in 0..<(W / T) {
+        let numRows = H / T
+        let numCols = W / T
+        
+        print("[WatermarkEmbedder] Processing \(numRows)×\(numCols) complete tiles for \(W)×\(H) image")
+
+        for row in 0..<numRows {
+            for col in 0..<numCols {
                 try processTile(&px, W: W, bpr: bpr, x0: col*T, y0: row*T, T: T, wm: wmArray)
             }
         }
 
-        guard let result = makeUIImage(px, W: W, H: H, bpr: bpr, scale: image.scale) else {
+        guard let result = makeUIImage(px, W: W, H: H, bpr: bpr, scale: image.scale, orientation: originalOrientation) else {
             throw WatermarkError.pixelBufferFailed
         }
+        
+        print("[WatermarkEmbedder] ✓ Watermark embedded (orientation: \(originalOrientation.rawValue))")
         return result
     }
 
@@ -196,12 +205,10 @@ class WatermarkEmbedder {
                               x0: Int, y0: Int, T: Int, wm: MLMultiArray) throws {
         let n = T * T
         
-        // CRITICAL FIX: Store original pixels for later addition
         var originalR = [Float](repeating: 0, count: n)
         var originalG = [Float](repeating: 0, count: n)
         var originalB = [Float](repeating: 0, count: n)
         
-        // Normalize to [-1, 1] and store originals
         for ty in 0..<T {
             let row = (y0 + ty) * bpr + x0 * 4
             let dst = ty * T
@@ -223,12 +230,10 @@ class WatermarkEmbedder {
         do { out = try model.prediction(from: provider) }
         catch { throw WatermarkError.inferenceFailed(error) }
 
-        // CRITICAL FIX: Get "residual" output (not "encoded")
         guard let residual = out.featureValue(for: ModelIO.residual)?.multiArrayValue else {
             throw WatermarkError.outputMissing(ModelIO.residual)
         }
 
-        // CRITICAL FIX: Add residual to original image
         residual.withUnsafeBufferPointer(ofType: Float.self) { ptr in
             guard let base = ptr.baseAddress else { return }
             for ty in 0..<T {
@@ -238,12 +243,14 @@ class WatermarkEmbedder {
                     let d = row + tx * 4
                     let idx = src + tx
                     
-                    // Add residual to original (both in [-1,1] range)
-                    let finalR = originalR[idx] + base[idx]
-                    let finalG = originalG[idx] + base[n + idx]
-                    let finalB = originalB[idx] + base[2*n + idx]
+                    let scaledR = base[idx] * residualScale
+                    let scaledG = base[n + idx] * residualScale
+                    let scaledB = base[2*n + idx] * residualScale
                     
-                    // Clamp to [-1,1] then convert to [0,255]
+                    let finalR = originalR[idx] + scaledR
+                    let finalG = originalG[idx] + scaledG
+                    let finalB = originalB[idx] + scaledB
+                    
                     px[d]   = toU8(finalR)
                     px[d+1] = toU8(finalG)
                     px[d+2] = toU8(finalB)
@@ -276,6 +283,10 @@ class WatermarkEmbedder {
     }
 
     private func orientedCGImage(from image: UIImage) -> CGImage? {
+        if let cg = image.cgImage {
+            return cg
+        }
+        
         let W = Int(image.size.width * image.scale)
         let H = Int(image.size.height * image.scale)
         guard let cs  = CGColorSpace(name: CGColorSpace.sRGB),
@@ -301,7 +312,7 @@ class WatermarkEmbedder {
     }
 
     private func makeUIImage(_ px: [UInt8], W: Int, H: Int,
-                              bpr: Int, scale: CGFloat) -> UIImage? {
+                              bpr: Int, scale: CGFloat, orientation: UIImage.Orientation) -> UIImage? {
         guard let cs  = CGColorSpace(name: CGColorSpace.sRGB),
               let dp  = CGDataProvider(data: Data(px) as CFData),
               let cg  = CGImage(width: W, height: H, bitsPerComponent: 8,
@@ -310,7 +321,8 @@ class WatermarkEmbedder {
                                 provider: dp, decode: nil,
                                 shouldInterpolate: false, intent: .defaultIntent)
         else { return nil }
-        return UIImage(cgImage: cg, scale: scale, orientation: .up)
+        
+        return UIImage(cgImage: cg, scale: scale, orientation: orientation)
     }
 }
 
