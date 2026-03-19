@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="euI-8F-E05">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Single Image View View Controller-->
+        <scene sceneID="SlU-Ob-Z3S">
+            <objects>
+                <viewController storyboardIdentifier="SingleImageViewViewController" id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="G0d-V3-Fgr">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sXq-Aj-dHl">
+                                <rect key="frame" x="0.0" y="736" width="393" height="48"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <items>
+                                    <barButtonItem systemItem="flexibleSpace" id="74z-kD-owl"/>
+                                    <barButtonItem systemItem="action" id="mF4-lp-55b">
+                                        <connections>
+                                            <action selector="shareTapped:" destination="Ymf-RX-0EY" id="p59-Oh-vGN"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="flexibleSpace" id="rvf-tM-G5e"/>
+                                    <barButtonItem title="Item" image="heart" catalog="system" id="O7o-6W-CVD">
+                                        <connections>
+                                            <action selector="heartTapped:" destination="Ymf-RX-0EY" id="2FZ-Y2-qvz"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Item" image="info.circle" catalog="system" id="rNu-JH-CxI">
+                                        <connections>
+                                            <action selector="infoTapped:" destination="Ymf-RX-0EY" id="hLX-Pd-fxD"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="flexibleSpace" id="fcz-zX-es7"/>
+                                    <barButtonItem systemItem="trash" id="0pU-9H-Xm0">
+                                        <connections>
+                                            <action selector="trashTapped:" destination="Ymf-RX-0EY" id="j4F-hw-AKq"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="flexibleSpace" id="cxu-DB-qk9"/>
+                                </items>
+                            </toolbar>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0Re-YY-i6A">
+                                <rect key="frame" x="0.0" y="656" width="393" height="80"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="B6Y-Yk-jBg"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="SpW-K2-nF6">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="EQF-tR-8Lq"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="sXq-Aj-dHl" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="Ygn-NS-yfY"/>
+                            <constraint firstItem="EQF-tR-8Lq" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="bottom" id="cMp-LB-x5B"/>
+                            <constraint firstItem="0Re-YY-i6A" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="top" id="g92-cC-vtJ"/>
+                            <constraint firstItem="0Re-YY-i6A" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="ghq-5A-2Du"/>
+                            <constraint firstAttribute="trailing" secondItem="0Re-YY-i6A" secondAttribute="trailing" id="kJx-IZ-aAO"/>
+                            <constraint firstAttribute="trailing" secondItem="sXq-Aj-dHl" secondAttribute="trailing" id="zSk-N6-RLG"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Jc1-Y3-6oS">
+                        <nil key="title"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="photo" catalog="system" id="jA9-hh-tKr">
+                            <connections>
+                                <segue destination="RGb-Oz-hNq" kind="show" id="RKc-ba-M2M"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="filmstripCollectionView" destination="0Re-YY-i6A" id="3Es-ON-Hqo"/>
+                        <outlet property="heartButtonItem" destination="O7o-6W-CVD" id="S3W-dG-fte"/>
+                        <outlet property="infoButtonItem" destination="rNu-JH-CxI" id="w03-jz-XZf"/>
+                        <outlet property="shareButtonItem" destination="mF4-lp-55b" id="fFw-Uv-BzG"/>
+                        <outlet property="toolbar" destination="sXq-Aj-dHl" id="CsT-Gp-KhM"/>
+                        <outlet property="trashButtonItem" destination="0pU-9H-Xm0" id="8hD-up-vVZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Am8-7t-jDk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-359.5419847328244" y="-430.28169014084511"/>
+        </scene>
+        <!--GalleryTabBarController-->
+        <scene sceneID="47L-b3-E9E">
+            <objects>
+                <viewControllerPlaceholder storyboardName="GalleryStoryboard" referencedIdentifier="GalleryTabBarController" id="RGb-Oz-hNq" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="4Pb-C6-FRo"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Zq-Ef-J72" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="781" y="-416"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="gun-Ae-3Vf">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="euI-8F-E05" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nDR-QR-3vU">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Ymf-RX-0EY" kind="relationship" relationship="rootViewController" id="h2t-5e-Pda"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Njc-I1-Iu2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1286.2595419847328" y="-430.28169014084511"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="heart" catalog="system" width="128" height="107"/>
+        <image name="info.circle" catalog="system" width="128" height="123"/>
+        <image name="photo" catalog="system" width="128" height="93"/>
+    </resources>
+</document>

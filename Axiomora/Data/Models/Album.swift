@@ -8,15 +8,20 @@
 import Foundation
 
 struct Album: Codable, Identifiable {
+    
+    //Identifiers
     let id: String
     var name: String // e.g., "All Photos" or "Studio Shoot"
     let creationDate: Date
     
-    // We only store the IDs of the images, NOT the actual ImageModel objects
-    var imageIds: [String]
+    //Type
+    var isSystemAlbum: Bool // System albums (e.g. Favourites) are created and managed by PhotoManager automatically. They cannot be renamed or deleted by the user.
     
-    // Optional: The filename of the image to display as the album cover
-    var coverImageLocalFilename: String?
+    //Contents
+    var imageIds: [String] // We only store the IDs of the images, NOT the actual ImageModel objects
+
+    //Cover Image
+    var coverImageLocalFilename: String? // Optional: The filename of the image to display as the album cover
     
     // The safely computed URL, just like in ImageModel
     var coverImageLocalFileURL: URL? {
@@ -31,9 +36,10 @@ struct Album: Codable, Identifiable {
         return documentsDirectory.appendingPathComponent(filename)
     }
     
-    init(id: String = UUID().uuidString, name: String) {
+    init(id: String = UUID().uuidString, name: String, isSystemAlbum: Bool = false) { // isSystemAlbum defaults to false, only PhotoManager passes true when creating Favourites.
         self.id = id
         self.name = name
+        self.isSystemAlbum = isSystemAlbum
         self.creationDate = Date()
         self.imageIds = []
     }

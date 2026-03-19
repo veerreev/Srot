@@ -23,6 +23,7 @@ final class CameraManager: NSObject {
     
     let captureSession = AVCaptureSession()
     let photoOutput = AVCapturePhotoOutput()
+    weak var delegate: CameraManagerDelegate?
     
     private var isConfigured = false
     private(set) var currentMode: CameraMode = .normal // 'set' forces the controller to use configureSession to change to '.pro' mode
@@ -35,7 +36,7 @@ final class CameraManager: NSObject {
     
     func configureSession(for mode: CameraMode = .normal) async throws {
         guard await requestCameraAccess() == .authorized else {
-            throw CameraError.unauthorized // Now the CameraViewControlelr catches this error and shows the user how to navigate to the settings and grant camera access
+            throw CameraError.unauthorized // Now the CameraViewController catches this error and shows the user how to navigate to the settings and grant camera access
         }
         
         /// could have used RETURN TRY AWAIT here. It is a better approach.
@@ -180,15 +181,14 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
         let ratio = currentAspectRatio
         let finalImage = CameraManager.crop(capturedImage, to: ratio)
         
-        PhotoManager.shared.applyWatermarkAndSave(image: finalImage) { /*[weak self]*/ success, error in
-            // Re-enable shutter button here
-            
-            if success {
-                print("Successfully watermarked and saved to library!")
-                // Update UI: e.g., show a small thumbnail in the corner of your CameraStoryboard
+        PhotoManager.shared.applyWatermarkAndSave(image: finalImage) { [weak self] success, savedImage, error in
+            guard let self = self else { return }
+            if success, let savedImage = savedImage {
+                DispatchQueue.main.async {
+                    self.delegate?.cameraManager(self, didCapture: savedImage)
+                }
             } else {
                 print("Failed to save: \(String(describing: error?.localizedDescription))")
-                // Show UIAlertController error to user
             }
         }
     }
@@ -198,7 +198,7 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
     /// - `.widescreen` (9:16 portrait): trims left & right, producing a taller, zoomed-in result.
     /// - `.square` (1:1): trims top & bottom equally, producing a centered square.
     private static func crop(_ image: UIImage, to ratio: CameraAspectRatio) -> UIImage {
-        guard ratio != .standard else { return image } // 4:3 is native — no crop needed
+        
 
         // Normalize to .up orientation first.
         // cgImage.cropping(to:) works in raw CGImage pixel space, which ignores imageOrientation.
@@ -206,6 +206,8 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
         // so without normalization the crop rect would be applied to the wrong axis.
         let normalized = image.normalized()
 
+        guard ratio != .standard else { return image } // 4:3 is native — no crop needed
+        
         let w = normalized.size.width
         let h = normalized.size.height
 
