@@ -23,13 +23,6 @@
 			);
 			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
 		};
-		D6305ED72F6BCBDE003C5C3B /* Exceptions for "MLAssets" folder in "Axiomora" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AxiomarkEncoder.mlpackage,
-			);
-			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
-		};
 		D638C63D2F3A00DF00C11CA6 /* Exceptions for "Core" folder in "Axiomora" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -40,28 +33,26 @@
 			);
 			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
 		};
+		D6A2406C2F6BFE43001E7B9F /* Exceptions for "Resources" folder in "Axiomora" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ZippableAssets/AxiomarkEncoder.mlpackage,
+			);
+			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		D6305ED92F6BCBE1003C5C3B /* Exceptions for "MLAssets" folder in "Copy Bundle Resources" phase from "Axiomora" target */ = {
+		D6A2406B2F6BFE3F001E7B9F /* Exceptions for "Resources" folder in "Copy Bundle Resources" phase from "Axiomora" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = D69154EE2F2DBEAD004CE209 /* Resources */;
 			membershipExceptions = (
-				AxiomarkEncoder.mlpackage,
+				ZippableAssets/AxiomarkEncoder.mlpackage,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		36E67C6A2F6ADCF4002471CB /* MLAssets */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				D6305ED72F6BCBDE003C5C3B /* Exceptions for "MLAssets" folder in "Axiomora" target */,
-				D6305ED92F6BCBE1003C5C3B /* Exceptions for "MLAssets" folder in "Copy Bundle Resources" phase from "Axiomora" target */,
-			);
-			path = MLAssets;
-			sourceTree = "<group>";
-		};
 		D62096B02F31F098004D1127 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -77,6 +68,10 @@
 		};
 		D69155082F2DBF2F004CE209 /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D6A2406C2F6BFE43001E7B9F /* Exceptions for "Resources" folder in "Axiomora" target */,
+				D6A2406B2F6BFE3F001E7B9F /* Exceptions for "Resources" folder in "Copy Bundle Resources" phase from "Axiomora" target */,
+			);
 			path = Resources;
 			sourceTree = "<group>";
 		};
@@ -114,7 +109,6 @@
 		D69154E72F2DBEAD004CE209 = {
 			isa = PBXGroup;
 			children = (
-				36E67C6A2F6ADCF4002471CB /* MLAssets */,
 				368E016D2F610B4200E255CD /* Remember.txt */,
 				D62096B02F31F098004D1127 /* App */,
 				D691552B2F2DDD76004CE209 /* Core */,
@@ -150,7 +144,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				36E67C6A2F6ADCF4002471CB /* MLAssets */,
 				D62096B02F31F098004D1127 /* App */,
 				D68A1C302F3DD34000E78634 /* Extensions */,
 				D69155082F2DBF2F004CE209 /* Resources */,
