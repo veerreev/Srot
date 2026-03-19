@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,16 +16,211 @@
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pOB-QB-rPk" userLabel="BackgroundView">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pqg-Tc-ze0" userLabel="LivePreviewView">
+                                        <rect key="frame" x="0.0" y="116" width="393" height="524"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="pqg-Tc-ze0" secondAttribute="height" multiplier="3:4" id="rrt-2C-763"/>
+                                        </constraints>
+                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-Eh-a5L" userLabel="Top Controls Stack View">
+                                        <rect key="frame" x="262" y="72" width="115" height="34"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BbR-tt-HSx">
+                                                <rect key="frame" x="0.0" y="1.6666666666666714" width="31" height="31"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="BbR-tt-HSx" secondAttribute="height" multiplier="1:1" id="IfB-Oq-IqL"/>
+                                                    <constraint firstAttribute="width" constant="31" id="Qk6-rx-35E"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="tinted" title="1"/>
+                                            </button>
+                                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="db7-91-BSr" customClass="CameraControlPill" customModule="Axiomora" customModuleProvider="target">
+                                                <rect key="frame" x="43" y="0.0" width="72" height="34"/>
+                                                <view key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="vjB-An-7ba">
+                                                    <rect key="frame" x="0.0" y="0.0" width="72" height="34"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="-6" translatesAutoresizingMaskIntoConstraints="NO" id="72F-zj-5VR">
+                                                            <rect key="frame" x="0.0" y="0.0" width="72" height="34"/>
+                                                            <subviews>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5gN-Rl-Jez">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="36" height="34"/>
+                                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <state key="normal" title="Button"/>
+                                                                    <buttonConfiguration key="configuration" style="plain">
+                                                                        <imageReference key="image" image="bolt.slash.fill" catalog="system" symbolScale="small"/>
+                                                                    </buttonConfiguration>
+                                                                    <connections>
+                                                                        <action selector="flashButtonTapped:" destination="db7-91-BSr" eventType="touchUpInside" id="uPr-Ia-KaM"/>
+                                                                    </connections>
+                                                                </button>
+                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NMZ-Oi-L9g" userLabel="Aspect Ratio Button">
+                                                                    <rect key="frame" x="30" y="0.0" width="42" height="34"/>
+                                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <state key="normal" title="Button"/>
+                                                                    <buttonConfiguration key="configuration" style="plain">
+                                                                        <imageReference key="image" image="aspectratio" catalog="system" symbolScale="small"/>
+                                                                    </buttonConfiguration>
+                                                                    <connections>
+                                                                        <action selector="aspectRatioButtonTapped:" destination="db7-91-BSr" eventType="touchUpInside" id="Ox4-z6-lhf"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <accessibility key="accessibilityConfiguration">
+                                                        <accessibilityTraits key="traits" notEnabled="YES"/>
+                                                    </accessibility>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="72F-zj-5VR" secondAttribute="trailing" id="9fz-zu-y1H"/>
+                                                        <constraint firstItem="72F-zj-5VR" firstAttribute="leading" secondItem="vjB-An-7ba" secondAttribute="leading" id="PCX-M7-2eH"/>
+                                                        <constraint firstAttribute="bottom" secondItem="72F-zj-5VR" secondAttribute="bottom" id="rbe-Sk-5Pf"/>
+                                                        <constraint firstItem="72F-zj-5VR" firstAttribute="top" secondItem="vjB-An-7ba" secondAttribute="top" id="s64-cO-Jqq"/>
+                                                    </constraints>
+                                                </view>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="72" id="0PE-9B-WJn"/>
+                                                    <constraint firstAttribute="height" constant="34" id="J53-rc-Byr"/>
+                                                </constraints>
+                                                <blurEffect style="regular"/>
+                                                <connections>
+                                                    <outlet property="aspectRatioButton" destination="NMZ-Oi-L9g" id="EHf-pt-S1E"/>
+                                                    <outlet property="flashButton" destination="5gN-Rl-Jez" id="H1X-Sf-fwb"/>
+                                                </connections>
+                                            </visualEffectView>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="IJr-7p-w6x" userLabel="Bottom Controls Stack View">
+                                        <rect key="frame" x="24" y="768" width="345" height="72"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRr-uY-0ZM" userLabel="Gallery Button">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="rRr-uY-0ZM" secondAttribute="height" multiplier="1:1" id="cr1-kg-4ef"/>
+                                                    <constraint firstAttribute="width" constant="50" id="iLf-4m-t0l"/>
+                                                </constraints>
+                                                <buttonConfiguration key="configuration" style="plain" image="WhatsApp Image 2025-09-15 at 13.09.36" cornerStyle="capsule">
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
+                                                </buttonConfiguration>
+                                            </button>
+                                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
+                                                <rect key="frame" x="50" y="0.0" width="245" height="72"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="72" id="4ps-D5-fbN"/>
+                                                    <constraint firstAttribute="width" constant="280" id="lvg-9U-LS1"/>
+                                                </constraints>
+                                                <items>
+                                                    <tabBarItem title="CAMERA" image="Camera" id="kig-dD-XXy"/>
+                                                    <tabBarItem title="VERIFY" id="cyt-fr-aZW"/>
+                                                </items>
+                                                <tabBarAppearance key="scrollEdgeAppearance"/>
+                                            </tabBar>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9oL-DO-DY9" userLabel="Rotate Camera Button">
+                                                <rect key="frame" x="295" y="0.0" width="50" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" secondItem="9oL-DO-DY9" secondAttribute="height" multiplier="1:1" id="Q5l-DD-CI9"/>
+                                                    <constraint firstAttribute="width" constant="50" id="w7K-w6-kD6"/>
+                                                </constraints>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal" title="Button">
+                                                    <imageReference key="image" image="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" symbolScale="large"/>
+                                                </state>
+                                                <buttonConfiguration key="configuration" style="plain">
+                                                    <imageReference key="image" image="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" symbolScale="large"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="rotateButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Vvl-6F-Hbb"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IPn-ia-8kF" userLabel="Capture Button Background Visual Effect View">
+                                        <rect key="frame" x="155.66666666666666" y="666" width="82" height="82"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="inG-oq-Rw0">
+                                            <rect key="frame" x="0.0" y="0.0" width="82" height="82"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ME6-tp-Nvf" userLabel="Capture Button">
+                                                    <rect key="frame" x="5" y="5" width="72" height="72"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="ME6-tp-Nvf" secondAttribute="height" multiplier="1:1" id="Ch6-dO-dKO"/>
+                                                        <constraint firstAttribute="width" constant="72" id="SWt-E4-h0f"/>
+                                                    </constraints>
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="filled" cornerStyle="capsule"/>
+                                                    <connections>
+                                                        <action selector="captureButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="8Co-DZ-9fn"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ME6-tp-Nvf" firstAttribute="centerX" secondItem="inG-oq-Rw0" secondAttribute="centerX" id="lrh-2p-qHh"/>
+                                                <constraint firstItem="ME6-tp-Nvf" firstAttribute="centerY" secondItem="inG-oq-Rw0" secondAttribute="centerY" id="wXJ-ob-g31"/>
+                                            </constraints>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="IPn-ia-8kF" secondAttribute="height" multiplier="1:1" id="e75-FN-3Nn"/>
+                                            <constraint firstAttribute="width" constant="82" id="rHm-cV-x20"/>
+                                        </constraints>
+                                        <blurEffect style="regular"/>
+                                    </visualEffectView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="pqg-Tc-ze0" secondAttribute="trailing" id="J1c-Ck-BHJ"/>
+                                    <constraint firstItem="J1F-Eh-a5L" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="72" id="VXz-ve-Ffo"/>
+                                    <constraint firstItem="pqg-Tc-ze0" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" id="a8l-AX-DV7"/>
+                                    <constraint firstItem="pqg-Tc-ze0" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="116" id="c5w-Pq-cEg"/>
+                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="top" secondItem="IPn-ia-8kF" secondAttribute="bottom" constant="20" id="e2r-Ik-jMW"/>
+                                    <constraint firstAttribute="trailing" secondItem="J1F-Eh-a5L" secondAttribute="trailing" constant="16" id="eXa-zt-b41"/>
+                                    <constraint firstAttribute="trailing" secondItem="IJr-7p-w6x" secondAttribute="trailing" constant="24" id="izw-dL-YHU"/>
+                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" constant="24" id="jFA-Qa-KHt"/>
+                                    <constraint firstAttribute="bottom" secondItem="IJr-7p-w6x" secondAttribute="bottom" constant="12" id="m6f-Gs-9jc"/>
+                                    <constraint firstItem="IPn-ia-8kF" firstAttribute="centerX" secondItem="pOB-QB-rPk" secondAttribute="centerX" id="uNb-2Q-lR0"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="pOB-QB-rPk" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="L2E-6O-8aS"/>
+                            <constraint firstAttribute="trailing" secondItem="pOB-QB-rPk" secondAttribute="trailing" id="e2b-2Z-Il9"/>
+                            <constraint firstItem="pOB-QB-rPk" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="hFF-iR-fkl"/>
+                            <constraint firstAttribute="bottom" secondItem="pOB-QB-rPk" secondAttribute="bottom" id="hxq-Jk-HYS"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="cameraControlPillVisualEffectView" destination="db7-91-BSr" id="eR1-Ti-rsB"/>
+                        <outlet property="captureButton" destination="ME6-tp-Nvf" id="J3a-ut-jlc"/>
+                        <outlet property="captureButtonBackground" destination="IPn-ia-8kF" id="80o-aW-a6A"/>
+                        <outlet property="livePreviewAspectRatioConstraint" destination="rrt-2C-763" id="XDK-yZ-oDJ"/>
+                        <outlet property="livePreviewTopConstraint" destination="c5w-Pq-cEg" id="ltp-kM-Mgr"/>
+                        <outlet property="livePreviewView" destination="pqg-Tc-ze0" id="jmZ-zZ-Zgf"/>
+                        <outlet property="rotateCameraButton" destination="9oL-DO-DY9" id="pkG-zj-p5n"/>
+                        <outlet property="signatureNumberButton" destination="BbR-tt-HSx" id="bwV-EC-AeG"/>
+                        <outlet property="tabBar" destination="N4p-u9-P45" id="tqT-LF-0s7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="138" y="106"/>
+            <point key="canvasLocation" x="156" y="192"/>
         </scene>
     </scenes>
     <resources>
+        <image name="Camera" width="128" height="128"/>
+        <image name="WhatsApp Image 2025-09-15 at 13.09.36" width="899" height="1599"/>
+        <image name="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" width="128" height="117"/>
+        <image name="aspectratio" catalog="system" width="128" height="93"/>
+        <image name="bolt.slash.fill" catalog="system" width="98" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -18,18 +18,6 @@ class RegisterViewController: BaseAuthViewController {
     @IBOutlet var confirmPasswordTextField: UITextField!
     @IBOutlet var footerLabel: UILabel!
     @IBOutlet var logInButton: UIButton!
-        
-    override var shouldAutorotate: Bool {
-        return false
-    }
-
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
-    }
-
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .portrait
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,7 +104,7 @@ class RegisterViewController: BaseAuthViewController {
     
     private func setupUI(for button: UIButton) {
         
-        Theme.Button.applyPrimaryBlueStyle(to: registerButton, title: "Register")
+        Theme.Button.applyGlassStyle(to: registerButton, title: "Register", color: .primaryBlue)
     }
     
 }

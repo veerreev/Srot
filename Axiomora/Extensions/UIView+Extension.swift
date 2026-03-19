@@ -7,8 +7,6 @@
 
 import UIKit
 
-// MARK: - Reusable Animations
-
 extension UIView {
     func shake() {
         let animation = CABasicAnimation(keyPath: "position")
