@@ -4,6 +4,7 @@
 //
 //  Created by Pradumn Kapil on 18/03/26.
 //
+//
 
 import UIKit
 import CoreML
@@ -14,11 +15,12 @@ enum WatermarkError: LocalizedError {
     case inferenceFailed(Error)
     case outputMissing(String)
     case imageTooSmall(width: Int, height: Int)
+    case modelCompilationFailed(Error)
 
     var errorDescription: String? {
         switch self {
         case .modelNotFound:
-            return "mlpackage file not found"
+            return "mlpackage file not found in app bundle"
         case .pixelBufferFailed:
             return "Could not create buffer from UIImage object"
         case .inferenceFailed(let e):
@@ -27,15 +29,17 @@ enum WatermarkError: LocalizedError {
             return "CoreML output '\(k)' missing"
         case .imageTooSmall(let w, let h):
             return "Image \(w)×\(h) is smaller than one tile (\(WatermarkEmbedder.tileSize)×\(WatermarkEmbedder.tileSize))."
+        case .modelCompilationFailed(let e):
+            return "Failed to compile model: \(e.localizedDescription)"
         }
     }
 }
 
 private struct BCHWatermarkCoder {
-    private let gfExp: [UInt8]  // antilog, length 512
-    private let gfLog: [Int]    // log, length 256
+    private let gfExp: [UInt8]
+    private let gfLog: [Int]
     private let gPoly: [UInt8]
-    private let eccBits: Int    // 128 for t=16, m=8
+    private let eccBits: Int
 
     init() {
         let primPoly = 0x11D
@@ -104,8 +108,6 @@ private struct BCHWatermarkCoder {
                 reg[0] = fb & gPoly[0]
             }
         }
-//        var ecc = [UInt8](repeating: 0, count: eccBits / 8)
-        #warning("Changed by Veer")
         let eccByteCount = (eccBits + 7) / 8
         var ecc = [UInt8](repeating: 0, count: eccByteCount)
         
@@ -125,21 +127,42 @@ class WatermarkEmbedder {
     private init() {}
 
     private let bch = BCHWatermarkCoder()
-
     private enum ModelIO {
         static let image     = "image"
         static let watermark = "watermark"
-        static let encoded   = "encoded"
+        static let residual  = "residual"
     }
 
     private lazy var model: MLModel = {
+        print("[WatermarkEmbedder] Loading model from bundle...")
+        
         guard let url = Bundle.main.url(forResource: "AxiomarkEncoder",
-                                        withExtension: "mlpackage") else {
-            fatalError("[WatermarkEmbedder] AxiomarkEncoder.mlpackage not found. ")
+                                        withExtension: "mlmodelc") else {
+            // Debug: Print what's actually in the bundle
+            if let resourcePath = Bundle.main.resourcePath {
+                print("[WatermarkEmbedder] Bundle resources:")
+                if let files = try? FileManager.default.contentsOfDirectory(atPath: resourcePath) {
+                    for file in files.prefix(20) {
+                        print("  - \(file)")
+                    }
+                }
+            }
+            fatalError("[WatermarkEmbedder] AxiomarkEncoder.mlpackage not found in bundle")
         }
+        
+        print("[WatermarkEmbedder] Found model at: \(url.path)")
+        
         let cfg = MLModelConfiguration()
         cfg.computeUnits = .all
-        return try! MLModel(contentsOf: url, configuration: cfg)
+        
+        do {
+            let loadedModel = try MLModel(contentsOf: url, configuration: cfg)
+            print("[WatermarkEmbedder] ✓ Model loaded successfully")
+            return loadedModel
+        } catch {
+            print("[WatermarkEmbedder] ✗ Failed to load model: \(error)")
+            fatalError("[WatermarkEmbedder] Model loading failed: \(error.localizedDescription)")
+        }
     }()
 
     func embed(_ image: UIImage, signature: Signature) throws -> UIImage {
@@ -172,43 +195,58 @@ class WatermarkEmbedder {
     private func processTile(_ px: inout [UInt8], W: Int, bpr: Int,
                               x0: Int, y0: Int, T: Int, wm: MLMultiArray) throws {
         let n = T * T
-        var r = [Float](repeating: 0, count: n)
-        var g = [Float](repeating: 0, count: n)
-        var b = [Float](repeating: 0, count: n)
+        
+        // CRITICAL FIX: Store original pixels for later addition
+        var originalR = [Float](repeating: 0, count: n)
+        var originalG = [Float](repeating: 0, count: n)
+        var originalB = [Float](repeating: 0, count: n)
+        
+        // Normalize to [-1, 1] and store originals
         for ty in 0..<T {
             let row = (y0 + ty) * bpr + x0 * 4
             let dst = ty * T
             for tx in 0..<T {
                 let s = row + tx * 4
-                r[dst+tx] = Float(px[s])   / 127.5 - 1
-                g[dst+tx] = Float(px[s+1]) / 127.5 - 1
-                b[dst+tx] = Float(px[s+2]) / 127.5 - 1
+                originalR[dst+tx] = Float(px[s])   / 127.5 - 1
+                originalG[dst+tx] = Float(px[s+1]) / 127.5 - 1
+                originalB[dst+tx] = Float(px[s+2]) / 127.5 - 1
             }
         }
 
-        let imgArray = try makeImageArray(r: r, g: g, b: b, T: T)
+        let imgArray = try makeImageArray(r: originalR, g: originalG, b: originalB, T: T)
         let provider = try MLDictionaryFeatureProvider(dictionary: [
             ModelIO.image:     MLFeatureValue(multiArray: imgArray),
             ModelIO.watermark: MLFeatureValue(multiArray: wm),
         ])
+        
         let out: MLFeatureProvider
         do { out = try model.prediction(from: provider) }
         catch { throw WatermarkError.inferenceFailed(error) }
 
-        guard let enc = out.featureValue(for: ModelIO.encoded)?.multiArrayValue else {
-            throw WatermarkError.outputMissing(ModelIO.encoded)
+        // CRITICAL FIX: Get "residual" output (not "encoded")
+        guard let residual = out.featureValue(for: ModelIO.residual)?.multiArrayValue else {
+            throw WatermarkError.outputMissing(ModelIO.residual)
         }
 
-        enc.withUnsafeBufferPointer(ofType: Float.self) { ptr in
+        // CRITICAL FIX: Add residual to original image
+        residual.withUnsafeBufferPointer(ofType: Float.self) { ptr in
             guard let base = ptr.baseAddress else { return }
             for ty in 0..<T {
                 let row = (y0 + ty) * bpr + x0 * 4
                 let src = ty * T
                 for tx in 0..<T {
                     let d = row + tx * 4
-                    px[d]   = toU8(base[src+tx])
-                    px[d+1] = toU8(base[n+src+tx])
-                    px[d+2] = toU8(base[2*n+src+tx])
+                    let idx = src + tx
+                    
+                    // Add residual to original (both in [-1,1] range)
+                    let finalR = originalR[idx] + base[idx]
+                    let finalG = originalG[idx] + base[n + idx]
+                    let finalB = originalB[idx] + base[2*n + idx]
+                    
+                    // Clamp to [-1,1] then convert to [0,255]
+                    px[d]   = toU8(finalR)
+                    px[d+1] = toU8(finalG)
+                    px[d+2] = toU8(finalB)
                 }
             }
         }

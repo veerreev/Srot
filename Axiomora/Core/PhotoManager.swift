@@ -38,8 +38,10 @@ class PhotoManager {
                     shouldIncludeLocation: false
                 )
                 
+                print("Yet to be signed")
                 // 3. Mark the call with 'try' inside the 'do' block
                 let watermarkedImage = try WatermarkEmbedder.shared.embed(image, signature: dummySignature)
+                print("Signed, yet to save")
                 
                 // 4. If successful, proceed to save to the library
                 self.saveToLibrary(image: watermarkedImage) { success, error in

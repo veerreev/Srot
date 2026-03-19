@@ -23,6 +23,13 @@
 			);
 			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
 		};
+		D6305ED72F6BCBDE003C5C3B /* Exceptions for "MLAssets" folder in "Axiomora" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AxiomarkEncoder.mlpackage,
+			);
+			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
+		};
 		D638C63D2F3A00DF00C11CA6 /* Exceptions for "Core" folder in "Axiomora" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -35,9 +42,23 @@
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		D6305ED92F6BCBE1003C5C3B /* Exceptions for "MLAssets" folder in "Copy Bundle Resources" phase from "Axiomora" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = D69154EE2F2DBEAD004CE209 /* Resources */;
+			membershipExceptions = (
+				AxiomarkEncoder.mlpackage,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		36E67C6A2F6ADCF4002471CB /* MLAssets */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D6305ED72F6BCBDE003C5C3B /* Exceptions for "MLAssets" folder in "Axiomora" target */,
+				D6305ED92F6BCBE1003C5C3B /* Exceptions for "MLAssets" folder in "Copy Bundle Resources" phase from "Axiomora" target */,
+			);
 			path = MLAssets;
 			sourceTree = "<group>";
 		};
@@ -206,6 +227,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H42V5WU8M5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Srota;
@@ -223,7 +245,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora12345;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora1234;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -242,6 +264,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H42V5WU8M5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Srota;
@@ -259,7 +282,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora12345;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora1234;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
