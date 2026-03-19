@@ -9,10 +9,10 @@ import UIKit
 
 class SingleImageViewViewController: UIViewController {
 
+    @IBOutlet var shareButtonItem: UIBarButtonItem!
     @IBOutlet var trashButtonItem: UIBarButtonItem!
     @IBOutlet var infoButtonItem: UIBarButtonItem!
     @IBOutlet var heartButtonItem: UIBarButtonItem!
-    @IBOutlet var shareButtonItem: UICollectionView!
     @IBOutlet var filmstripCollectionView: UICollectionView!
     @IBOutlet var toolbar: UIToolbar!
         
@@ -123,9 +123,8 @@ class SingleImageViewViewController: UIViewController {
         filmstripCollectionView.backgroundColor = .clear
         filmstripCollectionView.showsHorizontalScrollIndicator = false
             
-        // FilmstripCell is created entirely in code — no nib registration needed.
         filmstripCollectionView.register(
-            FilmstripCell.self,
+            UINib(nibName: "FilmstripCell", bundle: nil),
             forCellWithReuseIdentifier: FilmstripCell.reuseIdentifier
         )
             

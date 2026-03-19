@@ -33,7 +33,7 @@
                                     </barButtonItem>
                                     <barButtonItem title="Item" image="info.circle" catalog="system" id="rNu-JH-CxI">
                                         <connections>
-                                            <action selector="infoTapped" destination="Ymf-RX-0EY" id="lhE-A6-iNi"/>
+                                            <action selector="infoTapped:" destination="Ymf-RX-0EY" id="hLX-Pd-fxD"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem systemItem="flexibleSpace" id="fcz-zX-es7"/>
@@ -83,7 +83,7 @@
                         <outlet property="filmstripCollectionView" destination="0Re-YY-i6A" id="3Es-ON-Hqo"/>
                         <outlet property="heartButtonItem" destination="O7o-6W-CVD" id="S3W-dG-fte"/>
                         <outlet property="infoButtonItem" destination="rNu-JH-CxI" id="w03-jz-XZf"/>
-                        <outlet property="shareButtonItem" destination="0Re-YY-i6A" id="yiK-b6-fsR"/>
+                        <outlet property="shareButtonItem" destination="mF4-lp-55b" id="fFw-Uv-BzG"/>
                         <outlet property="toolbar" destination="sXq-Aj-dHl" id="CsT-Gp-KhM"/>
                         <outlet property="trashButtonItem" destination="0pU-9H-Xm0" id="8hD-up-vVZ"/>
                     </connections>
