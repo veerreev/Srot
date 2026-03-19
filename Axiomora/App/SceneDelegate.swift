@@ -27,7 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             if AuthManager.shared.isLoggedIn {
                 // User has a saved session => skip auth screens and go directly to the main screen(camera interface).
-                let mainStoryboard = UIStoryboard(name: "SingleImageViewStoryboard", bundle: nil)
+                let mainStoryboard = UIStoryboard(name: "CameraStoryboard", bundle: nil)
                 guard let mainVC = mainStoryboard.instantiateInitialViewController() else {
                     fatalError("CameraStoryboard has no Initial View Controller set.")
                 // fatalError is intentional here, if this crashes, it means the Initial View Controller is not set in CameraStoryboard, which is a configuration mistake that must be fixed, not silently handled.

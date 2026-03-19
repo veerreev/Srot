@@ -56,9 +56,7 @@ class RegisterViewController: BaseAuthViewController {
             self.registerButton.isEnabled = true
             
             if success {
-                print("Written to UserDefaults. isLoggedIn is now: \(UserDefaults.standard.bool(forKey: "isLoggedIn"))")
-                print("Registration Successful!")
-                print("isLoggedIn in UserDefaults: \(AuthManager.shared.isLoggedIn)")
+                
                 launchCameraStoryboard()
                 
             } else {

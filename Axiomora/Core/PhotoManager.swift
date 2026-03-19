@@ -100,94 +100,6 @@ extension PhotoManager {
 //Image Operations
 extension PhotoManager {
     
-    // Saves a captured UIImage to disk, generates a thumbnail, creates an Image model,and appends it to the in-memory array.
-    // Throws ImageSaveError if anything in the file write process fails.
-    // Called by CameraViewController immediately after a photo is captured.
-    func saveImage(_ uiImage: UIImage, creatorId: String, signatureId: String, device: String?) throws -> Image {
-        guard let directory = documentsDirectory else {
-            throw ImageSaveError.documentsDirectoryUnavailable
-        }
-        
-        // Generate unique filenames for the full-res image and its thumbnail.
-        let imageId          = UUID().uuidString
-        let filename          = "\(imageId).heic"
-        let thumbnailFilename = "\(imageId)_thumb.heic"
-        
-        // Write full-resolution image to disk.
-        let imageURL = directory.appendingPathComponent(filename)
-        guard let cgImage = uiImage.cgImage else {
-            throw ImageSaveError.fileWriteFailed
-        }
-
-        let destination = CGImageDestinationCreateWithURL(
-            imageURL as CFURL,
-            AVFileType.heic as CFString,
-            1,    // total number of images in this file
-            nil   // options dictionary — nil uses defaults
-        )
-
-        guard let dest = destination else {
-            throw ImageSaveError.fileWriteFailed
-        }
-
-        CGImageDestinationAddImage(dest, cgImage, nil)
-
-        guard CGImageDestinationFinalize(dest) else {
-            throw ImageSaveError.fileWriteFailed
-        }
-        
-        // Generate and write thumbnail.
-        // Thumbnails are generated once here so grid cells never load full-res images.
-        guard let thumbnail = generateThumbnail(from: uiImage, size: thumbnailSize),
-              let thumbCGImage = thumbnail.cgImage else {
-            throw ImageSaveError.thumbnailGenerationFailed
-        }
-
-        let thumbURL = directory.appendingPathComponent(thumbnailFilename)
-
-        let thumbDestination = CGImageDestinationCreateWithURL(
-            thumbURL as CFURL,
-            AVFileType.heic as CFString,
-            1,
-            nil
-        )
-
-        guard let thumbDest = thumbDestination else {
-            throw ImageSaveError.thumbnailGenerationFailed
-        }
-
-        let thumbOptions: [CFString: Any] = [
-            kCGImageDestinationLossyCompressionQuality: 0.7
-        ]
-
-        CGImageDestinationAddImage(thumbDest, thumbCGImage, thumbOptions as CFDictionary)
-
-        guard CGImageDestinationFinalize(thumbDest) else {
-            throw ImageSaveError.thumbnailGenerationFailed
-        }
-        
-        // Build the Image model.
-        let newImage = Image(
-            id: imageId,
-            creatorId: creatorId,
-            signatureId: signatureId,
-            localFilename: filename,
-            thumbnailFilename: thumbnailFilename,
-            remoteURL: nil,
-            createdAt: Date(),
-            device: device,
-            isFavourite: false,
-            albumIds: []
-        )
-        
-        // Append to in-memory array and persist.
-        images.append(newImage)
-        saveToDisk()
-        
-        print("PhotoManager: Saved image \(imageId)")
-        return newImage
-    }
-    
     // Deletes an image's files from disk, removes it from all albums, and removes it from the in-memory array.
     // Called by the trash button in SingleImageViewController.
     func deleteImage(_ image: Image) {
@@ -243,6 +155,62 @@ extension PhotoManager {
         return renderer.image { _ in
             image.draw(in: CGRect(origin: .zero, size: size))
         }
+    }
+    
+    func saveImage(_ uiImage: UIImage, creatorId: String, signatureId: String, device: String?) throws -> Image {
+        guard let directory = documentsDirectory else {
+            throw ImageSaveError.documentsDirectoryUnavailable
+        }
+        
+        let imageId           = UUID().uuidString
+        let filename          = "\(imageId).heic"
+        let thumbnailFilename = "\(imageId)_thumb.heic"
+        
+        let imageURL = directory.appendingPathComponent(filename)
+        let normalizedImage = uiImage.normalized()
+        guard let cgImage = normalizedImage.cgImage else {
+            throw ImageSaveError.fileWriteFailed
+        }
+
+        let destination = CGImageDestinationCreateWithURL(imageURL as CFURL, AVFileType.heic as CFString, 1, nil)
+        guard let dest = destination else { throw ImageSaveError.fileWriteFailed }
+        let orientationValue = CGImagePropertyOrientation(normalizedImage.imageOrientation).rawValue
+        let options: [CFString: Any] = [
+            kCGImagePropertyOrientation: orientationValue
+        ]
+        CGImageDestinationAddImage(dest, cgImage, options as CFDictionary)
+        guard CGImageDestinationFinalize(dest) else { throw ImageSaveError.fileWriteFailed }
+        
+        guard let thumbnail = generateThumbnail(from: uiImage, size: thumbnailSize),
+              let thumbCGImage = thumbnail.cgImage else {
+            throw ImageSaveError.thumbnailGenerationFailed
+        }
+
+        let thumbURL = directory.appendingPathComponent(thumbnailFilename)
+        let thumbDestination = CGImageDestinationCreateWithURL(thumbURL as CFURL, AVFileType.heic as CFString, 1, nil)
+        guard let thumbDest = thumbDestination else { throw ImageSaveError.thumbnailGenerationFailed }
+        
+        let thumbOptions: [CFString: Any] = [kCGImageDestinationLossyCompressionQuality: 0.7]
+        CGImageDestinationAddImage(thumbDest, thumbCGImage, thumbOptions as CFDictionary)
+        guard CGImageDestinationFinalize(thumbDest) else { throw ImageSaveError.thumbnailGenerationFailed }
+        
+        let newImage = Image(
+            id:                imageId,
+            creatorId:         creatorId,
+            signatureId:       signatureId,
+            localFilename:     filename,
+            thumbnailFilename: thumbnailFilename,
+            remoteURL:         nil,
+            createdAt:         Date(),
+            device:            device,
+            isFavourite:       false,
+            albumIds:          []
+        )
+        
+        images.append(newImage)
+        saveToDisk()
+        print("PhotoManager: Saved image \(imageId)")
+        return newImage
     }
     
 }
@@ -422,18 +390,36 @@ extension PhotoManager {
     private func ensureFavouritesAlbumExists() {
         _ = favouritesAlbum()
     }
+}
+
+extension PhotoManager{
     
-    func applyWatermarkAndSave(image: UIImage, completion: @escaping (Bool, Error?) -> Void) {
+    func applyWatermarkAndSave(image: UIImage, completion: @escaping (Bool, Image?, Error?) -> Void) {
         
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             
             let watermarkedImage = image
             
-            self.saveToLibrary(image: watermarkedImage) { success, error in
-                
+            let savedImage: Image?
+            do {
+                savedImage = try self.saveImage(
+                    watermarkedImage,
+                    creatorId:   AuthManager.shared.currentUser?.userId ?? "unknown",
+                    signatureId: "pending",
+                    device:      UIDevice.current.name
+                )
+            } catch {
+                print("PhotoManager: Failed to save to in-app gallery — \(error)")
                 DispatchQueue.main.async {
-                    completion(success, error)
+                    completion(false, nil, error)
+                }
+                return
+            }
+            
+            self.saveToLibrary(image: watermarkedImage) { success, error in
+                DispatchQueue.main.async {
+                    completion(success, savedImage, error)
                 }
             }
         }
@@ -456,7 +442,6 @@ extension PhotoManager {
             }
         }
     }
-    
 }
 
 extension PhotoManager {
@@ -506,18 +491,18 @@ extension PhotoManager {
     }
 }
 
-/*
-// Diagnostic
-// Temporary: Remove before release
-extension PhotoManager {
-    
-    func runDiagnostic() {
-        print("--- PhotoManager Diagnostic ---")
-        print("Albums on disk: \(allAlbums().map { $0.name })")
-        print("Images on disk: \(allImages().count)")
-        print("Favourites album ID: \(favouritesAlbum().id)")
-        print("-------------------------------")
+extension CGImagePropertyOrientation {
+    init(_ uiOrientation: UIImage.Orientation) {
+        switch uiOrientation {
+        case .up:            self = .up
+        case .down:          self = .down
+        case .left:          self = .left
+        case .right:         self = .right
+        case .upMirrored:    self = .upMirrored
+        case .downMirrored:  self = .downMirrored
+        case .leftMirrored:  self = .leftMirrored
+        case .rightMirrored: self = .rightMirrored
+        @unknown default:    self = .up
+        }
     }
-    
 }
-*/

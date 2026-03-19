@@ -10,8 +10,9 @@ import AVFoundation
 
 class CameraViewController: UIViewController, CameraManagerDelegate {
     
-    func cameraManager(_ manager: CameraManager, didCapture photo: UIImage) {
-        
+    @IBOutlet var thumbnailButton: UIButton!
+    func cameraManager(_ manager: CameraManager, didCapture savedImage: Image) {
+        updateThumbnail(with: savedImage)
     }
     
     func cameraManager(_ manager: CameraManager, didFailWithError error: any Error) {
@@ -42,6 +43,7 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         cameraControlPillVisualEffectView.delegate = self
         setupUI()
         setupCamera()
+        loadExistingThumbnail()
     }
     
     override func viewDidLayoutSubviews() {
@@ -148,6 +150,25 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         cameraManager.capturePhoto()
     }
     
+    @IBAction func thumbnailTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "SingleImageViewStoryboard", bundle: nil)
+            guard let navVC = storyboard.instantiateInitialViewController() as? UINavigationController,
+                  let singleImageVC = navVC.topViewController as? SingleImageViewViewController else {
+                print("Could not instantiate SingleImageViewViewController")
+                return
+            }
+            
+            let allImages = PhotoManager.shared.allImages()
+            
+            singleImageVC.images = allImages
+            singleImageVC.startingIndex = 0
+            
+            // Push SingleImageViewViewController onto the existing nav stack
+            // by setting our nav controller's view controllers directly.
+            // This gives the back chevron automatically.
+            guard let navController = navigationController else { return }
+            navController.setNavigationBarHidden(false, animated: false)
+            navController.pushViewController(singleImageVC, animated: true)    }
 }
 
 /// Preview Layer
@@ -243,4 +264,33 @@ extension CameraViewController: CameraControlPillDelegate {
         let newAspectRatio = cameraManager.changeAspectRatio()
         applyAspectRatio(newAspectRatio)
     }
+}
+
+extension CameraViewController {
+    
+    // Shows the last captured image on launch if photos already exist.
+    private func loadExistingThumbnail() {
+        guard let lastImage = PhotoManager.shared.allImages().first else { return }
+        updateThumbnail(with: lastImage)
+    }
+    
+    // Updates the thumbnail circle with a newly captured image.
+    // Called from cameraManager(_:didCapture:) after a successful save.
+    func updateThumbnail(with image: Image) {
+        guard let thumbURL = image.thumbnailFileURL,
+              let uiImage  = UIImage(contentsOfFile: thumbURL.path) else { return }
+        
+        DispatchQueue.main.async {
+            self.thumbnailButton.alpha = 0
+            self.thumbnailButton.setImage(uiImage, for: .normal)
+            self.thumbnailButton.imageView?.contentMode   = .scaleAspectFill
+            self.thumbnailButton.imageView?.clipsToBounds = true
+            self.thumbnailButton.backgroundColor          = .clear
+            
+            UIView.animate(withDuration: 0.3) {
+                self.thumbnailButton.alpha = 1
+            }
+        }
+    }
+    
 }

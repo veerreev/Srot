@@ -27,7 +27,8 @@ class SingleImageZoomViewController: UIViewController {
         
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // Called every time the view's bounds change including the first appearance.
-        // Recalculate zoom scale and centering each time so the image always fits correctly regardless of screen size or orientation.
+        // Only recalculate if an image is loaded and scroll view has valid bounds.
+        guard imageView.image != nil, scrollView.bounds.width > 0 else { return }
         updateMinZoomScale()
         centerImageInScrollView()
     }
@@ -49,34 +50,42 @@ class SingleImageZoomViewController: UIViewController {
     }
         
     private func loadImage() {
-        guard let image = image, let fileURL = image.localFileURL, let uiImage = UIImage(contentsOfFile: fileURL.path) else {
+        guard let image = image,
+              let fileURL = image.localFileURL,
+              let uiImage = UIImage(contentsOfFile: fileURL.path) else {
             imageView.image = nil
             return
         }
-        imageView.image = uiImage
-        // Recalculate after the image is set so the zoom scale is based on the actual image dimensions.
+        
+        let normalizedImage = uiImage.normalized()
+        imageView.image = normalizedImage
+        imageView.image = normalizedImage
+        
+        // Set the imageView frame to the actual image size.
+        // This is what makes the scroll view content the right size.
+        imageView.frame = CGRect(origin: .zero, size: normalizedImage.size)
+        scrollView.contentSize = normalizedImage.size
+        
         updateMinZoomScale()
         centerImageInScrollView()
     }
-        
-    // Calculates the zoom scale at which the image exactly fits the screen.
-    // Sets this as both the minimum zoom scale and the starting zoom scale so the image is always fully visible on first appearance.
+
     private func updateMinZoomScale() {
         guard let image = imageView.image else { return }
-            
+        
         let scrollSize = scrollView.bounds.size
         let imageSize  = image.size
-            
-        guard imageSize.width > 0, imageSize.height > 0 else { return }
-            
-        let widthScale = scrollSize.width / imageSize.width
+        
+        guard imageSize.width > 0, imageSize.height > 0,
+              scrollSize.width > 0, scrollSize.height > 0 else { return }
+        
+        let widthScale  = scrollSize.width  / imageSize.width
         let heightScale = scrollSize.height / imageSize.height
-            
-        // The smaller scale ensures the entire image is visible — aspect fit behaviour.
-        let minScale = min(widthScale, heightScale)
-
-        scrollView.minimumZoomScale = minScale // This needs to be done programatically because this is dynamic
+        let minScale    = min(widthScale, heightScale)
+        
+        scrollView.minimumZoomScale = minScale
         scrollView.zoomScale = minScale
+        
     }
         
     // When the image is smaller than the scroll view bounds (at minimum zoom), this keeps it centered rather than letting it sit at the top-left corner.

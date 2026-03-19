@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aiF-Cb-4yE">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
@@ -100,13 +100,15 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRr-uY-0ZM" userLabel="Gallery Button">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="rRr-uY-0ZM" secondAttribute="height" multiplier="1:1" id="cr1-kg-4ef"/>
                                                     <constraint firstAttribute="width" constant="50" id="iLf-4m-t0l"/>
                                                 </constraints>
-                                                <buttonConfiguration key="configuration" style="plain" image="WhatsApp Image 2025-09-15 at 13.09.36" cornerStyle="capsule">
-                                                    <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
-                                                </buttonConfiguration>
+                                                <buttonConfiguration key="configuration" style="plain" cornerStyle="capsule"/>
+                                                <connections>
+                                                    <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
+                                                </connections>
                                             </button>
                                             <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
                                                 <rect key="frame" x="50" y="0.0" width="245" height="72"/>
@@ -198,6 +200,7 @@
                             <constraint firstAttribute="bottom" secondItem="pOB-QB-rPk" secondAttribute="bottom" id="hxq-Jk-HYS"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Ek5-Wl-a7i"/>
                     <connections>
                         <outlet property="cameraControlPillVisualEffectView" destination="db7-91-BSr" id="eR1-Ti-rsB"/>
                         <outlet property="captureButton" destination="ME6-tp-Nvf" id="J3a-ut-jlc"/>
@@ -208,19 +211,39 @@
                         <outlet property="rotateCameraButton" destination="9oL-DO-DY9" id="pkG-zj-p5n"/>
                         <outlet property="signatureNumberButton" destination="BbR-tt-HSx" id="bwV-EC-AeG"/>
                         <outlet property="tabBar" destination="N4p-u9-P45" id="tqT-LF-0s7"/>
+                        <outlet property="thumbnailButton" destination="rRr-uY-0ZM" id="h89-Fu-3G9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="156" y="192"/>
+            <point key="canvasLocation" x="2935.1145038167938" y="191.5492957746479"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="nM5-L2-ocm">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="aiF-Cb-4yE" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3AV-b4-T5a">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="hr2-dK-DuZ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CX4-3j-bt2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2008.3969465648854" y="191.5492957746479"/>
         </scene>
     </scenes>
     <resources>
         <image name="Camera" width="128" height="128"/>
-        <image name="WhatsApp Image 2025-09-15 at 13.09.36" width="899" height="1599"/>
         <image name="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" width="128" height="117"/>
         <image name="aspectratio" catalog="system" width="128" height="93"/>
         <image name="bolt.slash.fill" catalog="system" width="98" height="128"/>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

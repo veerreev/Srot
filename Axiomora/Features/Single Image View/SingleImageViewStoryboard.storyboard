@@ -10,7 +10,7 @@
         <!--Single Image View View Controller-->
         <scene sceneID="SlU-Ob-Z3S">
             <objects>
-                <viewController id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SingleImageViewViewController" id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="G0d-V3-Fgr">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -46,7 +46,7 @@
                                 </items>
                             </toolbar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0Re-YY-i6A">
-                                <rect key="frame" x="16" y="704" width="361" height="80"/>
+                                <rect key="frame" x="0.0" y="656" width="393" height="80"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="B6Y-Yk-jBg"/>
@@ -63,17 +63,17 @@
                         <viewLayoutGuide key="safeArea" id="EQF-tR-8Lq"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="0Re-YY-i6A" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="bottom" id="4SE-vw-3d0"/>
                             <constraint firstItem="sXq-Aj-dHl" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="Ygn-NS-yfY"/>
                             <constraint firstItem="EQF-tR-8Lq" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="bottom" id="cMp-LB-x5B"/>
-                            <constraint firstItem="0Re-YY-i6A" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leadingMargin" id="ghq-5A-2Du"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="0Re-YY-i6A" secondAttribute="trailing" id="kJx-IZ-aAO"/>
+                            <constraint firstItem="0Re-YY-i6A" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="top" id="g92-cC-vtJ"/>
+                            <constraint firstItem="0Re-YY-i6A" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="ghq-5A-2Du"/>
+                            <constraint firstAttribute="trailing" secondItem="0Re-YY-i6A" secondAttribute="trailing" id="kJx-IZ-aAO"/>
                             <constraint firstAttribute="trailing" secondItem="sXq-Aj-dHl" secondAttribute="trailing" id="zSk-N6-RLG"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Jc1-Y3-6oS">
                         <nil key="title"/>
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="jA9-hh-tKr">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="photo" catalog="system" id="jA9-hh-tKr">
                             <connections>
                                 <segue destination="RGb-Oz-hNq" kind="show" id="RKc-ba-M2M"/>
                             </connections>
@@ -124,5 +124,6 @@
     <resources>
         <image name="heart" catalog="system" width="128" height="107"/>
         <image name="info.circle" catalog="system" width="128" height="123"/>
+        <image name="photo" catalog="system" width="128" height="93"/>
     </resources>
 </document>

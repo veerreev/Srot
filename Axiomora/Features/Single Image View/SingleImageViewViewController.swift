@@ -40,6 +40,15 @@ class SingleImageViewViewController: UIViewController {
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         label.textAlignment = .center
+        
+        // Capsule background — matches Apple's camera date pill style
+        label.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        label.layer.cornerRadius = 14
+        label.clipsToBounds = true
+        
+        // Padding inside the capsule
+        label.layer.masksToBounds = true
+        
         return label
     }()
         
@@ -55,6 +64,9 @@ class SingleImageViewViewController: UIViewController {
         setupGestures()
         updateDateLabel(for: startingIndex)
         updateHeartButton(for: startingIndex)
+        if images.isEmpty {
+            showEmptyState()
+        }
             
     }
         
@@ -69,6 +81,7 @@ class SingleImageViewViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.tintColor = .white
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
         
     private func setupNavigationBar() {
@@ -88,8 +101,8 @@ class SingleImageViewViewController: UIViewController {
         let appearance = UIToolbarAppearance()
         appearance.configureWithTransparentBackground()
         toolbar.standardAppearance = appearance
-        toolbar.compactAppearance  = appearance
-        toolbar.tintColor          = .white
+        toolbar.compactAppearance = appearance
+        toolbar.tintColor = .white
     }
         
 
@@ -101,13 +114,13 @@ class SingleImageViewViewController: UIViewController {
             navigationOrientation: .horizontal,
             options: nil
         )
-        pvc.images             = images
+        pvc.images = images
         pvc.pageChangeDelegate = self
             
         // Embed as a child view controller filling the entire screen.
         // Inserted at index 0 so all chrome views stay on top of it.
         addChild(pvc)
-        pvc.view.frame            = view.bounds
+        pvc.view.frame = view.bounds
         pvc.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.insertSubview(pvc.view, at: 0)
         pvc.didMove(toParent: self)
@@ -118,8 +131,8 @@ class SingleImageViewViewController: UIViewController {
         
     // MARK: - Filmstrip Setup
     private func setupFilmstrip() {
-        filmstripCollectionView.dataSource  = self
-        filmstripCollectionView.delegate    = self
+        filmstripCollectionView.dataSource = self
+        filmstripCollectionView.delegate = self
         filmstripCollectionView.backgroundColor = .clear
         filmstripCollectionView.showsHorizontalScrollIndicator = false
             
@@ -130,10 +143,10 @@ class SingleImageViewViewController: UIViewController {
             
         // Horizontal flow layout — cells scroll left and right.
         let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection    = .horizontal
-        layout.itemSize           = CGSize(width: 60, height: 60)
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 60, height: 60)
         layout.minimumLineSpacing = 4
-        layout.sectionInset       = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
         filmstripCollectionView.collectionViewLayout = layout
             
         scrollFilmstrip(to: startingIndex, animated: false)
@@ -165,8 +178,8 @@ class SingleImageViewViewController: UIViewController {
         isChromeVisible = false
         UIView.animate(withDuration: 0.25) {
             self.navigationController?.navigationBar.alpha = 0
-            self.filmstripCollectionView.alpha             = 0
-            self.toolbar.alpha                             = 0
+            self.filmstripCollectionView.alpha = 0
+            self.toolbar.alpha = 0
         }
     }
         
@@ -183,25 +196,29 @@ class SingleImageViewViewController: UIViewController {
     // Updates the date label in the nav bar title view to show
     // the capture date of the currently visible image.
     private func updateDateLabel(for index: Int) {
-        guard images.indices.contains(index),
-                let date = images[index].createdAt else {
+        guard images.indices.contains(index), let date = images[index].createdAt else {
             dateLabel.text = ""
             return
         }
-        let formatter       = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        dateLabel.text      = formatter.string(from: date)
-    }
-        
-    // Scrolls the filmstrip so the cell at the given index is centred.
-    private func scrollFilmstrip(to index: Int, animated: Bool) {
-        guard images.indices.contains(index) else { return }
-        filmstripCollectionView.scrollToItem(
-            at: IndexPath(item: index, section: 0),
-            at: .centeredHorizontally,
-            animated: animated
-        )
+        let calendar = Calendar.current
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "h:mm a"
+        let timeString = timeFormatter.string(from: date)
+            
+        if calendar.isDateInToday(date) {
+            dateLabel.text = "Today, \(timeString)"
+        } else if calendar.isDateInYesterday(date) {
+            dateLabel.text = "Yesterday, \(timeString)"
+        } else {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "d MMM yyyy"
+            dateLabel.text = "\(dateFormatter.string(from: date)), \(timeString)"
+        }
+        dateLabel.sizeToFit()
+        var frame = dateLabel.frame
+        frame.size.width += 24
+        frame.size.height = 28
+        dateLabel.frame = frame
     }
         
     // Updates the heart button icon and tint to reflect the
@@ -213,14 +230,36 @@ class SingleImageViewViewController: UIViewController {
         heartButtonItem.tintColor = isFavourite ? .systemRed : .white
     }
     
+    private func scrollFilmstrip(to index: Int, animated: Bool) {
+        guard images.indices.contains(index) else { return }
+        filmstripCollectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredHorizontally,animated: animated)
+    }
+    
+    private func showEmptyState() {
+        // Hide chrome elements that make no sense with no images.#imageLiteral(resourceName: "Screenshot 2026-03-19 at 11.14.59 AM.png")
+        filmstripCollectionView.isHidden = true
+        toolbar.isHidden = true
+        
+        // Show centred empty state label.
+        let label = UILabel()
+        label.text = "No Photos or Videos"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+    
     // MARK: - Toolbar Actions
     @IBAction func shareTapped(_ sender: UIBarButtonItem) {
-        guard images.indices.contains(currentIndex),
-                let fileURL = images[currentIndex].localFileURL else { return }
-        let activityVC = UIActivityViewController(
-            activityItems: [fileURL],
-            applicationActivities: nil
-        )
+        guard images.indices.contains(currentIndex), let fileURL = images[currentIndex].localFileURL else { return }
+        let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
         present(activityVC, animated: true)
     }
         
