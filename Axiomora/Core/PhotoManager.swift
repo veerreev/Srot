@@ -400,7 +400,29 @@ extension PhotoManager{
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             
-            let watermarkedImage = image
+            var watermarkedImage: UIImage!
+            do {
+                let dummySignature = Signature(
+                    id: UUID().uuidString,
+                    creatorID: "1234",
+                    title: "dummy",
+                    displayName: "John",
+                    socialHandles: [],
+                    shouldIncludeLocation: false
+                )
+                
+                print ("Yet to be signed")
+                
+                watermarkedImage = try WatermarkEmbedder.shared.embed(image, signature: dummySignature)
+                print ("Signed yet to save")
+            } catch {
+                print("Watermark Engine Error: \(error.localizedDescription)")
+                
+                DispatchQueue.main.async {
+                    completion(false, nil, error)
+                }
+                
+            }
             
             let savedImage: Image?
             do {

@@ -19,6 +19,12 @@ enum CameraMode {
     case pro    // To be implemented in the future
 }
 
+protocol CameraManagerDelegate: AnyObject {
+    func cameraManager(_ manager: CameraManager, didCapture savedImage: Image)
+    func cameraManager(_ manager: CameraManager, didFailWithError error: Error)
+    func cameraManagerWillProcessPhoto(_ manager: CameraManager)
+}
+
 final class CameraManager: NSObject {
     
     let captureSession = AVCaptureSession()
