@@ -1,10 +1,15 @@
 import UIKit
 
+protocol SignatureCellDelegate: AnyObject {
+    func didTapRadio(at index: Int)
+    func didTapEdit(at index: Int)
+}
+
 class SignatureCellTableViewCell: UITableViewCell {
 
     @IBOutlet weak var cardView: UIView!
     
-    @IBOutlet weak var numberLabel: UILabel!   // ✅ NEW
+    @IBOutlet weak var numberLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var sourceLabel: UILabel!
@@ -14,8 +19,8 @@ class SignatureCellTableViewCell: UITableViewCell {
     @IBOutlet weak var radioButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
     
-    var onRadioTapped: (() -> Void)?
-    var onEditTapped: (() -> Void)?
+    weak var delegate: SignatureCellDelegate?
+    var index: Int = 0
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,10 +31,14 @@ class SignatureCellTableViewCell: UITableViewCell {
         setupCardView()
         setupLabels()
         setupRadioButton()
-        setupNumberLabel()   // ✅ NEW
+        setupNumberLabel()
+        
+        //target action
+        radioButton.addTarget(self, action: #selector(radioTapped), for: .touchUpInside)
+        editButton.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
     }
     
-    // MARK: - UI SETUP
+    // UI SETUP
     
     func setupCardView() {
         cardView.backgroundColor = UIColor.white.withAlphaComponent(0.08)
@@ -61,11 +70,6 @@ class SignatureCellTableViewCell: UITableViewCell {
     func setupNumberLabel() {
         numberLabel.textColor = .systemBlue
         numberLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-        //numberLabel.textAlignment = .center
-        
-        //numberLabel.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.15)
-        //numberLabel.layer.cornerRadius = 10
-        //numberLabel.clipsToBounds = true
     }
     
     func setupRadioButton() {
@@ -74,11 +78,12 @@ class SignatureCellTableViewCell: UITableViewCell {
         radioButton.tintColor = .systemBlue
     }
 
-    // MARK: - CONFIGURE
+    // CONFIGURE
     
     func configure(with signature: Signature, isSelected: Bool, index: Int) {
         
-        // ✅ NUMBERING LOGIC
+        self.index = index
+        
         numberLabel.text = "\(index + 1)"
         
         titleLabel.text = signature.title
@@ -95,13 +100,13 @@ class SignatureCellTableViewCell: UITableViewCell {
         radioButton.isSelected = isSelected
     }
 
-    // MARK: - ACTIONS
-
-    @IBAction func radioTapped(_ sender: UIButton) {
-        onRadioTapped?()
+    //ACTIONS (Target-Action)
+    
+    @objc func radioTapped() {
+        delegate?.didTapRadio(at: index)
     }
     
-    @IBAction func editTapped(_ sender: UIButton) {
-        onEditTapped?()
+    @objc func editTapped() {
+        delegate?.didTapEdit(at: index)
     }
 }

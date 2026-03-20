@@ -35,9 +35,8 @@ extension AddEditSignatureViewController {
     
     func setupUI() {
         
-        view.backgroundColor = .black
+        //view.backgroundColor = .black
         
-        // 🔥 FORCE TITLE VISIBILITY
         titleLabel.text = existingSignature != nil ? "Edit Signature" : "Add Signature"
         titleLabel.textColor = .white
         titleLabel.font = UIFont.systemFont(ofSize: 30, weight: .bold)
@@ -67,7 +66,7 @@ extension AddEditSignatureViewController {
     }
 }
 
-// MARK: - ADD SOCIAL MEDIA
+//ADD SOCIAL MEDIA
 extension AddEditSignatureViewController {
     
     @IBAction func addSocialTapped(_ sender: UIButton) {
@@ -152,7 +151,7 @@ extension AddEditSignatureViewController {
     }
 }
 
-// MARK: - EDIT MODE
+// EDIT MODE
 extension AddEditSignatureViewController {
     
     func populateIfEdit() {
@@ -170,7 +169,7 @@ extension AddEditSignatureViewController {
     }
 }
 
-// MARK: - SAVE
+// SAVE BUTTON
 extension AddEditSignatureViewController {
     
     @objc func saveTapped() {
@@ -244,7 +243,7 @@ extension AddEditSignatureViewController {
     }
 }
 
-// MARK: - DELETE
+// delete signature button
 extension AddEditSignatureViewController {
     
     @objc func deleteTapped() {

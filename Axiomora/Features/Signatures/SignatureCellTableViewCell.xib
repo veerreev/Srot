@@ -31,9 +31,6 @@
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="circle" catalog="system"/>
-                                        <connections>
-                                            <action selector="radioTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="t4m-wO-44K"/>
-                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mH7-Hh-tNt">
                                         <rect key="frame" x="28" y="0.0" width="71" height="24"/>
@@ -55,9 +52,6 @@
                                         </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="pencil" catalog="system"/>
-                                        <connections>
-                                            <action selector="editTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Ucy-Uo-Be8"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>

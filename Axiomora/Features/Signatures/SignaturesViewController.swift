@@ -36,12 +36,10 @@ class SignaturesViewController: UIViewController {
     }
 }
 
-// MARK: - UI
+//UI
 extension SignaturesViewController {
     
     func setupNavigationBar() {
-       // title = "Signatures"
-        
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.titleTextAttributes = [
@@ -70,7 +68,7 @@ extension SignaturesViewController {
     }
 }
 
-// MARK: - DATA
+//loading mock data
 extension SignaturesViewController {
     
     func loadData() {
@@ -80,7 +78,7 @@ extension SignaturesViewController {
     }
 }
 
-// MARK: - TABLE
+//TABLE
 extension SignaturesViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -103,22 +101,7 @@ extension SignaturesViewController: UITableViewDelegate, UITableViewDataSource {
             index: indexPath.row
         )
         
-        cell.onRadioTapped = { [weak self] in
-            self?.selectedSignatureID = signature.id
-            self?.tableView.reloadData()
-        }
-        
-        cell.onEditTapped = { [weak self] in
-            guard let self = self else { return }
-            
-            let storyboard = UIStoryboard(name: "AddEditSignatureStoryboard", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "AddEditSignatureViewController") as! AddEditSignatureViewController
-            
-            vc.existingSignature = signature   // ✅ THIS decides edit mode
-            vc.delegate = self
-            
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
+        cell.delegate = self
         
         return cell
     }
@@ -133,7 +116,7 @@ extension SignaturesViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-// MARK: - ACTIONS
+//ACTIONS
 extension SignaturesViewController {
     
     @objc func backTapped() {
@@ -151,13 +134,35 @@ extension SignaturesViewController {
         let storyboard = UIStoryboard(name: "AddEditSignatureStoryboard", bundle: nil)
         let vc = storyboard.instantiateViewController(withIdentifier: "AddEditSignatureViewController") as! AddEditSignatureViewController
         
-        vc.delegate = self   // ✅ IMPORTANT
+        vc.delegate = self
         
-        self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
-// MARK: - DELEGATE
+//CELL DELEGATE
+extension SignaturesViewController: SignatureCellDelegate {
+    
+    func didTapRadio(at index: Int) {
+        let signature = signatures[index]
+        selectedSignatureID = signature.id
+        tableView.reloadData()
+    }
+    
+    func didTapEdit(at index: Int) {
+        let signature = signatures[index]
+        
+        let storyboard = UIStoryboard(name: "AddEditSignatureStoryboard", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "AddEditSignatureViewController") as! AddEditSignatureViewController
+        
+        vc.existingSignature = signature
+        vc.delegate = self
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+//ADD/EDIT DELEGATE
 extension SignaturesViewController: AddEditSignatureDelegate {
     
     func didSaveSignature(_ signature: Signature) {
