@@ -51,7 +51,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Uwi-oo-Kdb">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Tfe-ba-WL3" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="SignaturesViewController" automaticallyAdjustsScrollViewInsets="NO" id="Tfe-ba-WL3" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="N8o-30-Nvm">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>

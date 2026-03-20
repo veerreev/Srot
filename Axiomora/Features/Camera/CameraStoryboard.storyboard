@@ -38,6 +38,9 @@
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="tinted" title="1"/>
+                                                <connections>
+                                                    <action selector="signatureNumberButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="aJK-0c-TNf"/>
+                                                </connections>
                                             </button>
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="db7-91-BSr" customClass="CameraControlPill" customModule="Axiomora" customModuleProvider="target">
                                                 <rect key="frame" x="43" y="0.0" width="72" height="34"/>
@@ -110,7 +113,7 @@
                                                     <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
                                                 </connections>
                                             </button>
-                                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
+                                            <tabBar contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
                                                 <rect key="frame" x="50" y="0.0" width="245" height="72"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
