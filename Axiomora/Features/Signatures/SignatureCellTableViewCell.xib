@@ -20,36 +20,47 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdi-lj-cER">
                         <rect key="frame" x="16" y="8" width="351" height="237"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cso-oO-dSi">
-                                <rect key="frame" x="12" y="12" width="24" height="24"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="24" id="hw4-rp-ffg"/>
-                                    <constraint firstAttribute="height" constant="24" id="x2g-mQ-VBB"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="circle" catalog="system"/>
-                                <connections>
-                                    <action selector="radioTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="t4m-wO-44K"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SEO-ea-Ovs">
-                                <rect key="frame" x="315" y="12" width="24" height="24"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="24" id="I05-8b-Qoc"/>
-                                    <constraint firstAttribute="height" constant="24" id="tnv-p9-hQP"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" image="pencil" catalog="system"/>
-                                <connections>
-                                    <action selector="editTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Ucy-Uo-Be8"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8wx-Tb-BwS">
-                                <rect key="frame" x="44" y="11.999999999999998" width="263" height="20.333333333333329"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="9v0-Te-Gkb">
+                                <rect key="frame" x="12" y="12" width="327" height="24"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cso-oO-dSi">
+                                        <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="hw4-rp-ffg"/>
+                                            <constraint firstAttribute="height" constant="24" id="x2g-mQ-VBB"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="circle" catalog="system"/>
+                                        <connections>
+                                            <action selector="radioTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="t4m-wO-44K"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mH7-Hh-tNt">
+                                        <rect key="frame" x="28" y="0.0" width="71" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8wx-Tb-BwS">
+                                        <rect key="frame" x="103" y="0.0" width="196" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SEO-ea-Ovs">
+                                        <rect key="frame" x="303" y="0.0" width="24" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="I05-8b-Qoc"/>
+                                            <constraint firstAttribute="height" constant="24" id="tnv-p9-hQP"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="pencil" catalog="system"/>
+                                        <connections>
+                                            <action selector="editTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Ucy-Uo-Be8"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="rXO-bx-Lgt">
                                 <rect key="frame" x="12" y="48" width="327" height="177"/>
                                 <subviews>
@@ -82,16 +93,12 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="cso-oO-dSi" firstAttribute="leading" secondItem="gdi-lj-cER" secondAttribute="leading" constant="12" id="2Ly-kU-R17"/>
                             <constraint firstAttribute="trailing" secondItem="rXO-bx-Lgt" secondAttribute="trailing" constant="12" id="2S4-3A-aER"/>
-                            <constraint firstItem="SEO-ea-Ovs" firstAttribute="top" secondItem="gdi-lj-cER" secondAttribute="top" constant="12" id="EHa-cX-ZJI"/>
-                            <constraint firstItem="rXO-bx-Lgt" firstAttribute="top" secondItem="cso-oO-dSi" secondAttribute="bottom" constant="12" id="SjZ-tz-nBe"/>
-                            <constraint firstAttribute="trailing" secondItem="SEO-ea-Ovs" secondAttribute="trailing" constant="12" id="Vov-OC-rag"/>
-                            <constraint firstItem="8wx-Tb-BwS" firstAttribute="top" secondItem="gdi-lj-cER" secondAttribute="top" constant="12" id="aq2-sE-bGn"/>
-                            <constraint firstItem="SEO-ea-Ovs" firstAttribute="leading" secondItem="8wx-Tb-BwS" secondAttribute="trailing" constant="8" id="d5t-7D-JxP"/>
+                            <constraint firstItem="9v0-Te-Gkb" firstAttribute="top" secondItem="gdi-lj-cER" secondAttribute="top" constant="12" id="MMa-SV-gRy"/>
+                            <constraint firstItem="9v0-Te-Gkb" firstAttribute="leading" secondItem="gdi-lj-cER" secondAttribute="leading" constant="12" id="N7B-vD-JoU"/>
+                            <constraint firstAttribute="trailing" secondItem="9v0-Te-Gkb" secondAttribute="trailing" constant="12" id="c4A-3E-WHi"/>
                             <constraint firstItem="rXO-bx-Lgt" firstAttribute="leading" secondItem="gdi-lj-cER" secondAttribute="leading" constant="12" id="hHY-Nk-WH6"/>
-                            <constraint firstItem="8wx-Tb-BwS" firstAttribute="leading" secondItem="cso-oO-dSi" secondAttribute="trailing" constant="8" id="sWf-ns-4Xc"/>
-                            <constraint firstItem="cso-oO-dSi" firstAttribute="top" secondItem="gdi-lj-cER" secondAttribute="top" constant="12" id="v8A-Wg-d7A"/>
+                            <constraint firstItem="rXO-bx-Lgt" firstAttribute="top" secondItem="9v0-Te-Gkb" secondAttribute="bottom" constant="12" id="yE4-xH-J5W"/>
                             <constraint firstAttribute="bottom" secondItem="rXO-bx-Lgt" secondAttribute="bottom" constant="12" id="ztM-2K-Pl4"/>
                         </constraints>
                     </view>
@@ -109,6 +116,7 @@
                 <outlet property="editButton" destination="SEO-ea-Ovs" id="PQu-zb-Tgi"/>
                 <outlet property="imageIdLabel" destination="mj5-iU-GrY" id="kNI-ii-wwT"/>
                 <outlet property="nameLabel" destination="7q3-uT-qZW" id="VDu-e9-26X"/>
+                <outlet property="numberLabel" destination="mH7-Hh-tNt" id="a6Q-vb-gdD"/>
                 <outlet property="radioButton" destination="cso-oO-dSi" id="uvX-eA-pXk"/>
                 <outlet property="socialLabel" destination="Kbw-4q-793" id="sao-aS-iem"/>
                 <outlet property="sourceLabel" destination="6sf-vd-r2i" id="eTA-DM-qwP"/>

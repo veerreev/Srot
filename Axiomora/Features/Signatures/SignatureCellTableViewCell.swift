@@ -4,6 +4,7 @@ class SignatureCellTableViewCell: UITableViewCell {
 
     @IBOutlet weak var cardView: UIView!
     
+    @IBOutlet weak var numberLabel: UILabel!   // ✅ NEW
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var sourceLabel: UILabel!
@@ -19,29 +20,29 @@ class SignatureCellTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        // Background
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         
-        // Card styling
+        setupCardView()
+        setupLabels()
+        setupRadioButton()
+        setupNumberLabel()   // ✅ NEW
+    }
+    
+    // MARK: - UI SETUP
+    
+    func setupCardView() {
         cardView.backgroundColor = UIColor.white.withAlphaComponent(0.08)
         cardView.layer.cornerRadius = 16
         
         cardView.layer.borderWidth = 1
         cardView.layer.borderColor = UIColor.white.withAlphaComponent(0.08).cgColor
         
-        // Shadow (performance safe)
         cardView.layer.shadowColor = UIColor.black.cgColor
         cardView.layer.shadowOpacity = 0.25
         cardView.layer.shadowOffset = CGSize(width: 0, height: 4)
         cardView.layer.shadowRadius = 8
         cardView.layer.masksToBounds = false
-        
-        // Labels setup (IMPORTANT FOR STACK VIEW)
-        setupLabels()
-        
-        // Radio button setup
-        setupRadioButton()
     }
     
     func setupLabels() {
@@ -50,14 +51,21 @@ class SignatureCellTableViewCell: UITableViewCell {
         labels.forEach {
             $0?.textColor = .white
             $0?.numberOfLines = 0
-            
-            // 🔥 Prevent stretching issue
             $0?.setContentHuggingPriority(.required, for: .vertical)
             $0?.setContentCompressionResistancePriority(.required, for: .vertical)
         }
         
-        // Title slightly bold
         titleLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+    }
+    
+    func setupNumberLabel() {
+        numberLabel.textColor = .systemBlue
+        numberLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        //numberLabel.textAlignment = .center
+        
+        //numberLabel.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.15)
+        //numberLabel.layer.cornerRadius = 10
+        //numberLabel.clipsToBounds = true
     }
     
     func setupRadioButton() {
@@ -66,7 +74,12 @@ class SignatureCellTableViewCell: UITableViewCell {
         radioButton.tintColor = .systemBlue
     }
 
-    func configure(with signature: Signature, isSelected: Bool) {
+    // MARK: - CONFIGURE
+    
+    func configure(with signature: Signature, isSelected: Bool, index: Int) {
+        
+        // ✅ NUMBERING LOGIC
+        numberLabel.text = "\(index + 1)"
         
         titleLabel.text = signature.title
         nameLabel.text = "Name: \(signature.displayName)"
@@ -81,6 +94,8 @@ class SignatureCellTableViewCell: UITableViewCell {
         
         radioButton.isSelected = isSelected
     }
+
+    // MARK: - ACTIONS
 
     @IBAction func radioTapped(_ sender: UIButton) {
         onRadioTapped?()

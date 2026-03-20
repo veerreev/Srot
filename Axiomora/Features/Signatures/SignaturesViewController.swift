@@ -97,7 +97,11 @@ extension SignaturesViewController: UITableViewDelegate, UITableViewDataSource {
         let signature = signatures[indexPath.row]
         let isSelected = signature.id == selectedSignatureID
         
-        cell.configure(with: signature, isSelected: isSelected)
+        cell.configure(
+            with: signature,
+            isSelected: isSelected,
+            index: indexPath.row
+        )
         
         cell.onRadioTapped = { [weak self] in
             self?.selectedSignatureID = signature.id
