@@ -174,7 +174,7 @@ final class CameraManager: NSObject {
 
 extension CameraManager: AVCapturePhotoCaptureDelegate {
     
-    nonisolated func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         guard let imageData = photo.fileDataRepresentation(),
               let capturedImage = UIImage(data: imageData) else {
             print("Error converting photo data")
@@ -190,9 +190,9 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
         PhotoManager.shared.applyWatermarkAndSave(image: finalImage) { [weak self] success, savedImage, error in
             guard let self = self else { return }
             if success, let savedImage = savedImage {
-                DispatchQueue.main.async {
+                
                     self.delegate?.cameraManager(self, didCapture: savedImage)
-                }
+                
             } else {
                 print("Failed to save: \(String(describing: error?.localizedDescription))")
             }

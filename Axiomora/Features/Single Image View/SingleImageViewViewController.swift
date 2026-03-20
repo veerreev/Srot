@@ -107,7 +107,6 @@ class SingleImageViewViewController: UIViewController {
         
 
         
-    // MARK: - Page View Controller Setup
     private func setupPageViewController() {
         let pvc = SingleImagePageViewController(
             transitionStyle: .scroll,
@@ -129,7 +128,6 @@ class SingleImageViewViewController: UIViewController {
         pageVC = pvc
     }
         
-    // MARK: - Filmstrip Setup
     private func setupFilmstrip() {
         filmstripCollectionView.dataSource = self
         filmstripCollectionView.delegate = self
@@ -152,7 +150,6 @@ class SingleImageViewViewController: UIViewController {
         scrollFilmstrip(to: startingIndex, animated: false)
     }
         
-    // MARK: - Gestures
     private func setupGestures() {
         // Single tap on the main area toggles chrome visibility.
         // The delegate allows this to coexist with the page VC's pan gesture.
@@ -161,7 +158,6 @@ class SingleImageViewViewController: UIViewController {
         view.addGestureRecognizer(tap)
     }
         
-    // MARK: - Auto-Hide Chrome
     // Shows the nav bar, filmstrip and toolbar together with a fade-in,
     private func showChrome() {
         guard !isChromeVisible else { return }
@@ -183,7 +179,6 @@ class SingleImageViewViewController: UIViewController {
         }
     }
         
-    // MARK: - Gesture Handlers
     @objc private func handleMainTap() {
         if isChromeVisible {
             hideChrome()
@@ -192,7 +187,6 @@ class SingleImageViewViewController: UIViewController {
         }
     }
         
-    // MARK: - Helpers
     // Updates the date label in the nav bar title view to show
     // the capture date of the currently visible image.
     private func updateDateLabel(for index: Int) {
@@ -256,7 +250,6 @@ class SingleImageViewViewController: UIViewController {
         ])
     }
     
-    // MARK: - Toolbar Actions
     @IBAction func shareTapped(_ sender: UIBarButtonItem) {
         guard images.indices.contains(currentIndex), let fileURL = images[currentIndex].localFileURL else { return }
         let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
@@ -316,7 +309,6 @@ class SingleImageViewViewController: UIViewController {
         
 }
 
-// MARK: - SingleImagePageChangeDelegate
 // Called by SingleImagePageViewController when the user swipes to a new image.
 // Updates all chrome elements to reflect the newly visible image.
 extension SingleImageViewViewController: SingleImagePageChangeDelegate {
@@ -332,7 +324,6 @@ extension SingleImageViewViewController: SingleImagePageChangeDelegate {
         
 }
 
-// MARK: - UICollectionViewDataSource
 extension SingleImageViewViewController: UICollectionViewDataSource {
         
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -351,7 +342,6 @@ extension SingleImageViewViewController: UICollectionViewDataSource {
         
 }
 
-// MARK: - UICollectionViewDelegate
 extension SingleImageViewViewController: UICollectionViewDelegate {
         
     // Tapping a filmstrip cell jumps the page VC to that image
@@ -368,7 +358,6 @@ extension SingleImageViewViewController: UICollectionViewDelegate {
         
 }
 
-// MARK: - UIGestureRecognizerDelegate
 // Allows the single tap gesture and the page VC's pan gesture
 // to be recognised simultaneously without conflicting.
 extension SingleImageViewViewController: UIGestureRecognizerDelegate {

@@ -67,7 +67,7 @@ extension BaseAuthViewController {
         
         guard let cameraVC = cameraStoryboard.instantiateInitialViewController() else {
             print("Error instantiating CameraViewController")
-#warning("Error handling not done here")
+//            #warning("Error handling not done here")
             return
         }
         

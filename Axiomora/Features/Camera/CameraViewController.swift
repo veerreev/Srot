@@ -46,6 +46,14 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         loadExistingThumbnail()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        cameraManager.startSession()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        cameraManager.stopSession()
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
