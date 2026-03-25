@@ -27,8 +27,8 @@
                                             <constraint firstAttribute="width" secondItem="pqg-Tc-ze0" secondAttribute="height" multiplier="3:4" id="rrt-2C-763"/>
                                         </constraints>
                                     </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-Eh-a5L" userLabel="Top Controls Stack View">
-                                        <rect key="frame" x="262" y="72" width="115" height="34"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="J1F-Eh-a5L" userLabel="Top Controls Stack View">
+                                        <rect key="frame" x="266" y="72" width="111" height="34"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BbR-tt-HSx">
                                                 <rect key="frame" x="0.0" y="1.6666666666666714" width="31" height="31"/>
@@ -37,13 +37,15 @@
                                                     <constraint firstAttribute="width" constant="31" id="Qk6-rx-35E"/>
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="tinted" title="1"/>
+                                                <buttonConfiguration key="configuration" style="tinted">
+                                                    <imageReference key="image" image="plus" catalog="system" symbolScale="small"/>
+                                                </buttonConfiguration>
                                                 <connections>
                                                     <action selector="signatureNumberButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="aJK-0c-TNf"/>
                                                 </connections>
                                             </button>
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="db7-91-BSr" customClass="CameraControlPill" customModule="Axiomora" customModuleProvider="target">
-                                                <rect key="frame" x="43" y="0.0" width="72" height="34"/>
+                                                <rect key="frame" x="39" y="0.0" width="72" height="34"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="vjB-An-7ba">
                                                     <rect key="frame" x="0.0" y="0.0" width="72" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -113,11 +115,12 @@
                                                     <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
                                                 </connections>
                                             </button>
-                                            <tabBar contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
+                                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
                                                 <rect key="frame" x="50" y="0.0" width="245" height="72"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="72" id="4ps-D5-fbN"/>
+                                                    <constraint firstAttribute="width" constant="245" id="gUz-kp-Qse"/>
                                                     <constraint firstAttribute="width" constant="280" id="lvg-9U-LS1"/>
                                                 </constraints>
                                                 <items>
@@ -244,8 +247,9 @@
         <image name="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" width="128" height="117"/>
         <image name="aspectratio" catalog="system" width="128" height="93"/>
         <image name="bolt.slash.fill" catalog="system" width="98" height="128"/>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

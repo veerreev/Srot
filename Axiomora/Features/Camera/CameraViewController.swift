@@ -8,21 +8,9 @@
 import UIKit
 import AVFoundation
 
-class CameraViewController: UIViewController, CameraManagerDelegate {
+class CameraViewController: UIViewController {
     
     @IBOutlet var thumbnailButton: UIButton!
-    func cameraManager(_ manager: CameraManager, didCapture savedImage: Image) {
-        updateThumbnail(with: savedImage)
-    }
-    
-    func cameraManager(_ manager: CameraManager, didFailWithError error: any Error) {
-        
-    }
-    
-    func cameraManagerWillProcessPhoto(_ manager: CameraManager) {
-        
-    }
-    
     @IBOutlet weak var livePreviewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var livePreviewAspectRatioConstraint: NSLayoutConstraint!
     @IBOutlet weak var tabBar: UITabBar!
@@ -33,174 +21,65 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
     @IBOutlet weak var signatureNumberButton: UIButton!
     @IBOutlet weak var cameraControlPillVisualEffectView: CameraControlPill!
     
-    private let cameraManager = CameraManager()
+    private let viewModel = CameraViewModel()
     private var previewLayer: AVCaptureVideoPreviewLayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        cameraManager.delegate = self
         cameraControlPillVisualEffectView.delegate = self
         setupUI()
+        bindViewModel()
         setupCamera()
-        loadExistingThumbnail()
+        loadThumbnail()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        cameraManager.startSession()
+        super.viewWillAppear(animated)
+        viewModel.startSession()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        cameraManager.stopSession()
+        super.viewDidDisappear(animated)
+        viewModel.stopSession()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if let previewLayer = previewLayer {
-            previewLayer.frame = livePreviewView.bounds
+        previewLayer?.frame = livePreviewView.bounds
+        
+    }
+    
+    private func bindViewModel() {
+//        The alternative would be to have the ViewModel call a method on the ViewController directly, but then the ViewModel would need to import and know about the ViewController, which defeats the whole point of separation
+        viewModel.onPhotoCaptured = { [weak self] savedImage in
+            self?.updateThumbnail(with: savedImage)
+        }
+ 
+        viewModel.onUnauthorized = { [weak self] in
+            self?.presentCameraSettingsAlert()
+        }
+ 
+        viewModel.onError = { error in
+            print("Camera error: \(error.localizedDescription)")
         }
     }
     
-    private func setupUI() {
-        /// Setup signatureNumberButton theme
-        let symbolConfigSignatureButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .small)
-        let imageSignatureButton = UIImage(systemName: "plus", withConfiguration: symbolConfigSignatureButton)
-        Theme.Button.applyGlassStyle(to: signatureNumberButton, image: imageSignatureButton, color: .primaryBlue)
-        
-        /// Setup captureButtonBackground theme
-        let glassEffect = UIGlassEffect()
-        glassEffect.tintColor = .secondaryBlue
-        captureButtonBackground.effect = glassEffect
-        captureButtonBackground.layer.cornerRadius = captureButtonBackground.frame.height / 2
-        
-        setupTabBarAppearance()
-        
-        /// Setup rotateButton theme
-        let symbolConfigRotateButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .large)
-        let imageRotateButton = UIImage(systemName: "arrow.trianglehead.2.counterclockwise.rotate.90", withConfiguration: symbolConfigRotateButton)
-        Theme.Button.applyGlassStyle(to: rotateCameraButton, image: imageRotateButton)
-        
-        /// Setup captureButton theme
-//        captureButton.tintColor = .white
-        captureButton.configuration?.baseBackgroundColor = .white
-    }
+    // MARK: - SETUP
     
     private func setupCamera() {
         Task {
-            do {
-                try await cameraManager.configureSession(for: .normal)
-                
-                setupPreviewLayer()
-                
-                cameraManager.startSession()
-                
-            } catch CameraError.unauthorized {
-                presentCameraSettingsAlert()
-            } catch {
-                print("Failed to configure camera: \(error.localizedDescription)")
-            }
+            await viewModel.configureCamera()
+            setupPreviewLayer()
         }
     }
     
-    @IBAction func rotateButtonTapped(_ sender: Any) {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.error)
-        rotateCameraButton.shake()
-    }
-    
-    private func presentCameraSettingsAlert() {
-        DispatchQueue.main.async {
-            let alert = UIAlertController(
-                title: "Camera Access Denied",
-                message: "InvisMark needs access to your camera to capture secure photos. Please enable it in Settings.",
-                preferredStyle: .alert
-            )
-            
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-            alert.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
-                }
-            })
-            
-            self.present(alert, animated: true)
-        }
-    }
-    
-    @IBAction func captureButtonTapped(_ sender: Any) {
-        
-        let flashView = UIView(frame: self.livePreviewView.bounds)
-        flashView.backgroundColor = .black
-        flashView.alpha = 1.0
-        
-        self.livePreviewView.addSubview(flashView)
-        
-        #warning("Learn what is 'completion'")
-        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
-            flashView.alpha = 0.0
-        }, completion: { _ in
-            flashView.removeFromSuperview()
-        })
-        
-        #warning("Learn Animate")
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
-            self.captureButton.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: {
-                self.captureButton.transform = .identity
-            })
-        })
-        
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.impactOccurred()
-        
-        cameraManager.capturePhoto()
-    }
-    
-    @IBAction func thumbnailTapped(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "SingleImageViewStoryboard", bundle: nil)
-            guard let navVC = storyboard.instantiateInitialViewController() as? UINavigationController,
-                  let singleImageVC = navVC.topViewController as? SingleImageViewViewController else {
-                print("Could not instantiate SingleImageViewViewController")
-                return
-            }
-            
-            let allImages = PhotoManager.shared.allImages()
-            
-            singleImageVC.images = allImages
-            singleImageVC.startingIndex = 0
-            
-            // Push SingleImageViewViewController onto the existing nav stack
-            // by setting our nav controller's view controllers directly.
-            // This gives the back chevron automatically.
-            guard let navController = navigationController else { return }
-            navController.setNavigationBarHidden(false, animated: false)
-            navController.pushViewController(singleImageVC, animated: true)
-    }
-    
-    @IBAction func signatureNumberButtonTapped(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
-        guard let navVC = storyboard.instantiateInitialViewController() as? UINavigationController,
-        let signatureVC = navVC.topViewController as? SignaturesViewController else {
-            print ("Could not instantiate SignaturesViewController")
-            return
-        }
-        
-        guard let navController = navigationController else { return }
-        navController.setNavigationBarHidden(false, animated: false)
-        navController.pushViewController(signatureVC, animated: true)
-    }
-}
-
-/// Preview Layer
-extension CameraViewController {
-    
-    #warning("Ask why do we need to specify main thread explicitly, does everything not happen on the main thread by default?")
+    #warning("Why do we need to specify this explicitly?")
     @MainActor
     private func setupPreviewLayer() {
-            
-        let layer = cameraManager.createPreviewLayer()
+        
+        let layer = viewModel.createPreviewLayer()
         layer.frame = livePreviewView.bounds
             
         livePreviewView.layer.insertSublayer(layer, at: 0)
@@ -208,6 +87,82 @@ extension CameraViewController {
         previewLayer = layer
     }
     
+    // MARK: - UI Setting up
+    
+    private func setupUI() {
+        // Setup signatureNumberButton theme
+        let symbolConfigSignatureButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .small)
+        let imageSignatureButton = UIImage(systemName: "plus", withConfiguration: symbolConfigSignatureButton)
+        Theme.Button.applyGlassStyle(to: signatureNumberButton, image: imageSignatureButton, color: .primaryBlue)
+        
+        // Setup captureButtonBackground theme
+        let glassEffect = UIGlassEffect()
+        glassEffect.tintColor = .secondaryBlue
+        captureButtonBackground.effect = glassEffect
+        captureButtonBackground.layer.cornerRadius = captureButtonBackground.frame.height / 2
+        
+        setupTabBarAppearance()
+        
+        // Setup rotateButton theme
+        let symbolConfigRotateButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .large)
+        let imageRotateButton = UIImage(systemName: "arrow.trianglehead.2.counterclockwise.rotate.90", withConfiguration: symbolConfigRotateButton)
+        Theme.Button.applyGlassStyle(to: rotateCameraButton, image: imageRotateButton)
+        
+        // Setup captureButton theme
+        captureButton.configuration?.baseBackgroundColor = .white
+    }
+    
+    private func setupTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        
+        let textAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 15, weight: .semibold)
+        ]
+        
+        appearance.stackedLayoutAppearance.normal.titleTextAttributes = textAttributes
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = textAttributes
+        
+        let verticalOffset = UIOffset(horizontal: 0, vertical: -5)
+        appearance.stackedLayoutAppearance.normal.titlePositionAdjustment = verticalOffset
+        appearance.stackedLayoutAppearance.selected.titlePositionAdjustment = verticalOffset
+        
+        tabBar.standardAppearance = appearance
+        
+        if let items = tabBar.items, !items.isEmpty {
+            tabBar.selectedItem = items[0]
+        }
+    }
+    
+    // MARK: - Thumbnail
+    
+    // Shows the last captured image on launch if photos already exist.
+    private func loadThumbnail() {
+        guard let latestImage = viewModel.latestImage() else { return }
+        updateThumbnail(with: latestImage)
+    }
+    
+    // Updates the thumbnail circle with a newly captured image.
+    // Called from cameraManager(_:didCapture:) after a successful save.
+    func updateThumbnail(with image: Image) {
+        guard let thumbURL = image.thumbnailFileURL,
+              let uiImage  = UIImage(contentsOfFile: thumbURL.path) else { return }
+        
+        DispatchQueue.main.async {
+            self.thumbnailButton.alpha = 0
+            self.thumbnailButton.setImage(uiImage, for: .normal)
+            self.thumbnailButton.imageView?.contentMode   = .scaleAspectFill
+            self.thumbnailButton.imageView?.clipsToBounds = true
+            self.thumbnailButton.backgroundColor          = .clear
+            
+            UIView.animate(withDuration: 0.3) {
+                self.thumbnailButton.alpha = 1
+            }
+        }
+    }
+    
+    // MARK: - Aspect Ratio
+    
+    #warning("Why do we need to specify this explicitly?")
     @MainActor
     private func applyAspectRatio(_ ratio: CameraAspectRatio) {
         guard let previewLayer = previewLayer else { return }
@@ -249,70 +204,109 @@ extension CameraViewController {
             self.previewLayer?.frame = self.livePreviewView.bounds
         }
     }
-}
-
-extension CameraViewController {
     
-    private func setupTabBarAppearance() {
-        let appearance = UITabBarAppearance()
-        
-        let textAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 15, weight: .semibold)
-        ]
-        
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = textAttributes
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = textAttributes
-        
-        let verticalOffset = UIOffset(horizontal: 0, vertical: -5)
-        appearance.stackedLayoutAppearance.normal.titlePositionAdjustment = verticalOffset
-        appearance.stackedLayoutAppearance.selected.titlePositionAdjustment = verticalOffset
-        
-        tabBar.standardAppearance = appearance
-        
-        if let items = tabBar.items, !items.isEmpty {
-            tabBar.selectedItem = items[0]
+    // MARK: - Alert
+    
+    private func presentCameraSettingsAlert() {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(
+                title: "Camera Access Denied",
+                message: "InvisMark needs access to your camera to capture secure photos. Please enable it in Settings.",
+                preferredStyle: .alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            })
+            
+            self.present(alert, animated: true)
         }
     }
     
+    // MARK: -  Actions
+    
+    @IBAction func rotateButtonTapped(_ sender: Any) {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.error)
+        rotateCameraButton.shake()
+    }
+    
+    @IBAction func captureButtonTapped(_ sender: Any) {
+        
+        let flashView = UIView(frame: self.livePreviewView.bounds)
+        flashView.backgroundColor = .black
+        flashView.alpha = 1.0
+        
+        self.livePreviewView.addSubview(flashView)
+        
+        #warning("Learn what is 'completion'")
+        UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
+            flashView.alpha = 0.0
+        }, completion: { _ in
+            flashView.removeFromSuperview()
+        })
+        
+        #warning("Learn Animate")
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
+            self.captureButton.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: {
+                self.captureButton.transform = .identity
+            })
+        })
+        
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
+        
+        viewModel.capturePhoto()
+    }
+    
+    @IBAction func thumbnailTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "SingleImageViewStoryboard", bundle: nil)
+            guard let navVC = storyboard.instantiateInitialViewController() as? UINavigationController,
+                  let singleImageVC = navVC.topViewController as? SingleImageViewViewController else {
+                print("Could not instantiate SingleImageViewViewController")
+                return
+            }
+            
+            let allImages = PhotoManager.shared.allImages()
+            
+            singleImageVC.images = allImages
+            singleImageVC.startingIndex = 0
+            
+            // Push SingleImageViewViewController onto the existing nav stack
+            // by setting our nav controller's view controllers directly.
+            // This gives the back chevron automatically.
+            guard let navController = navigationController else { return }
+            navController.setNavigationBarHidden(false, animated: false)
+            navController.pushViewController(singleImageVC, animated: true)
+    }
+    
+    @IBAction func signatureNumberButtonTapped(_ sender: Any) {
+//        let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
+//        guard let navVC = storyboard.instantiateInitialViewController() as? UINavigationController,
+//        let signatureVC = navVC.topViewController as? SignaturesViewController else {
+//            print ("Could not instantiate SignaturesViewController")
+//            return
+//        }
+//        
+//        guard let navController = navigationController else { return }
+//        navController.setNavigationBarHidden(false, animated: false)
+//        navController.pushViewController(signatureVC, animated: true)
+    }
 }
 
 extension CameraViewController: CameraControlPillDelegate {
     
     func didTapFlashButton() -> String {
-        cameraManager.toggleFlash()
+        viewModel.toggleFlash()
     }
     
     func didTapAspectRatioButton() {
-        let newAspectRatio = cameraManager.changeAspectRatio()
+        let newAspectRatio = viewModel.changeAspectRatio()
         applyAspectRatio(newAspectRatio)
     }
-}
-
-extension CameraViewController {
-    
-    // Shows the last captured image on launch if photos already exist.
-    private func loadExistingThumbnail() {
-        guard let lastImage = PhotoManager.shared.allImages().first else { return }
-        updateThumbnail(with: lastImage)
-    }
-    
-    // Updates the thumbnail circle with a newly captured image.
-    // Called from cameraManager(_:didCapture:) after a successful save.
-    func updateThumbnail(with image: Image) {
-        guard let thumbURL = image.thumbnailFileURL,
-              let uiImage  = UIImage(contentsOfFile: thumbURL.path) else { return }
-        
-        DispatchQueue.main.async {
-            self.thumbnailButton.alpha = 0
-            self.thumbnailButton.setImage(uiImage, for: .normal)
-            self.thumbnailButton.imageView?.contentMode   = .scaleAspectFill
-            self.thumbnailButton.imageView?.clipsToBounds = true
-            self.thumbnailButton.backgroundColor          = .clear
-            
-            UIView.animate(withDuration: 0.3) {
-                self.thumbnailButton.alpha = 1
-            }
-        }
-    }
-    
 }
