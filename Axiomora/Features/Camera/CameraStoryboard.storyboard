@@ -42,6 +42,7 @@
                                                 </buttonConfiguration>
                                                 <connections>
                                                     <action selector="signatureNumberButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="aJK-0c-TNf"/>
+                                                    <segue destination="vgY-Ng-vf8" kind="show" id="3UN-Ra-VJA"/>
                                                 </connections>
                                             </button>
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="db7-91-BSr" customClass="CameraControlPill" customModule="Axiomora" customModuleProvider="target">
@@ -224,12 +225,33 @@
             </objects>
             <point key="canvasLocation" x="2935.1145038167938" y="191.5492957746479"/>
         </scene>
+        <!--SingleImageViewViewController-->
+        <scene sceneID="RTA-ha-nfp">
+            <objects>
+                <viewControllerPlaceholder storyboardName="SingleImageViewStoryboard" referencedIdentifier="SingleImageViewViewController" id="6kf-PM-cIe" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="bpP-fe-f5W"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Cxo-0b-Ull" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3676" y="301"/>
+        </scene>
+        <!--SignaturesViewController-->
+        <scene sceneID="xNJ-fO-m6y">
+            <objects>
+                <viewControllerPlaceholder storyboardName="SignaturesStoryboard" referencedIdentifier="SignaturesViewController" id="vgY-Ng-vf8" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="qSB-md-wk3"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YNd-pn-HsV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3677" y="192"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="nM5-L2-ocm">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="aiF-Cb-4yE" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="aiF-Cb-4yE" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3AV-b4-T5a">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

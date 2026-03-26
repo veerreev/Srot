@@ -93,11 +93,11 @@ class CameraViewController: UIViewController {
         // Setup signatureNumberButton theme
         let symbolConfigSignatureButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .small)
         let imageSignatureButton = UIImage(systemName: "plus", withConfiguration: symbolConfigSignatureButton)
-        Theme.Button.applyGlassStyle(to: signatureNumberButton, image: imageSignatureButton, color: .primaryBlue)
+        Theme.Button.applyGlassStyle(to: signatureNumberButton, image: imageSignatureButton, color: Theme.Colors.systemBlue)
         
         // Setup captureButtonBackground theme
         let glassEffect = UIGlassEffect()
-        glassEffect.tintColor = .secondaryBlue
+        glassEffect.tintColor = Theme.Colors.blobBlue
         captureButtonBackground.effect = glassEffect
         captureButtonBackground.layer.cornerRadius = captureButtonBackground.frame.height / 2
         
@@ -109,7 +109,7 @@ class CameraViewController: UIViewController {
         Theme.Button.applyGlassStyle(to: rotateCameraButton, image: imageRotateButton)
         
         // Setup captureButton theme
-        captureButton.configuration?.baseBackgroundColor = .white
+        captureButton.configuration?.baseBackgroundColor = Theme.Colors.white
     }
     
     private func setupTabBarAppearance() {
@@ -152,7 +152,7 @@ class CameraViewController: UIViewController {
             self.thumbnailButton.setImage(uiImage, for: .normal)
             self.thumbnailButton.imageView?.contentMode   = .scaleAspectFill
             self.thumbnailButton.imageView?.clipsToBounds = true
-            self.thumbnailButton.backgroundColor          = .clear
+            self.thumbnailButton.backgroundColor          = Theme.Colors.clear
             
             UIView.animate(withDuration: 0.3) {
                 self.thumbnailButton.alpha = 1
@@ -237,7 +237,7 @@ class CameraViewController: UIViewController {
     @IBAction func captureButtonTapped(_ sender: Any) {
         
         let flashView = UIView(frame: self.livePreviewView.bounds)
-        flashView.backgroundColor = .black
+        flashView.backgroundColor = Theme.Colors.black
         flashView.alpha = 1.0
         
         self.livePreviewView.addSubview(flashView)

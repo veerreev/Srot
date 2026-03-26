@@ -10,7 +10,7 @@
         <!--Single Image View View Controller-->
         <scene sceneID="SlU-Ob-Z3S">
             <objects>
-                <viewController storyboardIdentifier="SingleImageViewViewController" id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="G0d-V3-Fgr">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -105,7 +105,7 @@
         <!--Navigation Controller-->
         <scene sceneID="gun-Ae-3Vf">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="euI-8F-E05" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="SingleImageViewViewController" automaticallyAdjustsScrollViewInsets="NO" id="euI-8F-E05" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="nDR-QR-3vU">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>

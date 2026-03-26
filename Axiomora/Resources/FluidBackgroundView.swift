@@ -31,8 +31,8 @@ class FluidBackgroundView: UIView {
     }
 
     private func setupGradients() {
-        let colors1 = [UIColor.blobBlue.cgColor, UIColor.clear.cgColor]
-        let colors2 = [UIColor.blobPurple.cgColor, UIColor.clear.cgColor]
+        let colors1 = [Theme.Colors.blobBlue.cgColor, Theme.Colors.clear.cgColor]
+        let colors2 = [Theme.Colors.blobPurple.cgColor, Theme.Colors.clear.cgColor]
         
         blob1.type = .radial
         blob1.colors = colors1

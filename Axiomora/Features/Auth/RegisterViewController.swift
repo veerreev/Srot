@@ -73,16 +73,16 @@ class RegisterViewController: BaseAuthViewController {
         triggerErrorFeedback(on: registerButton)
         
         if usernameTextField.text!.isEmpty {
-            usernameTextField.placeholderColor = .translucentRed
+            usernameTextField.placeholderColor = Theme.Colors.secondaryRed
         }
         if emailTextField.text!.isEmpty {
-            emailTextField.placeholderColor = .translucentRed
+            emailTextField.placeholderColor = Theme.Colors.secondaryRed
         }
         if passwordTextField.text!.isEmpty {
-            passwordTextField.placeholderColor = .translucentRed
+            passwordTextField.placeholderColor = Theme.Colors.secondaryRed
         }
         if confirmPasswordTextField.text!.isEmpty {
-            confirmPasswordTextField.placeholderColor = .translucentRed
+            confirmPasswordTextField.placeholderColor = Theme.Colors.secondaryRed
         }
     }
 
@@ -102,7 +102,7 @@ class RegisterViewController: BaseAuthViewController {
     
     private func setupUI(for button: UIButton) {
         
-        Theme.Button.applyGlassStyle(to: registerButton, title: "Register", color: .primaryBlue)
+        Theme.Button.applyGlassStyle(to: registerButton, title: "Register", color: Theme.Colors.systemBlue)
     }
     
 }

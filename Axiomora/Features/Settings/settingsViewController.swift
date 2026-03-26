@@ -21,11 +21,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.delegate = self
         tableView.dataSource = self
 
-        tableView.backgroundColor = .clear
+        tableView.backgroundColor = Theme.Colors.clear
         tableView.separatorStyle = .none
         tableView.tableFooterView = UIView()
 
-        view.backgroundColor = .black
+        view.backgroundColor = Theme.Colors.black
 
 //        let blur = UIBlurEffect(style: .systemUltraThinMaterialDark)
 //        let blurView = UIVisualEffectView(effect: blur)

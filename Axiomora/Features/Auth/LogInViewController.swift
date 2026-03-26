@@ -65,10 +65,10 @@ class LogInViewController: BaseAuthViewController {
         triggerErrorFeedback(on: logInButton)
         
         if usernameTextField.text?.isEmpty == true {
-            usernameTextField.placeholderColor = .translucentRed
+            usernameTextField.placeholderColor = Theme.Colors.secondaryRed
         }
         if passwordTextField.text?.isEmpty == true {
-            passwordTextField.placeholderColor = .translucentRed
+            passwordTextField.placeholderColor = Theme.Colors.secondaryRed
         }
     }
     
@@ -87,7 +87,7 @@ class LogInViewController: BaseAuthViewController {
     
     private func setupUI(for button: UIButton) {
         
-        Theme.Button.applyGlassStyle(to: logInButton, title: "Log In", color: .primaryBlue)
+        Theme.Button.applyGlassStyle(to: logInButton, title: "Log In", color: Theme.Colors.systemBlue)
     }
     
 }
