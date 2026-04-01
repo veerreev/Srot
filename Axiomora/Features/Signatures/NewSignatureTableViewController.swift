@@ -28,7 +28,7 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == socialSectionIndex {
-            return socialHandles.count + 1
+            return socialHandles.count == 11 ? socialHandles.count : socialHandles.count + 1
         }
         return super.tableView(tableView, numberOfRowsInSection: section)
     }
@@ -93,12 +93,17 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
     }
     
     private func addNewRow() {
-        if socialHandles.count <= 10 {
-            socialHandles.append((platform: .instagram, handle: ""))
-            
-            let targetIndexPath = IndexPath(row: socialHandles.count - 1, section: socialSectionIndex)
-            tableView.insertRows(at: [targetIndexPath], with: .fade)
+        let oldAddSocialPath = IndexPath(row: socialHandles.count, section: socialSectionIndex)
+        
+        socialHandles.append((platform: .instagram, handle: ""))
+        let newRowPath = IndexPath(row: socialHandles.count - 1, section: socialSectionIndex)
+        
+        tableView.beginUpdates()
+        tableView.insertRows(at: [newRowPath], with: .fade)
+        if socialHandles.count == 11 {
+            tableView.deleteRows(at: [oldAddSocialPath], with: .fade)
         }
+        tableView.endUpdates()
     }
 }
 
@@ -144,9 +149,16 @@ extension NewSignatureTableViewController: SocialLinkCellDelegate {
     func didTapMinusButton(on cell: SocialLinkCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         
+        let wasAtLimit = socialHandles.count == 11
         socialHandles.remove(at: indexPath.row)
+        let newAddSocialPath = IndexPath(row: socialHandles.count, section: socialSectionIndex)
         
+        tableView.beginUpdates()
         tableView.deleteRows(at: [indexPath], with: .left)
+        if wasAtLimit {
+            tableView.insertRows(at: [newAddSocialPath], with: .fade)
+        }
+        tableView.endUpdates()
     }
 }
 
