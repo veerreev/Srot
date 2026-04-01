@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SocialLinkCell" id="XkZ-rg-3rQ" customClass="SocialLinkCell" customModule="Axiomora" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="353" height="51"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XkZ-rg-3rQ" id="1yO-WH-TjE">
+                <rect key="frame" x="0.0" y="0.0" width="353" height="51"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qq9-aB-TQn">
+                        <rect key="frame" x="16" y="15.666666666666664" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="hP9-p3-bpE"/>
+                            <constraint firstAttribute="height" constant="20" id="xja-MA-hGC"/>
+                        </constraints>
+                        <color key="tintColor" systemColor="systemRedColor"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="filled" cornerStyle="capsule">
+                            <imageReference key="image" image="minus" catalog="system" symbolScale="small"/>
+                        </buttonConfiguration>
+                        <connections>
+                            <action selector="minusButtonTapped:" destination="XkZ-rg-3rQ" eventType="touchUpInside" id="8mp-Mr-Ng7"/>
+                        </connections>
+                    </button>
+                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Social" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" id="3id-og-32C">
+                        <rect key="frame" x="153" y="14.666666666666664" width="184" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="186" id="5hv-wF-v3c"/>
+                        </constraints>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <textInputTraits key="textInputTraits"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="placeholderColor">
+                                <color key="value" name="tertiary_blue"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </textField>
+                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JN3-Dt-mt9">
+                        <rect key="frame" x="48" y="50" width="307" height="1"/>
+                        <color key="backgroundColor" name="primary_blue"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="G8P-Xl-YPy"/>
+                        </constraints>
+                    </view>
+                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I1F-Fb-Coo">
+                        <rect key="frame" x="36" y="8" width="117" height="35"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="Instagram" imagePadding="6">
+                            <imageReference key="image" image="chevron.right" catalog="system" symbolScale="small"/>
+                            <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
+                        </buttonConfiguration>
+                        <connections>
+                            <action selector="platformButtonTapped:" destination="XkZ-rg-3rQ" eventType="touchUpInside" id="oI4-0f-hWn"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" name="secondary_blue"/>
+                <constraints>
+                    <constraint firstItem="I1F-Fb-Coo" firstAttribute="centerY" secondItem="1yO-WH-TjE" secondAttribute="centerY" id="1Dm-Ci-8lz"/>
+                    <constraint firstItem="3id-og-32C" firstAttribute="leading" secondItem="I1F-Fb-Coo" secondAttribute="trailing" id="EQp-B2-OVZ"/>
+                    <constraint firstItem="3id-og-32C" firstAttribute="centerY" secondItem="1yO-WH-TjE" secondAttribute="centerY" id="QHT-9Q-T1I"/>
+                    <constraint firstAttribute="trailing" secondItem="3id-og-32C" secondAttribute="trailing" constant="16" id="UWD-xi-RFB"/>
+                    <constraint firstItem="JN3-Dt-mt9" firstAttribute="leading" secondItem="1yO-WH-TjE" secondAttribute="leading" constant="48" id="jEl-uO-z0K"/>
+                    <constraint firstItem="qq9-aB-TQn" firstAttribute="centerY" secondItem="1yO-WH-TjE" secondAttribute="centerY" id="nJh-68-g7u"/>
+                    <constraint firstAttribute="bottom" secondItem="JN3-Dt-mt9" secondAttribute="bottom" id="out-lh-w1c"/>
+                    <constraint firstAttribute="trailing" secondItem="JN3-Dt-mt9" secondAttribute="trailing" id="oyY-PL-41f"/>
+                    <constraint firstItem="qq9-aB-TQn" firstAttribute="leading" secondItem="1yO-WH-TjE" secondAttribute="leading" constant="16" id="pyC-2u-Nyg"/>
+                    <constraint firstItem="I1F-Fb-Coo" firstAttribute="leading" secondItem="qq9-aB-TQn" secondAttribute="trailing" id="yW7-MV-Vpp"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="handleTextField" destination="3id-og-32C" id="zVy-6P-ICs"/>
+                <outlet property="platformButton" destination="I1F-Fb-Coo" id="S5g-hU-orz"/>
+            </connections>
+            <point key="canvasLocation" x="139.69465648854961" y="153.16901408450704"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="chevron.right" catalog="system" width="97" height="128"/>
+        <image name="minus" catalog="system" width="128" height="26"/>
+        <namedColor name="primary_blue">
+            <color red="0.15294117647058825" green="0.20000000000000001" blue="0.32549019607843138" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="secondary_blue">
+            <color red="0.11764705882352941" green="0.15294117647058825" blue="0.24705882352941178" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="tertiary_blue">
+            <color red="0.44313725490196076" green="0.52549019607843139" blue="0.73333333333333328" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

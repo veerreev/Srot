@@ -202,7 +202,7 @@
 				DEVELOPMENT_TEAM = 75TRFG7HW8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = App/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Srota;
+				INFOPLIST_KEY_CFBundleDisplayName = SignIt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Access to your camera is needed to capture images and embed secure watermarks.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Access to your photo library is needed to save your securely watermarked images to the gallery.";
@@ -239,7 +239,7 @@
 				DEVELOPMENT_TEAM = 75TRFG7HW8;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = App/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Srota;
+				INFOPLIST_KEY_CFBundleDisplayName = SignIt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Access to your camera is needed to capture images and embed secure watermarks.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Access to your photo library is needed to save your securely watermarked images to the gallery.";
