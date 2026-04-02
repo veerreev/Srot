@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="SignatureCell" customModule="Axiomora" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="691"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="691"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="8DT-oi-70b" userLabel="Root Stack View">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="691"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SmL-Y2-t9b" userLabel="Title Label">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="33.666666666666664"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QKb-8z-FYP">
+                                <rect key="frame" x="0.0" y="33.666666666666686" width="414" height="657.33333333333326"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="6E7-np-Ls6">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="657.33333333333326"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="45f-VD-FaF" userLabel="Data Stack View">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="657.33333333333337"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NJe-WQ-3sn" userLabel="Personal Info Stack View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="507.33333333333331"/>
+                                                    <subviews>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="eox-el-tE7" userLabel="Name Stack View">
+                                                            <rect key="frame" x="0.0" y="0.0" width="414" height="57.333333333333336"/>
+                                                        </stackView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="XPY-ta-ylg" userLabel="Email Stack View">
+                                                            <rect key="frame" x="0.0" y="57.333333333333343" width="414" height="50"/>
+                                                        </stackView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="cUS-WU-ucZ" userLabel="Portfolio Stack View">
+                                                            <rect key="frame" x="0.0" y="107.33333333333334" width="414" height="200.00000000000003"/>
+                                                        </stackView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="BH8-vY-fBy" userLabel="Copyright Stack View">
+                                                            <rect key="frame" x="0.0" y="307.33333333333331" width="414" height="200"/>
+                                                        </stackView>
+                                                    </subviews>
+                                                </stackView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="doR-Gf-aky" userLabel="Social Stack View">
+                                                    <rect key="frame" x="0.0" y="507.33333333333326" width="414" height="150"/>
+                                                </stackView>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="45f-VD-FaF" secondAttribute="bottom" id="KTp-ld-hpL"/>
+                                        <constraint firstItem="45f-VD-FaF" firstAttribute="top" secondItem="6E7-np-Ls6" secondAttribute="top" id="Kg3-1F-7AP"/>
+                                        <constraint firstItem="45f-VD-FaF" firstAttribute="leading" secondItem="6E7-np-Ls6" secondAttribute="leading" id="j3n-ha-IHE"/>
+                                        <constraint firstAttribute="trailing" secondItem="45f-VD-FaF" secondAttribute="trailing" id="vec-cW-MOb"/>
+                                    </constraints>
+                                </view>
+                                <blurEffect style="regular"/>
+                            </visualEffectView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="8DT-oi-70b" secondAttribute="trailing" id="8TH-Rx-O5W"/>
+                <constraint firstItem="8DT-oi-70b" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="8iJ-5i-9pd"/>
+                <constraint firstAttribute="bottom" secondItem="8DT-oi-70b" secondAttribute="bottom" id="fUd-ph-JLy"/>
+                <constraint firstItem="8DT-oi-70b" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="wuS-gC-Rus"/>
+            </constraints>
+            <size key="customSize" width="414" height="691"/>
+            <point key="canvasLocation" x="648.85496183206101" y="241.90140845070422"/>
+        </collectionViewCell>
+    </objects>
+</document>

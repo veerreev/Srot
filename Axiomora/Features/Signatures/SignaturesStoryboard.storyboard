@@ -5,6 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -19,7 +20,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ae0-Yr-hxg" customClass="FluidBackgroundView" customModule="Axiomora" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="bxP-zW-KPu">
+                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="bxP-zW-KPu">
                                         <rect key="frame" x="45.333333333333343" y="378" width="302.33333333333326" height="96"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Signatures" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u9z-OT-Da0">
@@ -47,6 +48,27 @@
                                             <constraint firstItem="Tch-N9-lO6" firstAttribute="top" secondItem="uAN-BV-V8Y" secondAttribute="bottom" constant="8" id="e6p-Aw-5S4"/>
                                         </constraints>
                                     </stackView>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="njC-7B-diL">
+                                        <rect key="frame" x="0.0" y="172" width="393" height="594"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ch1-y4-IaV">
+                                            <size key="itemSize" width="369" height="594"/>
+                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        </collectionViewFlowLayout>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="jnS-3o-r9W">
+                                                <rect key="frame" x="0.0" y="0.0" width="369" height="594"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="HBS-Om-8fk">
+                                                    <rect key="frame" x="0.0" y="0.0" width="369" height="594"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </collectionViewCellContentView>
+                                                <size key="customSize" width="369" height="594"/>
+                                            </collectionViewCell>
+                                        </cells>
+                                    </collectionView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -58,26 +80,41 @@
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="njC-7B-diL" secondAttribute="bottom" id="3xL-fQ-gUu"/>
                             <constraint firstAttribute="trailing" secondItem="Ae0-Yr-hxg" secondAttribute="trailing" id="6If-xh-pkN"/>
                             <constraint firstAttribute="bottom" secondItem="Ae0-Yr-hxg" secondAttribute="bottom" id="Etb-4M-gGK"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="njC-7B-diL" secondAttribute="trailing" id="RvP-fC-KTY"/>
                             <constraint firstItem="Ae0-Yr-hxg" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="V6j-P9-a5u"/>
+                            <constraint firstItem="njC-7B-diL" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="hLl-xd-DCi"/>
+                            <constraint firstItem="njC-7B-diL" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="iYh-Zh-ojc"/>
                             <constraint firstItem="Ae0-Yr-hxg" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="yZW-Xl-aTW"/>
                         </constraints>
                     </view>
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Signatures" id="eiY-Jb-qFM">
-                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="aIX-GA-wXa">
+                    <toolbarItems>
+                        <barButtonItem image="pencil" catalog="system" id="8k6-8w-bnJ">
+                            <color key="tintColor" systemColor="systemBlueColor"/>
+                        </barButtonItem>
+                        <barButtonItem title="Select" id="ODv-hq-ATc">
+                            <color key="tintColor" systemColor="systemBlueColor"/>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Ebj-SB-pHV"/>
+                        <barButtonItem style="plain" systemItem="add" id="aIX-GA-wXa">
                             <color key="tintColor" systemColor="systemBlueColor"/>
                             <connections>
                                 <action selector="addButtonTapped:" destination="Y6W-OH-hqX" id="5rd-J0-kea"/>
                             </connections>
                         </barButtonItem>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Signatures" id="eiY-Jb-qFM">
+                        <barButtonItem key="rightBarButtonItem" image="ellipsis" catalog="system" id="l0Z-bH-tUu"/>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="addBarButtonItem" destination="aIX-GA-wXa" id="Jji-ad-NbB"/>
-                        <outlet property="createNewSignatureButton" destination="Tch-N9-lO6" id="gAp-rr-V7f"/>
+                        <outlet property="editButton" destination="8k6-8w-bnJ" id="oYr-JN-2bR"/>
+                        <outlet property="emptySignaturesStackView" destination="bxP-zW-KPu" id="2bD-YE-s1E"/>
+                        <outlet property="selectButton" destination="ODv-hq-ATc" id="prF-QM-Pfi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -86,6 +123,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="ellipsis" catalog="system" width="128" height="37"/>
+        <image name="pencil" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
