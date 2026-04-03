@@ -19,6 +19,16 @@ class SignaturesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        signatures = SignatureManager.shared.loadSignatures()
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(
+            UINib(nibName: "SignatureCell", bundle: nil),
+            forCellWithReuseIdentifier: "SignatureCell"
+        
+        )
         setupUI()
     }
     
@@ -32,11 +42,30 @@ class SignaturesViewController: UIViewController {
     }
     
     private func setupUI() {
+        
         addBarButtonItem.style = .prominent
-//        selectButton.style = .prominent
+        collectionView.setCollectionViewLayout(generateLayout(), animated: true)
         updateEmptyState()
+        
     }
     
+    private func generateLayout() -> UICollectionViewLayout {
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.85), heightDimension: .fractionalHeight(1))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        
+        section.interGroupSpacing = 16
+        
+        section.orthogonalScrollingBehavior = .groupPagingCentered
+        
+        return UICollectionViewCompositionalLayout(section: section)
+        
+    }
     private func updateEmptyState() {
         
         let isEmpty = signatures.isEmpty
@@ -50,6 +79,10 @@ class SignaturesViewController: UIViewController {
     private func launchNewSignatureViewController(sourceView: UIView?) {
         let storyboard = UIStoryboard(name: "NewSignatureStoryboard", bundle: nil)
         let navController = storyboard.instantiateInitialViewController() as! UINavigationController
+        
+        if let newSigVC = navController.viewControllers.first as? NewSignatureTableViewController {
+            newSigVC.delegate = self
+        }
         
         navController.preferredTransition = .zoom(options: .init()) { context in
             sourceView
@@ -66,7 +99,9 @@ extension SignaturesViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SignatureCell", for: indexPath) as! SignatureCell
+        cell.configure(with: signatures[indexPath.item])
+        return cell
     }
     
 }
@@ -75,6 +110,21 @@ extension SignaturesViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+    }
+    
+}
+
+extension SignaturesViewController: NewSignatureDelegate {
+    
+    func didCreateSignature(_ signature: Signature) {
+        
+        signatures.append(signature)
+        
+        let newIndex = IndexPath(item: signatures.count - 1, section: 0)
+        collectionView.insertItems(at: [newIndex])
+        updateEmptyState()
+        
+        SignatureManager.shared.saveSignatures(signatures)
     }
     
 }

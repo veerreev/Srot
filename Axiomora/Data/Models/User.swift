@@ -7,8 +7,8 @@
 
 import Foundation
 
-// Encodable is used for efficient conversion to JSON
-struct User: Encodable {
+// Codable is used for efficient conversion to JSON
+struct User: Codable {
     
     let userId: String
     let username: String

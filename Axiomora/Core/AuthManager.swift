@@ -25,7 +25,9 @@ class AuthManager {
     var currentUser: User?
     
     // Because the class has a private init(), no other part of the app can create a new instance of AuthManager using AuthManager(). This forces every view controller to use AuthManager.shared.
-    private init() {}
+    private init() {
+        self.currentUser = loadUserFromDefaults()
+    }
     
     /*
      Computed property that reads the persisted login state from disk.
@@ -50,7 +52,7 @@ class AuthManager {
             MockDataBase.shared.registeredUsers[newUser.userId] = newUser
             
             self.currentUser = newUser
-            
+            self.saveUserToDefaults(newUser)
             
             /*
              Persist the session to disk so the app remembers this user across kills and relaunches.
@@ -67,9 +69,6 @@ class AuthManager {
             
         })
     }
-}
-
-extension AuthManager {
     
     func pseudoLogin(username: String, password: String, completion: @escaping (Bool) -> Void) {
         
@@ -83,7 +82,7 @@ extension AuthManager {
             }
             
             self.currentUser = user
-            
+            self.saveUserToDefaults(user)
             //same persistence as pseudoRegister
             let defaults = UserDefaults.standard
             defaults.set(true, forKey: UDKeys.isLoggedIn)
@@ -94,6 +93,20 @@ extension AuthManager {
             completion(true)
             
         })
+    }
+    
+    private func saveUserToDefaults(_ user: User) {
+        if let encoded = try? JSONEncoder().encode(user) {
+            UserDefaults.standard.set(encoded, forKey: "currentUser")
+        }
+    }
+
+    private func loadUserFromDefaults() -> User? {
+        guard let data = UserDefaults.standard.data(forKey: "currentUser"),
+              let user = try? JSONDecoder().decode(User.self, from: data) else {
+            return nil
+        }
+        return user
     }
     
 }

@@ -116,6 +116,8 @@ struct Signature: Codable, Identifiable {
     var socialHandles: [SocialHandle]
     
     var shouldIncludeLocation: Bool
+    
+    var notes: String?
 //    Moved this part to image model, because this is different for each image
 //
 //    // Metadata - Added at the exact moment of capture

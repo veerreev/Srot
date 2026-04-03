@@ -5,7 +5,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
-        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -48,8 +47,8 @@
                                             <constraint firstItem="Tch-N9-lO6" firstAttribute="top" secondItem="uAN-BV-V8Y" secondAttribute="bottom" constant="8" id="e6p-Aw-5S4"/>
                                         </constraints>
                                     </stackView>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="njC-7B-diL">
-                                        <rect key="frame" x="0.0" y="172" width="393" height="594"/>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="njC-7B-diL">
+                                        <rect key="frame" x="0.0" y="188" width="393" height="546"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ch1-y4-IaV">
                                             <size key="itemSize" width="369" height="594"/>
@@ -57,17 +56,7 @@
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
-                                        <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="jnS-3o-r9W">
-                                                <rect key="frame" x="0.0" y="0.0" width="369" height="594"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="HBS-Om-8fk">
-                                                    <rect key="frame" x="0.0" y="0.0" width="369" height="594"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                </collectionViewCellContentView>
-                                                <size key="customSize" width="369" height="594"/>
-                                            </collectionViewCell>
-                                        </cells>
+                                        <cells/>
                                     </collectionView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -80,12 +69,12 @@
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="njC-7B-diL" secondAttribute="bottom" id="3xL-fQ-gUu"/>
+                            <constraint firstItem="njC-7B-diL" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="16" id="3vc-ss-ZPH"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="njC-7B-diL" secondAttribute="bottom" constant="32" id="3xL-fQ-gUu"/>
                             <constraint firstAttribute="trailing" secondItem="Ae0-Yr-hxg" secondAttribute="trailing" id="6If-xh-pkN"/>
                             <constraint firstAttribute="bottom" secondItem="Ae0-Yr-hxg" secondAttribute="bottom" id="Etb-4M-gGK"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="njC-7B-diL" secondAttribute="trailing" id="RvP-fC-KTY"/>
                             <constraint firstItem="Ae0-Yr-hxg" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="V6j-P9-a5u"/>
-                            <constraint firstItem="njC-7B-diL" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="hLl-xd-DCi"/>
                             <constraint firstItem="njC-7B-diL" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="iYh-Zh-ojc"/>
                             <constraint firstItem="Ae0-Yr-hxg" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="yZW-Xl-aTW"/>
                         </constraints>
@@ -94,7 +83,8 @@
                         <barButtonItem image="pencil" catalog="system" id="8k6-8w-bnJ">
                             <color key="tintColor" systemColor="systemBlueColor"/>
                         </barButtonItem>
-                        <barButtonItem title="Select" id="ODv-hq-ATc">
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="daI-Po-zba"/>
+                        <barButtonItem title="Set as current" id="ODv-hq-ATc">
                             <color key="tintColor" systemColor="systemBlueColor"/>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Ebj-SB-pHV"/>
@@ -112,6 +102,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="addBarButtonItem" destination="aIX-GA-wXa" id="Jji-ad-NbB"/>
+                        <outlet property="collectionView" destination="njC-7B-diL" id="HYJ-ek-s8I"/>
                         <outlet property="editButton" destination="8k6-8w-bnJ" id="oYr-JN-2bR"/>
                         <outlet property="emptySignaturesStackView" destination="bxP-zW-KPu" id="2bD-YE-s1E"/>
                         <outlet property="selectButton" destination="ODv-hq-ATc" id="prF-QM-Pfi"/>

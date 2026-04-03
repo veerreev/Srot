@@ -24,6 +24,7 @@ struct Theme {
         static let blobPurple: UIColor = UIColor.blobPurple
         
         /// Others
+        static let signatureBackground: UIColor = UIColor.primaryPurple
         static let textFieldBackground: UIColor = UIColor.textFieldBackground
         static let white: UIColor = .white
         static let clear: UIColor = .clear
