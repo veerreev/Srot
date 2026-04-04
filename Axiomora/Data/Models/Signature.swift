@@ -94,6 +94,7 @@ struct Signature: Codable, Identifiable {
     let id: String // This ID will eventually map to the ML Watermark, Output like: "550e8400-e29b-41d4-a716-446655440000"
     let creatorID: String // Maps back to AuthManager.shared.currentUser.userId
     var title: String // e.g.: "Professional Profile" or "Personal"
+    var isCurrent: Bool = false
     
     // Identity
     var displayName: String // The name of the user
