@@ -48,6 +48,7 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         cameraManager.startSession()
+        loadExistingThumbnail()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -158,26 +159,7 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         cameraManager.capturePhoto()
     }
     
-    @IBAction func thumbnailTapped(_ sender: Any) {
-        let storyboard = UIStoryboard(name: "SingleImageViewStoryboard", bundle: nil)
-            guard let navVC = storyboard.instantiateInitialViewController() as? UINavigationController,
-                  let singleImageVC = navVC.topViewController as? SingleImageViewViewController else {
-                print("Could not instantiate SingleImageViewViewController")
-                return
-            }
-            
-            let allImages = PhotoManager.shared.allImages()
-            
-            singleImageVC.images = allImages
-            singleImageVC.startingIndex = 0
-            
-            // Push SingleImageViewViewController onto the existing nav stack
-            // by setting our nav controller's view controllers directly.
-            // This gives the back chevron automatically.
-            guard let navController = navigationController else { return }
-            navController.setNavigationBarHidden(false, animated: false)
-            navController.pushViewController(singleImageVC, animated: true)
-    }
+    
     
     @IBAction func signatureNumberButtonTapped(_ sender: Any) {
         let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
@@ -191,6 +173,23 @@ class CameraViewController: UIViewController, CameraManagerDelegate {
         navController.setNavigationBarHidden(false, animated: false)
         navController.pushViewController(signatureVC, animated: true)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if segue.identifier == "segue_to_singleImage" {
+                // Check if the destination is our SingleImageViewViewController
+                if let singleImageVC = segue.destination as? SingleImageViewViewController {
+                    
+                    // 1. Fetch the latest images from the manager
+                    let allImages = PhotoManager.shared.allImages()
+                    
+                    // 2. Pass the data!
+                    singleImageVC.images = allImages
+                    
+                    // 3. Tapping the camera thumbnail always opens the most recent photo (index 0)
+                    singleImageVC.startingIndex = 0
+                }
+            }
+        }
 }
 
 /// Preview Layer
@@ -292,27 +291,49 @@ extension CameraViewController {
     
     // Shows the last captured image on launch if photos already exist.
     private func loadExistingThumbnail() {
-        guard let lastImage = PhotoManager.shared.allImages().first else { return }
-        updateThumbnail(with: lastImage)
-    }
+            // Check if there is at least one image
+            guard let lastImage = PhotoManager.shared.allImages().first else {
+                // IF NO IMAGES EXIST: Clear the background image from the configuration
+                DispatchQueue.main.async {
+                    var config = self.thumbnailButton.configuration ?? UIButton.Configuration.plain()
+                    config.background.image = nil
+                    self.thumbnailButton.configuration = config
+                }
+                return
+            }
+            
+            // IF IMAGES EXIST: Proceed as normal
+            updateThumbnail(with: lastImage)
+        }
     
     // Updates the thumbnail circle with a newly captured image.
     // Called from cameraManager(_:didCapture:) after a successful save.
     func updateThumbnail(with image: Image) {
-        guard let thumbURL = image.thumbnailFileURL,
-              let uiImage  = UIImage(contentsOfFile: thumbURL.path) else { return }
+        guard let thumbURL = image.thumbnailFileURL, let uiImage = UIImage(contentsOfFile: thumbURL.path) else { return }
         
         DispatchQueue.main.async {
             self.thumbnailButton.alpha = 0
-            self.thumbnailButton.setImage(uiImage, for: .normal)
-            self.thumbnailButton.imageView?.contentMode   = .scaleAspectFill
-            self.thumbnailButton.imageView?.clipsToBounds = true
-            self.thumbnailButton.backgroundColor          = .clear
+            
+            // 1. Grab the existing configuration
+            var config = self.thumbnailButton.configuration ?? UIButton.Configuration.plain()
+            
+            // 2. Apply the image to the BACKGROUND, not the foreground
+            config.background.image = uiImage
+            
+            // 3. Tell the background exactly how to scale it!
+            // .scaleAspectFill is what the native Apple Camera uses (fills the circle completely)
+            // If you truly want to see the ENTIRE rectangle with empty space on the sides, change this to .scaleAspectFit
+            config.background.imageContentMode = .scaleAspectFill
+            
+            // 4. Re-apply the updated configuration
+            self.thumbnailButton.configuration = config
+            
+            // 5. Clear out any old foreground images so they don't overlap
+            self.thumbnailButton.setImage(nil, for: .normal)
             
             UIView.animate(withDuration: 0.3) {
                 self.thumbnailButton.alpha = 1
             }
         }
     }
-    
 }

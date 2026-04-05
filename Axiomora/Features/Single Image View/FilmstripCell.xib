@@ -39,7 +39,6 @@
             </constraints>
             <connections>
                 <outlet property="imageView" destination="Kjj-U1-TJe" id="zsn-ak-qnu"/>
-                <outlet property="selectionBorderView" destination="6Zw-xx-aOK" id="9tu-Xd-X7f"/>
             </connections>
             <point key="canvasLocation" x="-232" y="154"/>
         </collectionViewCell>

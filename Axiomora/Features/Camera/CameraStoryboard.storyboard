@@ -12,7 +12,7 @@
         <!--Camera View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" customClass="CameraViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CameraViewController" id="Y6W-OH-hqX" customClass="CameraViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -110,10 +110,10 @@
                                                 </constraints>
                                                 <buttonConfiguration key="configuration" style="plain" cornerStyle="capsule"/>
                                                 <connections>
-                                                    <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
+                                                    <segue destination="ot2-DB-Ixx" kind="show" identifier="segue_to_singleImage" id="Nnd-Yd-xva"/>
                                                 </connections>
                                             </button>
-                                            <tabBar contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
+                                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
                                                 <rect key="frame" x="50" y="0.0" width="245" height="72"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -204,6 +204,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Ek5-Wl-a7i"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="cameraControlPillVisualEffectView" destination="db7-91-BSr" id="eR1-Ti-rsB"/>
                         <outlet property="captureButton" destination="ME6-tp-Nvf" id="J3a-ut-jlc"/>
@@ -221,12 +222,23 @@
             </objects>
             <point key="canvasLocation" x="2935.1145038167938" y="191.5492957746479"/>
         </scene>
+        <!--SingleImageViewStoryboard-->
+        <scene sceneID="yrV-j4-2yV">
+            <objects>
+                <viewControllerPlaceholder storyboardName="SingleImageViewStoryboard" id="ot2-DB-Ixx" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Cus-Mq-uWR"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fVo-oJ-ckw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2731" y="641"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="nM5-L2-ocm">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="aiF-Cb-4yE" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="aiF-Cb-4yE" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3AV-b4-T5a">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="3AV-b4-T5a">
+                        <rect key="frame" x="0.0" y="118" width="393" height="106"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

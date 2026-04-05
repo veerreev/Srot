@@ -11,14 +11,9 @@ class FilmstripCell: UICollectionViewCell {
     
     static let reuseIdentifier = "FilmstripCell"
 
-    @IBOutlet var selectionBorderView: UIView!
     @IBOutlet var imageView: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Border width and color can't be set in the xib so they're configured here once after the nib loads.
-        selectionBorderView.layer.borderColor = UIColor.white.cgColor
-        selectionBorderView.layer.borderWidth = 2
-        selectionBorderView.isHidden = true
     }
             
     // Called by SingleImageViewViewController for each filmstrip cell.
@@ -31,8 +26,8 @@ class FilmstripCell: UICollectionViewCell {
         }
                 
         // Dim non-selected cells so the current image stands out clearly.
-        contentView.alpha = isSelected ? 1.0 : 0.6
-        selectionBorderView.isHidden = !isSelected
+        contentView.alpha = isSelected ? 1.0 : 0.3
+        //selectionBorderView.isHidden = !isSelected
     }
             
 }
