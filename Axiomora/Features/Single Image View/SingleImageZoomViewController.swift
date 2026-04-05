@@ -99,7 +99,7 @@ class SingleImageZoomViewController: UIViewController {
             scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
         } else {
             // Zoom in to a comfortable level: 3x the "fit on screen" size
-            let targetScale = scrollView.minimumZoomScale * 3.0
+            let targetScale = scrollView.minimumZoomScale * 2.0
                 
             let tapPoint = gesture.location(in: imageView)
             let zoomRect = zoomRect(for: targetScale, centeredAt: tapPoint)

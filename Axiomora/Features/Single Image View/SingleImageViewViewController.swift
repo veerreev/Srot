@@ -87,14 +87,26 @@ class SingleImageViewViewController: UIViewController {
     }
         
     private func setupFilmstrip() {
-        filmstripCollectionView.dataSource = self
-        filmstripCollectionView.delegate = self
-            
-        filmstripCollectionView.register(
-            UINib(nibName: "FilmstripCell", bundle: nil),
-            forCellWithReuseIdentifier: FilmstripCell.reuseIdentifier
-        )
-    }
+            filmstripCollectionView.dataSource = self
+            filmstripCollectionView.delegate = self
+            filmstripCollectionView.backgroundColor = .clear
+            filmstripCollectionView.showsHorizontalScrollIndicator = false
+                
+            filmstripCollectionView.register(
+                UINib(nibName: "FilmstripCell", bundle: nil),
+                forCellWithReuseIdentifier: FilmstripCell.reuseIdentifier
+            )
+                
+            // THE FIX: Grab the Storyboard layout and force it to stop estimating sizes
+            if let layout = filmstripCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+                layout.estimatedItemSize = .zero // This completely kills the elongation bug!
+                layout.itemSize = CGSize(width: 60, height: 60)
+                layout.minimumLineSpacing = 4
+                layout.sectionInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
+            }
+                
+            scrollFilmstrip(to: startingIndex, animated: false)
+        }
         
     // Shows the nav bar, filmstrip and toolbar together with a fade-in,
     private func showChrome() {
