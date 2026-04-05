@@ -48,7 +48,7 @@
                                         </constraints>
                                     </stackView>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceHorizontal="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="njC-7B-diL">
-                                        <rect key="frame" x="0.0" y="188" width="393" height="523.66666666666663"/>
+                                        <rect key="frame" x="0.0" y="188" width="393" height="531.66666666666663"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ch1-y4-IaV">
                                             <size key="itemSize" width="369" height="594"/>
@@ -59,7 +59,8 @@
                                         <cells/>
                                     </collectionView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="szE-mh-vUp">
-                                        <rect key="frame" x="131.33333333333337" y="735.66666666666663" width="130.66666666666663" height="34.333333333333371"/>
+                                        <rect key="frame" x="131.33333333333337" y="743.66666666666663" width="130.66666666666663" height="34.333333333333371"/>
+                                        <size key="titleShadowOffset" width="8" height="7"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="tinted" title="Set as current" cornerStyle="capsule"/>
                                         <connections>
@@ -84,7 +85,7 @@
                             <constraint firstAttribute="bottom" secondItem="Ae0-Yr-hxg" secondAttribute="bottom" id="Etb-4M-gGK"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="njC-7B-diL" secondAttribute="trailing" id="RvP-fC-KTY"/>
                             <constraint firstItem="Ae0-Yr-hxg" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="V6j-P9-a5u"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="szE-mh-vUp" secondAttribute="bottom" constant="-4" id="gYf-4J-ejd"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="szE-mh-vUp" secondAttribute="bottom" constant="-12" id="gYf-4J-ejd"/>
                             <constraint firstItem="njC-7B-diL" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="iYh-Zh-ojc"/>
                             <constraint firstItem="Ae0-Yr-hxg" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="yZW-Xl-aTW"/>
                         </constraints>
@@ -125,13 +126,13 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

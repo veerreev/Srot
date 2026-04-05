@@ -284,19 +284,6 @@ class CameraViewController: UIViewController {
             navController.setNavigationBarHidden(false, animated: false)
             navController.pushViewController(singleImageVC, animated: true)
     }
-    
-    @IBAction func signatureNumberButtonTapped(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
-//        guard let navVC = storyboard.instantiateInitialViewController() as? UINavigationController,
-//        let signatureVC = navVC.topViewController as? SignaturesViewController else {
-//            print ("Could not instantiate SignaturesViewController")
-//            return
-//        }
-//        
-//        guard let navController = navigationController else { return }
-//        navController.setNavigationBarHidden(false, animated: false)
-//        navController.pushViewController(signatureVC, animated: true)
-    }
 }
 
 extension CameraViewController: CameraControlPillDelegate {

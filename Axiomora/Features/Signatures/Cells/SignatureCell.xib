@@ -75,19 +75,15 @@
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Gw-0m-wT0">
-                                    <rect key="frame" x="360.33333333333331" y="12" width="49.666666666666686" height="34.333333333333336"/>
-                                    <state key="normal" title="Button"/>
-                                    <buttonConfiguration key="configuration" style="plain">
-                                        <imageReference key="image" image="chevron.forward.circle" catalog="system" symbolScale="large"/>
-                                        <color key="baseForegroundColor" systemColor="separatorColor"/>
-                                    </buttonConfiguration>
-                                </button>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kIY-8W-Md2">
+                                    <rect key="frame" x="372.33333333333331" y="15.333333333333332" width="25.666666666666686" height="25.666666666666654"/>
+                                    <color key="tintColor" systemColor="separatorColor"/>
+                                    <imageReference key="image" image="chevron.forward.circle" catalog="system" symbolScale="large"/>
+                                </imageView>
                             </subviews>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="lLd-SJ-710" secondAttribute="trailing" constant="16" id="2ig-8T-sNw"/>
                                 <constraint firstItem="iTg-ok-t65" firstAttribute="leading" secondItem="6E7-np-Ls6" secondAttribute="leading" constant="16" id="Ido-kK-MhI"/>
-                                <constraint firstItem="5Gw-0m-wT0" firstAttribute="top" secondItem="6E7-np-Ls6" secondAttribute="top" constant="12" id="K78-RY-DTz"/>
                                 <constraint firstItem="kfq-34-t39" firstAttribute="top" secondItem="Zv8-tJ-eGl" secondAttribute="bottom" constant="12" id="Kus-5U-OII"/>
                                 <constraint firstAttribute="trailing" secondItem="iTg-ok-t65" secondAttribute="trailing" constant="16" id="LvU-6O-WGo"/>
                                 <constraint firstItem="kfq-34-t39" firstAttribute="leading" secondItem="6E7-np-Ls6" secondAttribute="leading" constant="16" id="Mx1-Er-03X"/>
@@ -97,10 +93,11 @@
                                 <constraint firstItem="lLd-SJ-710" firstAttribute="top" secondItem="kfq-34-t39" secondAttribute="bottom" constant="16" id="Yb9-8x-JzX"/>
                                 <constraint firstItem="Zv8-tJ-eGl" firstAttribute="leading" secondItem="6E7-np-Ls6" secondAttribute="leading" constant="16" id="bf4-JB-zh4"/>
                                 <constraint firstItem="NJe-WQ-3sn" firstAttribute="top" secondItem="Gav-09-4Oe" secondAttribute="bottom" constant="8" id="cmV-IK-duq"/>
-                                <constraint firstAttribute="trailing" secondItem="5Gw-0m-wT0" secondAttribute="trailing" constant="4" id="eh9-fd-Us3"/>
+                                <constraint firstAttribute="trailing" secondItem="kIY-8W-Md2" secondAttribute="trailing" constant="16" id="cqC-Wy-yfb"/>
                                 <constraint firstItem="Gav-09-4Oe" firstAttribute="leading" secondItem="6E7-np-Ls6" secondAttribute="leading" constant="16" id="gJ4-dO-Gog"/>
                                 <constraint firstItem="Gav-09-4Oe" firstAttribute="top" secondItem="6E7-np-Ls6" secondAttribute="top" constant="16" id="gYE-5s-Pt7"/>
                                 <constraint firstAttribute="bottom" secondItem="iTg-ok-t65" secondAttribute="bottom" constant="16" id="gh1-DR-aRe"/>
+                                <constraint firstItem="kIY-8W-Md2" firstAttribute="top" secondItem="6E7-np-Ls6" secondAttribute="top" constant="18" id="hJa-Nz-CVD"/>
                                 <constraint firstItem="lLd-SJ-710" firstAttribute="leading" secondItem="6E7-np-Ls6" secondAttribute="leading" constant="16" id="jZp-Cs-0ed"/>
                                 <constraint firstItem="iTg-ok-t65" firstAttribute="top" secondItem="lLd-SJ-710" secondAttribute="bottom" constant="16" id="kZn-b3-LNy"/>
                                 <constraint firstAttribute="trailing" secondItem="NJe-WQ-3sn" secondAttribute="trailing" constant="16" id="zot-ud-kiJ"/>

@@ -42,7 +42,6 @@
                                                     <imageReference key="image" image="plus" catalog="system" symbolScale="small"/>
                                                 </buttonConfiguration>
                                                 <connections>
-                                                    <action selector="signatureNumberButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="aJK-0c-TNf"/>
                                                     <segue destination="vgY-Ng-vf8" kind="show" id="3UN-Ra-VJA"/>
                                                 </connections>
                                             </button>
@@ -225,7 +224,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2935.1145038167938" y="191.5492957746479"/>
+            <point key="canvasLocation" x="3861.8320610687019" y="191.5492957746479"/>
         </scene>
         <!--SingleImageViewViewController-->
         <scene sceneID="RTA-ha-nfp">
@@ -235,7 +234,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cxo-0b-Ull" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3676" y="301"/>
+            <point key="canvasLocation" x="4601.5267175572517" y="300.7042253521127"/>
         </scene>
         <!--SignaturesViewController-->
         <scene sceneID="xNJ-fO-m6y">
@@ -245,12 +244,13 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YNd-pn-HsV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3677" y="192"/>
+            <point key="canvasLocation" x="4603.0534351145034" y="191.5492957746479"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Item-->
         <scene sceneID="nM5-L2-ocm">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="aiF-Cb-4yE" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="PJQ-XF-lhc"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3AV-b4-T5a">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
@@ -266,7 +266,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CX4-3j-bt2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2008.3969465648854" y="191.5492957746479"/>
+            <point key="canvasLocation" x="2935.1145038167938" y="191.5492957746479"/>
         </scene>
     </scenes>
     <resources>

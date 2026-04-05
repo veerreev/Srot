@@ -28,12 +28,9 @@ class SignatureCell: UICollectionViewCell {
     // MARK: - Private state
 
     private var storedSocialHandles: [SocialHandle] = []
-    /// Tracks the last width we built the stack for, so we only
-    /// rebuild when the stack actually changes size.
     private var lastBuiltWidth: CGFloat = 0
 
     private let iconSize: CGFloat = 30
-    /// Estimated rendered width of the "+N" overflow label (generous upper bound).
     private let overflowLabelEstimatedWidth: CGFloat = 40
 
     // MARK: - Lifecycle
@@ -65,7 +62,15 @@ class SignatureCell: UICollectionViewCell {
         rebuildSocialStack()
     }
 
-    // MARK: - Public configure
+    func buildSocialStackIfNeeded() {
+        let currentWidth = socialStack1.bounds.width
+        guard currentWidth > 0,
+              !storedSocialHandles.isEmpty,
+              abs(currentWidth - lastBuiltWidth) > 0.5 else { return }
+
+        lastBuiltWidth = currentWidth
+        rebuildSocialStack()
+    }
 
     func configure(with signature: Signature) {
 
@@ -182,6 +187,7 @@ class SignatureCell: UICollectionViewCell {
         visualEffectViewBackground.effect = glassEffect
         visualEffectViewBackground.layer.cornerRadius = 32
         glassEffect.tintColor = .primaryPurple
+
     }
 
     func setAsCurrentSignature(_ isCurrent: Bool) {

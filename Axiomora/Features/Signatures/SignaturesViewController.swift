@@ -18,15 +18,12 @@ class SignaturesViewController: UIViewController {
     private var signatures: [Signature] = []
     private var currentCenteredIndex: Int = 0
 
-    // MARK: - Lifecycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         signatures = SignatureManager.shared.loadSignatures()
 
-        // If there's exactly one signature and nothing is marked current,
-        // auto-select it — the app requires at least one selection at all times.
+        // If there's exactly one signature and nothing is marked current auto select it the app requires at least one selection at all times.
         autoSelectIfNeeded()
 
         collectionView.dataSource = self
@@ -80,23 +77,15 @@ class SignaturesViewController: UIViewController {
         return UICollectionViewCompositionalLayout(section: section)
     }
 
-    // MARK: - State helpers
-
-    /// Hides the empty-state stack and shows/hides action buttons appropriately.
     private func updateEmptyState() {
         let isEmpty = signatures.isEmpty
         emptySignaturesStackView.isHidden = !isEmpty
         deleteButton.isHidden = isEmpty
         collectionView.isHidden = isEmpty
 
-        // Select button has its own, finer-grained visibility rule.
         updateSelectButtonVisibility()
     }
-
-    /// The "Set as Selected" button is visible only when:
-    ///   • There are at least two signatures (a single signature is always
-    ///     selected automatically and the user cannot deselect it), AND
-    ///   • The currently centred signature is NOT already the selected one.
+    
     private func updateSelectButtonVisibility() {
         guard !signatures.isEmpty,
               currentCenteredIndex < signatures.count else {
@@ -106,14 +95,14 @@ class SignaturesViewController: UIViewController {
         
         let shouldShow = !signatures[currentCenteredIndex].isCurrent && signatures.count > 1
         
+        #warning("Learn animate")
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5) {
             self.selectButton.alpha = shouldShow ? 1 : 0
             self.selectButton.transform = shouldShow ? .identity : CGAffineTransform(translationX: 0, y: 8)
         }
     }
 
-    /// Ensures that exactly one signature is marked as current whenever the
-    /// list is non-empty. Saves to disk only when a change is actually made.
+    // Ensures that exactly one signature is marked as current whenever the list is non-empty. Saves to disk only when a change is actually made.
     private func autoSelectIfNeeded() {
         guard !signatures.isEmpty else { return }
 
@@ -152,6 +141,28 @@ class SignaturesViewController: UIViewController {
     }
 
     @IBAction func deleteButtonTapped(_ sender: Any) {
+        let alert = UIAlertController(
+            title: "Delete Signature?",
+            message: "You will not be able to extract information from the images which contain this signature.",
+            preferredStyle: .actionSheet
+        )
+
+        alert.addAction(UIAlertAction(title: "Delete Signature", style: .destructive) { [weak self] _ in
+            self?.deleteCurrentSignature()
+        })
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        // Anchor the popover to the bar button item (required on iPad,
+        // but good practice on iPhone too)
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = deleteButton
+        }
+
+        present(alert, animated: true)
+    }
+
+    private func deleteCurrentSignature() {
         let indexToDelete = currentCenteredIndex
         guard indexToDelete < signatures.count else { return }
 
@@ -160,14 +171,10 @@ class SignaturesViewController: UIViewController {
 
         collectionView.deleteItems(at: [IndexPath(item: indexToDelete, section: 0)])
 
-        // Clamp the tracked index so it never goes out of bounds.
         currentCenteredIndex = min(indexToDelete, max(0, signatures.count - 1))
 
-        // If deletion left us with a single signature that isn't selected,
-        // auto-select it — we always need at least one current signature.
         autoSelectIfNeeded()
 
-        // Refresh any visible cells so their highlight state is accurate.
         collectionView.indexPathsForVisibleItems.forEach { indexPath in
             guard let cell = collectionView.cellForItem(at: indexPath) as? SignatureCell else { return }
             cell.setAsCurrentSignature(indexPath.item == currentCenteredIndex && signatures[indexPath.item].isCurrent)
@@ -175,9 +182,8 @@ class SignaturesViewController: UIViewController {
 
         updateEmptyState()
     }
-
+    
     @IBAction func setAsCurrentTapped(_ sender: Any) {
-        print("🟢 setAsCurrentTapped fired, centeredIndex: \(currentCenteredIndex)")
         guard currentCenteredIndex < signatures.count else { return }
 
         // Deselect all, then select the centred one.
@@ -192,7 +198,6 @@ class SignaturesViewController: UIViewController {
             cell.setAsCurrentSignature(indexPath.item == currentCenteredIndex)
         }
 
-        // The centred card is now selected → hide the button immediately.
         updateSelectButtonVisibility()
     }
 }
@@ -217,6 +222,12 @@ extension SignaturesViewController: UICollectionViewDataSource {
 extension SignaturesViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) { }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? SignatureCell else { return }
+        cell.layoutIfNeeded()           // forces Auto Layout to resolve subview frames NOW
+        cell.buildSocialStackIfNeeded() // measures socialStack1.bounds.width — now accurate
+    }
 }
 
 // MARK: - NewSignatureDelegate
