@@ -12,7 +12,7 @@
         <!--Camera View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" customClass="CameraViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CameraViewController" id="Y6W-OH-hqX" customClass="CameraViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -101,8 +101,8 @@
                                             </visualEffectView>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="IJr-7p-w6x" userLabel="Bottom Controls Stack View">
-                                        <rect key="frame" x="24" y="768" width="345" height="72"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="IJr-7p-w6x" userLabel="Bottom Controls Stack View">
+                                        <rect key="frame" x="24" y="766" width="345" height="50"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRr-uY-0ZM" userLabel="Gallery Button">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -117,20 +117,17 @@
                                                     <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
                                                 </connections>
                                             </button>
-                                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N4p-u9-P45">
-                                                <rect key="frame" x="50" y="0.0" width="245" height="72"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUx-BC-hHN">
+                                                <rect key="frame" x="92.666666666666686" y="8" width="160" height="34.333333333333336"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="72" id="4ps-D5-fbN"/>
-                                                    <constraint firstAttribute="width" constant="245" id="gUz-kp-Qse"/>
-                                                    <constraint firstAttribute="width" constant="280" id="lvg-9U-LS1"/>
+                                                    <constraint firstAttribute="width" constant="160" id="AkW-oM-ctZ"/>
                                                 </constraints>
-                                                <items>
-                                                    <tabBarItem title="CAMERA" image="Camera" id="kig-dD-XXy"/>
-                                                    <tabBarItem title="VERIFY" id="cyt-fr-aZW"/>
-                                                </items>
-                                                <tabBarAppearance key="scrollEdgeAppearance"/>
-                                            </tabBar>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="Verify"/>
+                                                <connections>
+                                                    <action selector="verifyButtonChanged:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="bhU-Z3-Ue5"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9oL-DO-DY9" userLabel="Rotate Camera Button">
                                                 <rect key="frame" x="295" y="0.0" width="50" height="50"/>
                                                 <constraints>
@@ -152,7 +149,7 @@
                                         </subviews>
                                     </stackView>
                                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IPn-ia-8kF" userLabel="Capture Button Background Visual Effect View">
-                                        <rect key="frame" x="155.66666666666666" y="666" width="82" height="82"/>
+                                        <rect key="frame" x="155.66666666666666" y="664" width="82" height="82"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="inG-oq-Rw0">
                                             <rect key="frame" x="0.0" y="0.0" width="82" height="82"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -194,7 +191,7 @@
                                     <constraint firstAttribute="trailing" secondItem="J1F-Eh-a5L" secondAttribute="trailing" constant="16" id="eXa-zt-b41"/>
                                     <constraint firstAttribute="trailing" secondItem="IJr-7p-w6x" secondAttribute="trailing" constant="24" id="izw-dL-YHU"/>
                                     <constraint firstItem="IJr-7p-w6x" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" constant="24" id="jFA-Qa-KHt"/>
-                                    <constraint firstAttribute="bottom" secondItem="IJr-7p-w6x" secondAttribute="bottom" constant="12" id="m6f-Gs-9jc"/>
+                                    <constraint firstAttribute="bottom" secondItem="IJr-7p-w6x" secondAttribute="bottom" constant="36" id="m6f-Gs-9jc"/>
                                     <constraint firstItem="IPn-ia-8kF" firstAttribute="centerX" secondItem="pOB-QB-rPk" secondAttribute="centerX" id="uNb-2Q-lR0"/>
                                 </constraints>
                             </view>
@@ -218,23 +215,24 @@
                         <outlet property="livePreviewView" destination="pqg-Tc-ze0" id="jmZ-zZ-Zgf"/>
                         <outlet property="rotateCameraButton" destination="9oL-DO-DY9" id="pkG-zj-p5n"/>
                         <outlet property="signatureNumberButton" destination="BbR-tt-HSx" id="bwV-EC-AeG"/>
-                        <outlet property="tabBar" destination="N4p-u9-P45" id="tqT-LF-0s7"/>
                         <outlet property="thumbnailButton" destination="rRr-uY-0ZM" id="h89-Fu-3G9"/>
+                        <outlet property="verifyButton" destination="HUx-BC-hHN" id="gxc-5D-vgb"/>
+                        <segue destination="4fy-9f-Dcr" kind="show" identifier="showVerify" id="Tgo-Wq-ejh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3861.8320610687019" y="191.5492957746479"/>
         </scene>
-        <!--SingleImageViewViewController-->
-        <scene sceneID="RTA-ha-nfp">
+        <!--VerifyViewController-->
+        <scene sceneID="5Rc-Rk-jYM">
             <objects>
-                <viewControllerPlaceholder storyboardName="SingleImageViewStoryboard" referencedIdentifier="SingleImageViewViewController" id="6kf-PM-cIe" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="bpP-fe-f5W"/>
+                <viewControllerPlaceholder storyboardName="VerifyStoryboard" referencedIdentifier="VerifyViewController" id="4fy-9f-Dcr" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="fnr-6c-qKQ"/>
                 </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Cxo-0b-Ull" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FfK-Ow-ZBL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4601.5267175572517" y="300.7042253521127"/>
+            <point key="canvasLocation" x="4598" y="397"/>
         </scene>
         <!--SignaturesViewController-->
         <scene sceneID="xNJ-fO-m6y">
@@ -244,13 +242,13 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YNd-pn-HsV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4603.0534351145034" y="191.5492957746479"/>
+            <point key="canvasLocation" x="4623" y="34"/>
         </scene>
-        <!--Item-->
+        <!--Camera-->
         <scene sceneID="nM5-L2-ocm">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="aiF-Cb-4yE" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="PJQ-XF-lhc"/>
+                    <tabBarItem key="tabBarItem" title="Camera" id="PJQ-XF-lhc"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3AV-b4-T5a">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
@@ -270,7 +268,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Camera" width="128" height="128"/>
         <image name="arrow.trianglehead.2.counterclockwise.rotate.90" catalog="system" width="128" height="117"/>
         <image name="aspectratio" catalog="system" width="128" height="93"/>
         <image name="bolt.slash.fill" catalog="system" width="98" height="128"/>

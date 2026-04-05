@@ -13,13 +13,13 @@ class CameraViewController: UIViewController {
     @IBOutlet var thumbnailButton: UIButton!
     @IBOutlet weak var livePreviewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var livePreviewAspectRatioConstraint: NSLayoutConstraint!
-    @IBOutlet weak var tabBar: UITabBar!
     @IBOutlet weak var rotateCameraButton: UIButton!
     @IBOutlet weak var livePreviewView: UIView!
     @IBOutlet weak var captureButtonBackground: UIVisualEffectView!
     @IBOutlet weak var captureButton: UIButton!
     @IBOutlet weak var signatureNumberButton: UIButton!
     @IBOutlet weak var cameraControlPillVisualEffectView: CameraControlPill!
+    @IBOutlet weak var verifyButton: UIButton!
     
     private let viewModel = CameraViewModel()
     private var previewLayer: AVCaptureVideoPreviewLayer?
@@ -100,37 +100,16 @@ class CameraViewController: UIViewController {
         glassEffect.tintColor = Theme.Colors.blobBlue
         captureButtonBackground.effect = glassEffect
         captureButtonBackground.layer.cornerRadius = captureButtonBackground.frame.height / 2
-        
-        setupTabBarAppearance()
-        
+                
         // Setup rotateButton theme
         let symbolConfigRotateButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .large)
         let imageRotateButton = UIImage(systemName: "arrow.trianglehead.2.counterclockwise.rotate.90", withConfiguration: symbolConfigRotateButton)
         Theme.Button.applyGlassStyle(to: rotateCameraButton, image: imageRotateButton)
         
+        Theme.Button.applyGlassStyle(to: verifyButton, title: "Verify", color: .systemBlue)
+        
         // Setup captureButton theme
         captureButton.configuration?.baseBackgroundColor = Theme.Colors.white
-    }
-    
-    private func setupTabBarAppearance() {
-        let appearance = UITabBarAppearance()
-        
-        let textAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: 15, weight: .semibold)
-        ]
-        
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = textAttributes
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = textAttributes
-        
-        let verticalOffset = UIOffset(horizontal: 0, vertical: -5)
-        appearance.stackedLayoutAppearance.normal.titlePositionAdjustment = verticalOffset
-        appearance.stackedLayoutAppearance.selected.titlePositionAdjustment = verticalOffset
-        
-        tabBar.standardAppearance = appearance
-        
-        if let items = tabBar.items, !items.isEmpty {
-            tabBar.selectedItem = items[0]
-        }
     }
     
     // MARK: - Thumbnail
@@ -283,6 +262,10 @@ class CameraViewController: UIViewController {
             guard let navController = navigationController else { return }
             navController.setNavigationBarHidden(false, animated: false)
             navController.pushViewController(singleImageVC, animated: true)
+    }
+    
+    @IBAction func verifyButtonChanged(_ sender: UIButton) {
+            performSegue(withIdentifier: "showVerify", sender: nil)
     }
 }
 
