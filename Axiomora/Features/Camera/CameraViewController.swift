@@ -106,7 +106,8 @@ class CameraViewController: UIViewController {
         let imageRotateButton = UIImage(systemName: "arrow.trianglehead.2.counterclockwise.rotate.90", withConfiguration: symbolConfigRotateButton)
         Theme.Button.applyGlassStyle(to: rotateCameraButton, image: imageRotateButton)
         
-        Theme.Button.applyGlassStyle(to: verifyButton, title: "Verify", color: .systemBlue)
+        // verify button theme
+//        Theme.Button.applyGlassStyle(to: verifyButton, title: "Verify", color: .systemBlue)
         
         // Setup captureButton theme
         captureButton.configuration?.baseBackgroundColor = Theme.Colors.white
@@ -208,8 +209,6 @@ class CameraViewController: UIViewController {
     // MARK: -  Actions
     
     @IBAction func rotateButtonTapped(_ sender: Any) {
-        let generator = UINotificationFeedbackGenerator()
-        generator.notificationOccurred(.error)
         rotateCameraButton.shake()
     }
     

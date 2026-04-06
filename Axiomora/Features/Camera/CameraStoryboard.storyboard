@@ -117,17 +117,6 @@
                                                     <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUx-BC-hHN">
-                                                <rect key="frame" x="92.666666666666686" y="8" width="160" height="34.333333333333336"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="160" id="AkW-oM-ctZ"/>
-                                                </constraints>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="filled" title="Verify"/>
-                                                <connections>
-                                                    <action selector="verifyButtonChanged:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="bhU-Z3-Ue5"/>
-                                                </connections>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9oL-DO-DY9" userLabel="Rotate Camera Button">
                                                 <rect key="frame" x="295" y="0.0" width="50" height="50"/>
                                                 <constraints>
@@ -149,7 +138,7 @@
                                         </subviews>
                                     </stackView>
                                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IPn-ia-8kF" userLabel="Capture Button Background Visual Effect View">
-                                        <rect key="frame" x="155.66666666666666" y="664" width="82" height="82"/>
+                                        <rect key="frame" x="155.66666666666666" y="656" width="82" height="82"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="inG-oq-Rw0">
                                             <rect key="frame" x="0.0" y="0.0" width="82" height="82"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -180,18 +169,29 @@
                                         </constraints>
                                         <blurEffect style="regular"/>
                                     </visualEffectView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUx-BC-hHN">
+                                        <rect key="frame" x="20" y="73.666666666666671" width="68" height="31"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="tinted" title="Verify" cornerStyle="capsule" buttonSize="medium" titleAlignment="automatic"/>
+                                        <connections>
+                                            <action selector="verifyButtonChanged:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="bhU-Z3-Ue5"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="pqg-Tc-ze0" secondAttribute="trailing" id="J1c-Ck-BHJ"/>
+                                    <constraint firstItem="HUx-BC-hHN" firstAttribute="height" secondItem="BbR-tt-HSx" secondAttribute="height" id="T0a-EF-WeZ"/>
+                                    <constraint firstItem="HUx-BC-hHN" firstAttribute="centerY" secondItem="J1F-Eh-a5L" secondAttribute="centerY" id="Thg-ct-Vkv"/>
                                     <constraint firstItem="J1F-Eh-a5L" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="72" id="VXz-ve-Ffo"/>
                                     <constraint firstItem="pqg-Tc-ze0" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" id="a8l-AX-DV7"/>
                                     <constraint firstItem="pqg-Tc-ze0" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="116" id="c5w-Pq-cEg"/>
-                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="top" secondItem="IPn-ia-8kF" secondAttribute="bottom" constant="20" id="e2r-Ik-jMW"/>
+                                    <constraint firstItem="IJr-7p-w6x" firstAttribute="top" secondItem="IPn-ia-8kF" secondAttribute="bottom" constant="28" id="e2r-Ik-jMW"/>
                                     <constraint firstAttribute="trailing" secondItem="J1F-Eh-a5L" secondAttribute="trailing" constant="16" id="eXa-zt-b41"/>
                                     <constraint firstAttribute="trailing" secondItem="IJr-7p-w6x" secondAttribute="trailing" constant="24" id="izw-dL-YHU"/>
                                     <constraint firstItem="IJr-7p-w6x" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" constant="24" id="jFA-Qa-KHt"/>
                                     <constraint firstAttribute="bottom" secondItem="IJr-7p-w6x" secondAttribute="bottom" constant="36" id="m6f-Gs-9jc"/>
+                                    <constraint firstItem="HUx-BC-hHN" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" constant="20" id="t6T-DC-qWo"/>
                                     <constraint firstItem="IPn-ia-8kF" firstAttribute="centerX" secondItem="pOB-QB-rPk" secondAttribute="centerX" id="uNb-2Q-lR0"/>
                                 </constraints>
                             </view>
@@ -273,7 +273,7 @@
         <image name="bolt.slash.fill" catalog="system" width="98" height="128"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

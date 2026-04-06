@@ -3,12 +3,13 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Verify View Controller-->
+        <!--Verify-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
                 <viewController storyboardIdentifier="VerifyViewController" id="Y6W-OH-hqX" customClass="VerifyViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
@@ -18,7 +19,80 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lee-Du-yeW" customClass="FluidBackgroundView" customModule="Axiomora" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <subviews>
+                                    <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TPt-zI-fHx">
+                                        <rect key="frame" x="0.0" y="142.66666666666663" width="393" height="524"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="l5S-SF-nlK">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="524"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Rwc-Ib-CDO">
+                                                    <rect key="frame" x="39.333333333333343" y="204.00000000000003" width="314.33333333333326" height="116.33333333333334"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="taQ-n7-uiu">
+                                                            <rect key="frame" x="117.33333333333331" y="-0.6666666666666643" width="80" height="81.333333333333314"/>
+                                                            <color key="tintColor" systemColor="systemBlueColor"/>
+                                                            <gestureRecognizers/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="taQ-n7-uiu" secondAttribute="height" multiplier="1:1" id="62v-tu-PPX"/>
+                                                                <constraint firstAttribute="height" constant="80" id="GJ0-2e-heP"/>
+                                                            </constraints>
+                                                            <imageReference key="image" image="plus" catalog="system" symbolScale="large"/>
+                                                        </imageView>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Upload an image to verify its source." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X4V-I2-g4g">
+                                                            <rect key="frame" x="18.666666666666657" y="96" width="277" height="20.333333333333329"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <gestureRecognizers/>
+                                            <constraints>
+                                                <constraint firstItem="Rwc-Ib-CDO" firstAttribute="centerX" secondItem="l5S-SF-nlK" secondAttribute="centerX" id="3Lr-d3-yhi"/>
+                                                <constraint firstItem="Rwc-Ib-CDO" firstAttribute="centerY" secondItem="l5S-SF-nlK" secondAttribute="centerY" id="I0a-Vb-Hft"/>
+                                                <constraint firstItem="Rwc-Ib-CDO" firstAttribute="width" secondItem="l5S-SF-nlK" secondAttribute="width" multiplier="0.8" id="uwR-33-5RZ"/>
+                                            </constraints>
+                                            <connections>
+                                                <outletCollection property="gestureRecognizers" destination="qg1-KM-75E" appends="YES" id="CPZ-5Y-ldH"/>
+                                            </connections>
+                                        </view>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <gestureRecognizers/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="TPt-zI-fHx" secondAttribute="height" multiplier="3:4" id="9b4-Az-IcN"/>
+                                        </constraints>
+                                        <blurEffect style="systemChromeMaterial"/>
+                                    </visualEffectView>
+                                    <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bhU-ne-d5p">
+                                        <rect key="frame" x="0.0" y="142.66666666666663" width="393" height="524"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="bhU-ne-d5p" secondAttribute="height" multiplier="3:4" id="vOr-pX-RoK"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RDR-n2-0jI">
+                                        <rect key="frame" x="29.333333333333343" y="765.66666666666663" width="334.33333333333326" height="34.333333333333371"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="Verify"/>
+                                        <connections>
+                                            <action selector="verifyButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="4za-KF-1Zf"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="RDR-n2-0jI" secondAttribute="bottom" constant="52" id="8PS-Ah-rtr"/>
+                                    <constraint firstItem="bhU-ne-d5p" firstAttribute="centerX" secondItem="lee-Du-yeW" secondAttribute="centerX" id="BZd-bP-8YG"/>
+                                    <constraint firstItem="bhU-ne-d5p" firstAttribute="width" secondItem="lee-Du-yeW" secondAttribute="width" id="CTu-yH-cOn"/>
+                                    <constraint firstItem="TPt-zI-fHx" firstAttribute="width" secondItem="lee-Du-yeW" secondAttribute="width" id="FW6-mo-uiK"/>
+                                    <constraint firstItem="RDR-n2-0jI" firstAttribute="width" secondItem="TPt-zI-fHx" secondAttribute="width" multiplier="0.85" id="a5d-bg-tkH"/>
+                                    <constraint firstItem="bhU-ne-d5p" firstAttribute="centerY" secondItem="lee-Du-yeW" secondAttribute="centerY" multiplier="0.95" id="nKr-qV-GJl"/>
+                                    <constraint firstItem="TPt-zI-fHx" firstAttribute="centerY" secondItem="lee-Du-yeW" secondAttribute="centerY" multiplier="0.95" id="pJV-6B-Xke"/>
+                                    <constraint firstItem="TPt-zI-fHx" firstAttribute="centerX" secondItem="lee-Du-yeW" secondAttribute="centerX" id="pvw-5n-Nul"/>
+                                    <constraint firstItem="RDR-n2-0jI" firstAttribute="centerX" secondItem="lee-Du-yeW" secondAttribute="centerX" id="uXb-cb-wrs"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
@@ -30,15 +104,35 @@
                             <constraint firstAttribute="bottom" secondItem="lee-Du-yeW" secondAttribute="bottom" id="xfI-GA-GAa"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Verify" id="ECO-X2-TaM"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="imageView" destination="bhU-ne-d5p" id="CoQ-9a-e3J"/>
+                        <outlet property="imageViewAspectRatio" destination="vOr-pX-RoK" id="SXa-65-Rzs"/>
+                        <outlet property="infoMessageLabel" destination="X4V-I2-g4g" id="rK7-wR-hmh"/>
+                        <outlet property="plusImage" destination="taQ-n7-uiu" id="Xyy-vl-10S"/>
+                        <outlet property="uploadViewBackground" destination="l5S-SF-nlK" id="M0U-DZ-n2G"/>
+                        <outlet property="uploadVisualEffectBackground" destination="TPt-zI-fHx" id="Bq9-Wq-fuh"/>
+                        <outlet property="verifyButton" destination="RDR-n2-0jI" id="aoh-Gu-CN7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="qg1-KM-75E">
+                    <connections>
+                        <action selector="uploadViewTapped:" destination="Y6W-OH-hqX" id="WNY-35-W0z"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="552" y="225"/>
+            <point key="canvasLocation" x="-1463" y="37"/>
         </scene>
     </scenes>
     <resources>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

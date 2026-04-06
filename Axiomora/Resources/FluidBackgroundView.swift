@@ -38,13 +38,13 @@ class FluidBackgroundView: UIView {
         blob1.colors = colors1
         blob1.startPoint = CGPoint(x: 0.5, y: 0.5)
         blob1.endPoint = CGPoint(x: 1, y: 1)
-        layer.addSublayer(blob1)
+        layer.insertSublayer(blob1, at: 0)
         
         blob2.type = .radial
         blob2.colors = colors2
         blob2.startPoint = CGPoint(x: 0.5, y: 0.5)
         blob2.endPoint = CGPoint(x: 1, y: 1)
-        layer.addSublayer(blob2)
+        layer.insertSublayer(blob2, at: 1)
     }
     
     override func layoutSubviews() {
