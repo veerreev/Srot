@@ -16,11 +16,11 @@ class PhotoGridCell: UICollectionViewCell {
     }
     
     func configure(with image: Image) {
-            guard let thumbURL = image.thumbnailFileURL, let uiImage  = UIImage(contentsOfFile: thumbURL.path) else {
-                imageView?.image = nil
-                return
-            }
-            imageView?.image = uiImage
+        guard let thumbURL = image.thumbnailFileURL, let uiImage  = UIImage(contentsOfFile: thumbURL.path) else {
+            imageView?.image = nil
+            return
         }
+        imageView?.image = uiImage
+    }
 
 }

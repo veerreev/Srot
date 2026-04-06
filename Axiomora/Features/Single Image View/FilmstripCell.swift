@@ -29,7 +29,6 @@ class FilmstripCell: UICollectionViewCell {
                 
         // Dim non-selected cells so the current image stands out clearly.
         contentView.alpha = isSelected ? 1.0 : 0.3
-        //selectionBorderView.isHidden = !isSelected
     }
             
 }

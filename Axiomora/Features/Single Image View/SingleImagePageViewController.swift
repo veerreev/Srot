@@ -34,21 +34,16 @@ class SingleImagePageViewController: UIPageViewController {
     func showImage(at index: Int, animated: Bool = false) {
         guard images.indices.contains(index) else { return }
             
-        // 1. Calculate the correct swipe direction BEFORE updating the currentIndex
+        //Calculate the correct swipe direction before updating the currentIndex
         let swipeDirection: UIPageViewController.NavigationDirection = index < currentIndex ? .reverse : .forward
             
-        // 2. Now it's safe to update the index
+        //Now it's safe to update the index
         currentIndex = index
                 
         let zoomVC = makeZoomVC(for: index)
                 
-        // 3. Pass the dynamic swipeDirection into the view controllers setup
-        setViewControllers(
-            [zoomVC],
-            direction: swipeDirection,
-            animated: animated,
-            completion: nil
-        )
+        //Pass the dynamic swipeDirection into the view controllers setup
+        setViewControllers([zoomVC], direction: swipeDirection, animated: animated, completion: nil)
     }
     
     // Creates a SingleImageZoomViewController for a given index.

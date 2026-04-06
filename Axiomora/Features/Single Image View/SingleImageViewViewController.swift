@@ -41,9 +41,8 @@ class SingleImageViewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         currentIndex = startingIndex
-        setupToolbar()
         setupPageViewController()
-        setupFilmstrip()
+        registerFilmstrip()
         updateTitle(for: startingIndex)
         showEmptyState()
         navigationItem.titleView = customTitleView
@@ -58,17 +57,7 @@ class SingleImageViewViewController: UIViewController {
         super.viewDidAppear(animated)
         self.navigationController?.delegate = self
     }
-    
-    private func setupToolbar() {
-        let appearance = UIToolbarAppearance()
-        appearance.configureWithTransparentBackground()
-        toolbar.standardAppearance = appearance
-        toolbar.compactAppearance = appearance
-        toolbar.tintColor = .white
-    }
-        
 
-        
     private func setupPageViewController() {
         let pvc = SingleImagePageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         pvc.images = images
@@ -86,27 +75,12 @@ class SingleImageViewViewController: UIViewController {
         pageVC = pvc
     }
         
-    private func setupFilmstrip() {
-            filmstripCollectionView.dataSource = self
-            filmstripCollectionView.delegate = self
-            filmstripCollectionView.backgroundColor = .clear
-            filmstripCollectionView.showsHorizontalScrollIndicator = false
+    private func registerFilmstrip() {
+                       
+        filmstripCollectionView.register(UINib(nibName: "FilmstripCell", bundle: nil), forCellWithReuseIdentifier: FilmstripCell.reuseIdentifier)
                 
-            filmstripCollectionView.register(
-                UINib(nibName: "FilmstripCell", bundle: nil),
-                forCellWithReuseIdentifier: FilmstripCell.reuseIdentifier
-            )
-                
-            // THE FIX: Grab the Storyboard layout and force it to stop estimating sizes
-            if let layout = filmstripCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                layout.estimatedItemSize = .zero // This completely kills the elongation bug!
-                layout.itemSize = CGSize(width: 60, height: 60)
-                layout.minimumLineSpacing = 4
-                layout.sectionInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
-            }
-                
-            scrollFilmstrip(to: startingIndex, animated: false)
-        }
+        scrollFilmstrip(to: startingIndex, animated: false)
+    }
         
     // Shows the nav bar, filmstrip and toolbar together with a fade-in,
     private func showChrome() {
@@ -165,11 +139,28 @@ class SingleImageViewViewController: UIViewController {
         filmstripCollectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredHorizontally,animated: animated)
     }
     
-    private func showEmptyState() {
-        fluidBackgroundView.isHidden = !images.isEmpty
-        toolbar.isHidden = images.isEmpty
-        filmstripCollectionView.isHidden = images.isEmpty
-    }
+    private func showEmptyState(animated: Bool = false) {
+            let isEmpty = images.isEmpty
+            
+            // Group all the visibility changes together
+            let stateChanges = {
+                self.fluidBackgroundView.isHidden = !isEmpty
+                self.toolbar.isHidden = isEmpty
+                self.filmstripCollectionView.isHidden = isEmpty
+                self.pageVC?.view.isHidden = isEmpty
+            }
+            
+            // Perform the changes with or without animation
+            if animated {
+                UIView.transition(with: self.view, duration: 0.3, options: .transitionCrossDissolve, animations: stateChanges, completion: nil)
+            } else {
+                stateChanges()
+            }
+            
+            if isEmpty {
+                updateTitle(for: -1)
+            }
+        }
     
     @IBAction func shareTapped(_ sender: UIBarButtonItem) {
         guard images.indices.contains(currentIndex), let fileURL = images[currentIndex].localFileURL else { return }
@@ -180,21 +171,18 @@ class SingleImageViewViewController: UIViewController {
         
     @IBAction func trashTapped(_ sender: UIBarButtonItem) {
         guard images.indices.contains(currentIndex) else { return }
-            
-        // Confirmation
-        let alert = UIAlertController(title: "Delete Photo", message: "This photo will be permanently deleted from Axiomora.", preferredStyle: .actionSheet)
-            
-        alert.addAction(UIAlertAction(title: "Delete Photo", style: .destructive) { [weak self] _ in
-            guard let self = self else { return }
+                    
+            let alert = UIAlertController(title: "Delete Photo", message: "This photo will be permanently deleted from Axiomora.", preferredStyle: .actionSheet)
                 
+            alert.addAction(UIAlertAction(title: "Delete Photo", style: .destructive) { [weak self] _ in
+                guard let self = self else { return }
+                    
             PhotoManager.shared.deleteImage(self.images[self.currentIndex])
             self.images = PhotoManager.shared.allImages()
-            
+                    
             if self.images.isEmpty {
-                // No images left => pop back to camera.
-                self.navigationController?.popViewController(animated: true)
+                self.showEmptyState(animated: true)
             } else {
-                // Adjust index if we deleted the last item in the array.
                 let newIndex = min(self.currentIndex, self.images.count - 1)
                 self.currentIndex = newIndex
                 self.pageVC?.images = self.images
@@ -204,13 +192,19 @@ class SingleImageViewViewController: UIViewController {
                 self.updateTitle(for: newIndex)
             }
         })
-            
+                    
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = sender
+        }
+                
         present(alert, animated: true)
     }
     
     
     @IBAction func handleMainTap(_ sender: Any) {
+        guard !images.isEmpty else { return }
         if isChromeVisible {
                 hideChrome()
             } else {
@@ -221,72 +215,74 @@ class SingleImageViewViewController: UIViewController {
     
     @IBAction func handlePan(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: view)
-                let verticalMovement = translation.y / view.bounds.height
-                let progress = max(0.0, min(1.0, verticalMovement))
+        let verticalMovement = translation.y / view.bounds.height
+        let progress = max(0.0, min(1.0, verticalMovement))
 
-                let pageVC = self.children.first(where: { $0 is SingleImagePageViewController })
+        let pageVC = self.children.first(where: { $0 is SingleImagePageViewController })
 
-                switch sender.state {
-                case .began:
-                    interactor = UIPercentDrivenInteractiveTransition()
-                    // Natively animate the nav bar away in perfect sync with the pull-down
-                    self.navigationController?.setNavigationBarHidden(true, animated: true)
-                    self.navigationController?.popViewController(animated: true)
+        switch sender.state {
+            case .began:
+                interactor = UIPercentDrivenInteractiveTransition()
+                // Natively animate the nav bar away in perfect sync with the pull-down
+                self.navigationController?.setNavigationBarHidden(true, animated: true)
+                self.navigationController?.popViewController(animated: true)
                     
-                case .changed:
-                    interactor?.update(progress)
+            case .changed:
+                interactor?.update(progress)
                     
-                    // 1:1 Finger Tracking
-                    let scale = max(0.6, 1.0 - (progress * 0.5))
-                    pageVC?.view.transform = CGAffineTransform(translationX: translation.x, y: translation.y).scaledBy(x: scale, y: scale)
+                // 1:1 Finger Tracking
+                let scale = max(0.6, 1.0 - (progress * 0.5))
+                pageVC?.view.transform = CGAffineTransform(translationX: translation.x, y: translation.y).scaledBy(x: scale, y: scale)
                     
-                case .ended, .cancelled:
-                    let velocity = sender.velocity(in: view)
-                    let isDismissing = progress > 0.25 || velocity.y > 300
+            case .ended, .cancelled:
+                let velocity = sender.velocity(in: view)
+                let isDismissing = progress > 0.25 || velocity.y > 300
                             
-                    if isDismissing {
-                        interactor?.finish()
-                    } else {
-                        interactor?.cancel()
-                        // Bring the nav bar back safely if the user cancels the swipe
-                        self.navigationController?.setNavigationBarHidden(false, animated: true)
-                    }
-                    
-                    UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-                        if isDismissing {
-                            let finalY = self.view.bounds.height
-                            let finalX = translation.x + (velocity.x * 0.2)
-                            pageVC?.view.transform = CGAffineTransform(translationX: finalX, y: finalY).scaledBy(x: 0.6, y: 0.6)
-                        } else {
-                            pageVC?.view.transform = .identity
-                        }
-                    })
-                    
-                    interactor = nil
-                    
-                default:
-                    break
+                if isDismissing {
+                    interactor?.finish()
+                } else {
+                    interactor?.cancel()
+                    // Bring the nav bar back safely if the user cancels the swipe
+                    self.navigationController?.setNavigationBarHidden(false, animated: true)
                 }
+                    
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                    if isDismissing {
+                        let finalY = self.view.bounds.height
+                        let finalX = translation.x + (velocity.x * 0.2)
+                        pageVC?.view.transform = CGAffineTransform(translationX: finalX, y: finalY).scaledBy(x: 0.6, y: 0.6)
+                    } else {
+                        pageVC?.view.transform = .identity
+                    }
+                })
+                    
+                interactor = nil
+                    
+            default:
+                break
+        }
     }
     // Called when popping back from the Gallery to instantly update the screen
-        func updateToDisplayImage(at index: Int, with newImages: [Image]) {
-            self.images = newImages
-            self.currentIndex = index
-            self.startingIndex = index
+    func updateToDisplayImage(at index: Int, with newImages: [Image]) {
+        self.images = newImages
+        self.currentIndex = index
+        self.startingIndex = index
             
-            // Force the UI to immediately reflect the new image
-            if let pageVC = self.pageVC {
-                pageVC.images = newImages
-                pageVC.showImage(at: index, animated: false)
-                updateTitle(for: index)
-                filmstripCollectionView.reloadData()
+        // Force the UI to immediately reflect the new image
+        if let pageVC = self.pageVC {
+            pageVC.images = newImages
+            pageVC.showImage(at: index, animated: false)
+            updateTitle(for: index)
+            filmstripCollectionView.reloadData()
                 
-                // A slight delay ensures the collection view layout finishes before scrolling
-                DispatchQueue.main.async {
-                    self.scrollFilmstrip(to: index, animated: false)
-                }
+            // A slight delay ensures the collection view layout finishes before scrolling
+            Task { @MainActor in
+                // explicitly yield to the runloop to guarantee the layout pass finishes
+                await Task.yield()
+                self.scrollFilmstrip(to: index, animated: false)
             }
         }
+    }
         
 }
 
@@ -321,9 +317,9 @@ extension SingleImageViewViewController: UICollectionViewDataSource {
 
 extension SingleImageViewViewController: UICollectionViewDelegate {
         
-    // Tapping a filmstrip cell jumps the page VC to that image
-    // and syncs all chrome elements to the new current image.
+    // Tapping a filmstrip cell jumps the page VC to that image and syncs all chrome elements to the new current image.
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.item != currentIndex else { return }
         currentIndex = indexPath.item
         pageVC?.showImage(at: currentIndex, animated: true)
         updateTitle(for: currentIndex)
@@ -334,10 +330,10 @@ extension SingleImageViewViewController: UICollectionViewDelegate {
         
 }
 
-// MARK: - Custom Transitions
+//Custom Transitions
 extension SingleImageViewViewController: UINavigationControllerDelegate {
     
-    // 1. Tell the nav controller to use our custom Slide Down animation instead of the default sideways pop
+    //Tell the nav controller to use our custom Slide Down animation instead of the default sideways pop
     func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         if operation == .pop && fromVC === self {
             return SlideDownAnimator()
@@ -345,21 +341,18 @@ extension SingleImageViewViewController: UINavigationControllerDelegate {
         return nil
     }
 
-    // 2. Attach our finger-tracking interactor to the animation
+    //Attach our finger-tracking interactor to the animation
     func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return interactor
     }
-    // 3. The actual animation that pushes the screen down
+    //The actual animation that pushes the screen down
     class SlideDownAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
             return 0.3
         }
 
         func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-            guard let fromVC = transitionContext.viewController(forKey: .from) as? SingleImageViewViewController,
-                  let fromView = transitionContext.view(forKey: .from),
-                  let toView = transitionContext.view(forKey: .to) else {
-                transitionContext.completeTransition(false)
+            guard let fromVC = transitionContext.viewController(forKey: .from) as? SingleImageViewViewController, let fromView = transitionContext.view(forKey: .from), let toView = transitionContext.view(forKey: .to) else { transitionContext.completeTransition(false)
                 return
             }
 

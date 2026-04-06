@@ -14,17 +14,32 @@ class AllPhotosViewController: UIViewController {
     @IBOutlet var fluidBackgroundView: FluidBackgroundView!
     var images: [Image] = []
     
-    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+                            
+        //Remove the view from the main hierarchy
+        fluidBackgroundView.removeFromSuperview()
+            
+        //Tell the view to automatically stretch to fill the Collection View bounds
+        fluidBackgroundView.translatesAutoresizingMaskIntoConstraints = true
+        fluidBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            
+        //Assign it to the background
+        collectionView.backgroundView = fluidBackgroundView
+        collectionView.alwaysBounceVertical = true
+    }
+        
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+            
         self.images = PhotoManager.shared.allImages()
         
-        fluidBackgroundView.isHidden = !images.isEmpty
-        
+        //Just toggle the internal background view.
+        //Never hide the collectionView itself, or the Large Title engine crashes!
+        collectionView.backgroundView?.isHidden = !images.isEmpty
+            
         self.collectionView.reloadData()
     }
-    
 
     @IBAction func openCameraTapped(_ sender: Any) {
         let storyboard = UIStoryboard(name: "CameraStoryboard", bundle: nil)
@@ -72,13 +87,13 @@ extension AllPhotosViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let navController = navigationController else { return }
         
-        // 1. Look back down the stack to find the existing Single Image View
+        //Look back down the stack to find the existing Single Image View
         if let singleImageVC = navController.viewControllers.first(where: { $0 is SingleImageViewViewController }) as? SingleImageViewViewController {
             
-            // 2. Hand it the fresh data and the exact image index you just tapped
+            //Hand it the fresh data and the exact image index you just tapped
             singleImageVC.updateToDisplayImage(at: indexPath.row, with: self.images)
             
-            // 3. Pop the Gallery completely off the stack, revealing the updated Single Image screen!
+            //Pop the Gallery completely off the stack, revealing the updated Single Image screen!
             navController.popToViewController(singleImageVC, animated: true)
         }
     }
