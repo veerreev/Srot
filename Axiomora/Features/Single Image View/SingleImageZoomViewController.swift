@@ -20,10 +20,9 @@ class SingleImageZoomViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupScrollView()
         setupGestures()
         loadImage()
-        }
+    }
         
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews() // Called every time the view's bounds change including the first appearance.
@@ -33,14 +32,6 @@ class SingleImageZoomViewController: UIViewController {
         centerImageInScrollView()
     }
         
-    private func setupScrollView() {
-        scrollView.delegate = self
-        scrollView.showsVerticalScrollIndicator = false
-        scrollView.showsHorizontalScrollIndicator = false
-        // Prevents the scroll view from adding automatic insets for the nav bar, i.e it does not put a gap below the nav bar.
-        // We want the image to go fully edge to edge including behind the nav bar.
-        scrollView.contentInsetAdjustmentBehavior = .never
-    }
         
     private func setupGestures() {
         // Double tap to zoom into the tapped point at 2x, or back out to fit.
@@ -50,17 +41,13 @@ class SingleImageZoomViewController: UIViewController {
     }
         
     private func loadImage() {
-        guard let image = image,
-              let fileURL = image.localFileURL,
-              let uiImage = UIImage(contentsOfFile: fileURL.path) else {
+        guard let image = image, let fileURL = image.localFileURL, let uiImage = UIImage(contentsOfFile: fileURL.path) else {
             imageView.image = nil
             return
         }
         
         let normalizedImage = uiImage.normalized()
-        imageView.image = normalizedImage
-        imageView.image = normalizedImage
-        
+        imageView.image = normalizedImage        
         // Set the imageView frame to the actual image size.
         // This is what makes the scroll view content the right size.
         imageView.frame = CGRect(origin: .zero, size: normalizedImage.size)
@@ -72,20 +59,24 @@ class SingleImageZoomViewController: UIViewController {
 
     private func updateMinZoomScale() {
         guard let image = imageView.image else { return }
-        
+            
         let scrollSize = scrollView.bounds.size
         let imageSize  = image.size
-        
-        guard imageSize.width > 0, imageSize.height > 0,
-              scrollSize.width > 0, scrollSize.height > 0 else { return }
-        
+            
+        guard imageSize.width > 0, imageSize.height > 0, scrollSize.width > 0, scrollSize.height > 0 else { return }
+            
         let widthScale  = scrollSize.width  / imageSize.width
         let heightScale = scrollSize.height / imageSize.height
-        let minScale    = min(widthScale, heightScale)
-        
+        let minScale = min(widthScale, heightScale)
+            
         scrollView.minimumZoomScale = minScale
+            
+        // NEW: Prevent infinite pinch-zooming by capping the max zoom.
+        // max(1.0, ...) ensures that small images can still be zoomed up to their true size,
+        // while massive images get capped at 4x their "fit" size.
+        scrollView.maximumZoomScale = max(1.0, minScale * 4.0)
+            
         scrollView.zoomScale = minScale
-        
     }
         
     // When the image is smaller than the scroll view bounds (at minimum zoom), this keeps it centered rather than letting it sit at the top-left corner.
@@ -95,25 +86,23 @@ class SingleImageZoomViewController: UIViewController {
         let contentSize = scrollView.contentSize
             
         let horizontalInset = max(0, (scrollSize.width  - contentSize.width)  / 2)
-        let verticalInset   = max(0, (scrollSize.height - contentSize.height) / 2)
+        let verticalInset = max(0, (scrollSize.height - contentSize.height) / 2)
             
-        scrollView.contentInset = UIEdgeInsets(
-            top:    verticalInset,
-            left:   horizontalInset,
-            bottom: verticalInset,
-            right:  horizontalInset
-        )
+        scrollView.contentInset = UIEdgeInsets(top: verticalInset, left: horizontalInset, bottom: verticalInset, right:  horizontalInset)
     }
         
     
     @objc private func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
-        if scrollView.zoomScale > scrollView.minimumZoomScale {
+        // Add a small tolerance margin for the float comparison
+        if scrollView.zoomScale > scrollView.minimumZoomScale + 0.01 {
             // Image is already zoomed in => animate back to fit.
             scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
         } else {
-            // Zoom into the exact point the user double tapped, at 2x.
+            // Zoom in to a comfortable level: 3x the "fit on screen" size
+            let targetScale = scrollView.minimumZoomScale * 2.0
+                
             let tapPoint = gesture.location(in: imageView)
-            let zoomRect = zoomRect(for: 2.0, centeredAt: tapPoint)
+            let zoomRect = zoomRect(for: targetScale, centeredAt: tapPoint)
             scrollView.zoom(to: zoomRect, animated: true)
         }
     }
@@ -122,12 +111,7 @@ class SingleImageZoomViewController: UIViewController {
     private func zoomRect(for scale: CGFloat, centeredAt center: CGPoint) -> CGRect {
         let width  = scrollView.bounds.width  / scale
         let height = scrollView.bounds.height / scale
-        return CGRect(
-            x:      center.x - (width  / 2),
-            y:      center.y - (height / 2),
-            width:  width,
-            height: height
-        )
+        return CGRect(x: center.x - (width / 2),y: center.y - (height / 2), width: width, height: height)
     }
         
 }

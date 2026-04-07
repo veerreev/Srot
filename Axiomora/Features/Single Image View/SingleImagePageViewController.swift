@@ -24,7 +24,7 @@ class SingleImagePageViewController: UIPageViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black //SingleImagePageViewController has no storyboard scene of its own, it's created and embedded entirely in code by SingleImageViewViewController.
+        view.backgroundColor = .clear //SingleImagePageViewController has no storyboard scene of its own, it's created and embedded entirely in code by SingleImageViewViewController.
         dataSource = self
         delegate = self
     }
@@ -34,25 +34,24 @@ class SingleImagePageViewController: UIPageViewController {
     func showImage(at index: Int, animated: Bool = false) {
         guard images.indices.contains(index) else { return }
             
+        //Calculate the correct swipe direction before updating the currentIndex
+        let swipeDirection: UIPageViewController.NavigationDirection = index < currentIndex ? .reverse : .forward
+            
+        //Now it's safe to update the index
         currentIndex = index
-            
+                
         let zoomVC = makeZoomVC(for: index)
-            
-        setViewControllers(
-            [zoomVC],
-            direction: .forward, // Direction doesn't matter for the initial display or filmstrip taps. Forward is used as a neutral default.
-            animated: animated,
-            completion: nil
-        )
+                
+        //Pass the dynamic swipeDirection into the view controllers setup
+        setViewControllers([zoomVC], direction: swipeDirection, animated: animated, completion: nil)
     }
-        
+    
     // Creates a SingleImageZoomViewController for a given index.
     // UIPageViewController calls this via the dataSource methods when it needs the next or previous page.
     private func makeZoomVC(for index: Int) -> SingleImageZoomViewController {
         let storyboard = UIStoryboard(name: "SingleImageZoom", bundle: nil)
-        guard let zoomVC = storyboard.instantiateViewController(
-            withIdentifier: "SingleImageZoomViewController"
-        ) as? SingleImageZoomViewController else {
+        guard let zoomVC = storyboard.instantiateViewController(withIdentifier: "SingleImageZoomViewController") as? SingleImageZoomViewController
+        else {
             fatalError("SingleImageZoom storyboard missing SingleImageZoomViewController")
         }
         zoomVC.image = images[index]

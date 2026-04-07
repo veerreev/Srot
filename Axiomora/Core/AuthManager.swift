@@ -14,6 +14,7 @@ class AuthManager {
     */
     private enum UDKeys {
             static let isLoggedIn       = "isLoggedIn"
+            // for later use(database integration)
             static let currentUserId    = "currentUserId"
             static let currentUsername  = "currentUsername"
         }

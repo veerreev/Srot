@@ -33,18 +33,15 @@ class PhotoManager {
         loadFromDisk()
     }
     
-    static let favouritesAlbumId = "system-favourites-album" // Using a hardcoded ID means PhotoManager can always find Favourites without searching through the albums array by name.
     
     // Filenames for the two JSON persistence files in the Documents directory.
     private let imagesFileName  = "images.json"
-    private let albumsFileName  = "albums.json"
         
     private let thumbnailSize = CGSize(width: 300, height: 300)
         
     // Single source of truth for the entire app.
     // All ViewControllers read from here, never maintain their own copies.
     private(set) var images: [Image] = []
-    private(set) var albums: [Album] = []
 }
 
 //Persistence
@@ -59,11 +56,6 @@ extension PhotoManager {
     // Called once on init, loads both arrays from disk into memory.
     private func loadFromDisk() {
         images = load([Image].self, from: imagesFileName) ?? []
-        albums = load([Album].self, from: albumsFileName) ?? []
-        
-        // Ensure the Favourites system album always exists.
-        // If this is a fresh install or the file was corrupted, recreate it.
-        ensureFavouritesAlbumExists()
     }
     
     // Generic decode helper reads a JSON file from Documents and decodes it.
@@ -79,7 +71,6 @@ extension PhotoManager {
     // Called at the end of every save/delete/toggle/album operation.
     private func saveToDisk() {
         save(images, to: imagesFileName)
-        save(albums, to: albumsFileName)
     }
     
     private func save<T: Encodable>(_ value: T, to filename: String) {
@@ -110,12 +101,7 @@ extension PhotoManager {
         if let thumbURL = image.thumbnailFileURL {
             try? FileManager.default.removeItem(at: thumbURL)
         }
-        
-        // Remove this image's ID from every album that contains it.
-        for i in albums.indices {
-            albums[i].imageIds.removeAll { $0 == image.id }
-        }
-        
+                
         // Remove from in-memory array and persist.
         images.removeAll { $0.id == image.id }
         saveToDisk()
@@ -128,25 +114,7 @@ extension PhotoManager {
     func deleteImages(_ imagesToDelete: [Image]) {
         imagesToDelete.forEach { deleteImage($0) }
     }
-    
-    // Toggles the isFavourite flag on an image and automatically adds or removes it from the Favourites system album.
-    // Called by the heart button in SingleImageViewController.
-    func toggleFavourite(_ image: Image) {
-        guard let index = images.firstIndex(where: { $0.id == image.id }) else { return }
         
-        images[index].isFavourite.toggle()
-        let isFavourite = images[index].isFavourite
-        
-        if isFavourite {
-            addImages([images[index]], to: favouritesAlbum())
-        } else {
-            removeImages([images[index]], from: favouritesAlbum())
-        }
-        
-        saveToDisk()
-        print("PhotoManager: Image \(image.id) isFavourite = \(isFavourite)")
-    }
-    
     // Thumbnail Generation
     // Draws the full-res image into a smaller CGSize context.
     // Using UIGraphicsImageRenderer is the modern recommended approach since it handles screen scale and color space automatically.
@@ -162,8 +130,8 @@ extension PhotoManager {
             throw ImageSaveError.documentsDirectoryUnavailable
         }
         
-        let imageId           = UUID().uuidString
-        let filename          = "\(imageId).heic"
+        let imageId = UUID().uuidString
+        let filename = "\(imageId).heic"
         let thumbnailFilename = "\(imageId)_thumb.heic"
         
         let imageURL = directory.appendingPathComponent(filename)
@@ -262,136 +230,8 @@ extension PhotoManager {
         if calendar.isDateInYesterday(date) { return "Yesterday" }
         return formatter.string(from: date)
     }
-    
-    // Returns only the images that belong to a specific album, preserving the order defined by the album's imageIds array.
-    func images(in album: Album) -> [Image] {
-        return album.imageIds.compactMap { imageId in
-            images.first { $0.id == imageId }
-        }
-    }
-    
+        
 }
-
-// Album Operations
-extension PhotoManager {
-    
-    // Creates a new user-defined album, appends it to the array, and persists.
-    // Called by the + button in AlbumsViewController.
-    @discardableResult
-    func createAlbum(name: String) -> Album {
-        let album = Album(name: name, isSystemAlbum: false)
-        albums.append(album)
-        saveToDisk()
-        print("PhotoManager: Created album '\(name)' with ID \(album.id)")
-        return album
-    }
-    
-    // Deletes a user album. System albums (Favourites) cannot be deleted, the guard prevents this silently.
-    #warning ("The UI should hide the delete option for system albums, but this is a safety net.")
-    func deleteAlbum(_ album: Album) {
-        guard !album.isSystemAlbum else {
-            print("PhotoManager: Cannot delete system album '\(album.name)'")
-            return
-        }
-        
-        // Remove this album's ID from every image that belongs to it.
-        let albumId = album.id
-        for i in images.indices {
-            images[i].albumIds.removeAll { $0 == albumId }
-        }
-        
-        albums.removeAll { $0.id == album.id }
-        saveToDisk()
-        print("PhotoManager: Deleted album '\(album.name)'")
-    }
-    
-    // Adds images to an album. Skips images already in the album to prevent duplicates.
-    // Also updates each image's albumIds array to reflect the membership.
-    func addImages(_ imagesToAdd: [Image], to album: Album) {
-        guard let albumIndex = albums.firstIndex(where: { $0.id == album.id }) else { return }
-        
-        for image in imagesToAdd {
-            // Skip if already in the album.
-            guard !albums[albumIndex].imageIds.contains(image.id) else { continue }
-            
-            albums[albumIndex].imageIds.append(image.id)
-            
-            // Update the image's own albumIds list.
-            if let imageIndex = images.firstIndex(where: { $0.id == image.id }) {
-                if !images[imageIndex].albumIds.contains(album.id) {
-                    images[imageIndex].albumIds.append(album.id)
-                }
-            }
-            
-            // If album has no cover yet, use this image as the cover.
-            if albums[albumIndex].coverImageLocalFilename == nil {
-                albums[albumIndex].coverImageLocalFilename = image.thumbnailFilename
-            }
-        }
-        
-        saveToDisk()
-    }
-    
-    // Removes images from an album without deleting the image files themselves.
-    // Used by the remove-from-album action in AlbumDetailViewController's multi-select.
-    func removeImages(_ imagesToRemove: [Image], from album: Album) {
-        guard let albumIndex = albums.firstIndex(where: { $0.id == album.id }) else { return }
-        
-        let idsToRemove = Set(imagesToRemove.map { $0.id })
-        albums[albumIndex].imageIds.removeAll { idsToRemove.contains($0) }
-        
-        // Update each image's albumIds list.
-        for image in imagesToRemove {
-            if let imageIndex = images.firstIndex(where: { $0.id == image.id }) {
-                images[imageIndex].albumIds.removeAll { $0 == album.id }
-            }
-        }
-        
-        // If the cover image was one of the removed images, reassign the cover to the first remaining image, or nil if the album is now empty.
-        if let cover = albums[albumIndex].coverImageLocalFilename,
-           imagesToRemove.contains(where: { $0.thumbnailFilename == cover }) {
-            albums[albumIndex].coverImageLocalFilename = albums[albumIndex].imageIds.first.flatMap { id in
-                images.first { $0.id == id }?.thumbnailFilename
-            }
-        }
-        
-        saveToDisk()
-    }
-    
-}
-
-// Album Retrieval
-extension PhotoManager {
-    
-    // Returns all albums
-    // Favourites always first, then the rest sorted by creation date.
-    func allAlbums() -> [Album] {
-        let favourites   = albums.filter { $0.id == PhotoManager.favouritesAlbumId }
-        let rest         = albums
-            .filter { $0.id != PhotoManager.favouritesAlbumId }
-            .sorted { $0.creationDate < $1.creationDate }
-        return favourites + rest
-    }
-    
-    // Returns the Favourites album. Creates it if it doesn't exist.
-    // Using a hardcoded ID means this lookup is always O(1).
-    func favouritesAlbum() -> Album {
-        if let existing = albums.first(where: { $0.id == PhotoManager.favouritesAlbumId }) {
-            return existing
-        }
-        
-        var favourites = Album(id: PhotoManager.favouritesAlbumId, name: "Favourites", isSystemAlbum: true)
-        albums.insert(favourites, at: 0)
-        saveToDisk()
-        return favourites
-    }
-    
-    // Called on every init to silently guarantee Favourites always exists.
-    private func ensureFavouritesAlbumExists() {
-        _ = favouritesAlbum()
-    }
-}
-
 extension PhotoManager{
     
     func applyWatermarkAndSave(image: UIImage, completion: @escaping (Bool, Image?, Error?) -> Void) {

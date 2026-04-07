@@ -56,7 +56,7 @@ class BaseAuthViewController: UIViewController {
 /*
  Transitions the app from any auth screen to the main camera screen after a successful registration or login.
  Replaces the window's rootViewController in memory instead of just stacking on top.
- This ensures the auth screens are fully removed from memory — the user cannot navigate back to registration after successfully logging in.
+ This ensures the auth screens are fully removed from memory => the user cannot navigate back to registration after successfully logging in.
 */
 extension BaseAuthViewController {
     

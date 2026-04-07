@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="euI-8F-E05">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ymf-RX-0EY">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
@@ -10,7 +10,7 @@
         <!--Single Image View View Controller-->
         <scene sceneID="SlU-Ob-Z3S">
             <objects>
-                <viewController id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SingleImageViewViewController" id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="G0d-V3-Fgr">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -18,25 +18,13 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sXq-Aj-dHl">
                                 <rect key="frame" x="0.0" y="736" width="393" height="48"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
                                 <items>
-                                    <barButtonItem systemItem="flexibleSpace" id="74z-kD-owl"/>
                                     <barButtonItem systemItem="action" id="mF4-lp-55b">
                                         <connections>
                                             <action selector="shareTapped:" destination="Ymf-RX-0EY" id="p59-Oh-vGN"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="flexibleSpace" id="rvf-tM-G5e"/>
-                                    <barButtonItem title="Item" image="heart" catalog="system" id="O7o-6W-CVD">
-                                        <connections>
-                                            <action selector="heartTapped:" destination="Ymf-RX-0EY" id="2FZ-Y2-qvz"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="Item" image="info.circle" catalog="system" id="rNu-JH-CxI">
-                                        <connections>
-                                            <action selector="infoTapped:" destination="Ymf-RX-0EY" id="hLX-Pd-fxD"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem systemItem="flexibleSpace" id="fcz-zX-es7"/>
                                     <barButtonItem systemItem="trash" id="0pU-9H-Xm0">
                                         <connections>
                                             <action selector="trashTapped:" destination="Ymf-RX-0EY" id="j4F-hw-AKq"/>
@@ -44,25 +32,61 @@
                                     </barButtonItem>
                                     <barButtonItem systemItem="flexibleSpace" id="cxu-DB-qk9"/>
                                 </items>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <toolbarAppearance key="standardAppearance">
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="shadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </toolbarAppearance>
+                                <toolbarAppearance key="compactAppearance">
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="shadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </toolbarAppearance>
                             </toolbar>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0Re-YY-i6A">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0Re-YY-i6A">
                                 <rect key="frame" x="0.0" y="656" width="393" height="80"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="B6Y-Yk-jBg"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="SpW-K2-nF6">
-                                    <size key="itemSize" width="128" height="128"/>
+                                <inset key="scrollIndicatorInsets" minX="8" minY="10" maxX="8" maxY="10"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="4" minimumInteritemSpacing="10" id="SpW-K2-nF6">
+                                    <size key="itemSize" width="60" height="60"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="8" minY="10" maxX="8" maxY="10"/>
                                 </collectionViewFlowLayout>
                                 <cells/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Ymf-RX-0EY" id="3Wt-ez-R5s"/>
+                                    <outlet property="delegate" destination="Ymf-RX-0EY" id="mgQ-Ch-2pF"/>
+                                </connections>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7c4-RG-vvD" customClass="FluidBackgroundView" customModule="Axiomora" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No captured images" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fqL-Da-OHg">
+                                        <rect key="frame" x="96.333333333333329" y="413" width="200.66666666666669" height="26.333333333333314"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="fqL-Da-OHg" firstAttribute="centerX" secondItem="7c4-RG-vvD" secondAttribute="centerX" id="FL3-hk-WGH"/>
+                                    <constraint firstItem="fqL-Da-OHg" firstAttribute="centerY" secondItem="7c4-RG-vvD" secondAttribute="centerY" id="g84-76-qCe"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="EQF-tR-8Lq"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="7c4-RG-vvD" secondAttribute="trailing" id="427-AI-fee"/>
+                            <constraint firstAttribute="bottom" secondItem="7c4-RG-vvD" secondAttribute="bottom" id="45A-sw-ZIV"/>
+                            <constraint firstItem="7c4-RG-vvD" firstAttribute="top" secondItem="G0d-V3-Fgr" secondAttribute="top" id="S76-Xa-gE1"/>
+                            <constraint firstItem="7c4-RG-vvD" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="Tcp-G8-oXK"/>
                             <constraint firstItem="sXq-Aj-dHl" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="Ygn-NS-yfY"/>
                             <constraint firstItem="EQF-tR-8Lq" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="bottom" id="cMp-LB-x5B"/>
                             <constraint firstItem="0Re-YY-i6A" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="top" id="g92-cC-vtJ"/>
@@ -70,60 +94,91 @@
                             <constraint firstAttribute="trailing" secondItem="0Re-YY-i6A" secondAttribute="trailing" id="kJx-IZ-aAO"/>
                             <constraint firstAttribute="trailing" secondItem="sXq-Aj-dHl" secondAttribute="trailing" id="zSk-N6-RLG"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="mSL-0g-xcQ" appends="YES" id="axI-Fi-Q5b"/>
+                            <outletCollection property="gestureRecognizers" destination="iQY-PM-Nhx" appends="YES" id="RCH-yi-z54"/>
+                        </connections>
                     </view>
-                    <navigationItem key="navigationItem" id="Jc1-Y3-6oS">
+                    <navigationItem key="navigationItem" id="NRU-PY-rhT">
                         <nil key="title"/>
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="photo" catalog="system" id="jA9-hh-tKr">
+                        <barButtonItem key="rightBarButtonItem" image="photo.on.rectangle" catalog="system" id="2jM-tJ-F7k">
                             <connections>
-                                <segue destination="RGb-Oz-hNq" kind="show" id="RKc-ba-M2M"/>
+                                <segue destination="RGb-Oz-hNq" kind="show" id="N8d-fu-dis"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="customTitleView" destination="yev-sF-pyO" id="eq9-5y-UgZ"/>
+                        <outlet property="dateTitleLabel" destination="GBr-Zc-gI2" id="lMT-or-nJv"/>
                         <outlet property="filmstripCollectionView" destination="0Re-YY-i6A" id="3Es-ON-Hqo"/>
-                        <outlet property="heartButtonItem" destination="O7o-6W-CVD" id="S3W-dG-fte"/>
-                        <outlet property="infoButtonItem" destination="rNu-JH-CxI" id="w03-jz-XZf"/>
+                        <outlet property="fluidBackgroundView" destination="7c4-RG-vvD" id="sdV-oK-xKW"/>
                         <outlet property="shareButtonItem" destination="mF4-lp-55b" id="fFw-Uv-BzG"/>
+                        <outlet property="timeSubtitleLabel" destination="rGo-gg-yqX" id="htF-yv-Akm"/>
                         <outlet property="toolbar" destination="sXq-Aj-dHl" id="CsT-Gp-KhM"/>
                         <outlet property="trashButtonItem" destination="0pU-9H-Xm0" id="8hD-up-vVZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Am8-7t-jDk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="yev-sF-pyO">
+                    <rect key="frame" x="0.0" y="0.0" width="200" height="44"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="iG5-sI-vFO">
+                            <rect key="frame" x="0.0" y="0.0" width="200" height="10"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBr-Zc-gI2">
+                                    <rect key="frame" x="83.333333333333329" y="0.0" width="33.666666666666671" height="0.0"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rGo-gg-yqX">
+                                    <rect key="frame" x="86" y="2" width="28" height="8"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" white="1" alpha="0.70256347656249996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </stackView>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="4eW-Sb-Gra"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="iG5-sI-vFO" firstAttribute="top" secondItem="yev-sF-pyO" secondAttribute="top" id="4hD-cd-sOo"/>
+                        <constraint firstItem="4eW-Sb-Gra" firstAttribute="bottom" secondItem="iG5-sI-vFO" secondAttribute="bottom" id="AEv-4Q-f29"/>
+                        <constraint firstAttribute="trailing" secondItem="iG5-sI-vFO" secondAttribute="trailing" id="QkI-Ay-zsa"/>
+                        <constraint firstItem="iG5-sI-vFO" firstAttribute="leading" secondItem="yev-sF-pyO" secondAttribute="leading" id="crp-K8-fDR"/>
+                    </constraints>
+                </view>
+                <tapGestureRecognizer id="mSL-0g-xcQ">
+                    <connections>
+                        <action selector="handleMainTap:" destination="Ymf-RX-0EY" id="GNm-vj-44v"/>
+                        <outlet property="delegate" destination="Ymf-RX-0EY" id="BGV-Bl-LJD"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="iQY-PM-Nhx">
+                    <connections>
+                        <action selector="handlePan:" destination="Ymf-RX-0EY" id="0HE-EI-aWl"/>
+                        <outlet property="delegate" destination="Ymf-RX-0EY" id="Qph-8m-W0g"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-359.5419847328244" y="-430.28169014084511"/>
         </scene>
-        <!--GalleryTabBarController-->
+        <!--AllPhotosViewController-->
         <scene sceneID="47L-b3-E9E">
             <objects>
-                <viewControllerPlaceholder storyboardName="GalleryStoryboard" referencedIdentifier="GalleryTabBarController" id="RGb-Oz-hNq" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="GalleryStoryboard" referencedIdentifier="AllPhotosViewController" id="RGb-Oz-hNq" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="4Pb-C6-FRo"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Zq-Ef-J72" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="781" y="-416"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="gun-Ae-3Vf">
-            <objects>
-                <navigationController storyboardIdentifier="SingleImageViewViewController" automaticallyAdjustsScrollViewInsets="NO" id="euI-8F-E05" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="nDR-QR-3vU">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Ymf-RX-0EY" kind="relationship" relationship="rootViewController" id="h2t-5e-Pda"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Njc-I1-Iu2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1286.2595419847328" y="-430.28169014084511"/>
-        </scene>
     </scenes>
     <resources>
-        <image name="heart" catalog="system" width="128" height="107"/>
-        <image name="info.circle" catalog="system" width="128" height="123"/>
-        <image name="photo" catalog="system" width="128" height="93"/>
+        <image name="photo.on.rectangle" catalog="system" width="128" height="98"/>
     </resources>
 </document>

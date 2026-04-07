@@ -25,6 +25,7 @@ struct Image: Codable {
     
     // Must include ISO/Shutter-Speed/etc. when implementing pro mode
     
+    #warning("To be implemented in gallery")
     // State
     var isFavourite: Bool = false // Whether the user has hearted this image.
                                  // When toggled, PhotoManager automatically adds/removes it from the Favourites album.
@@ -32,7 +33,7 @@ struct Image: Codable {
     
     // Computed URLs
     
-    // Full-resolution image URL — used in SingleImageViewController
+    // Full-resolution image URL used in SingleImageViewController
     var localFileURL: URL? {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return nil
@@ -41,11 +42,11 @@ struct Image: Codable {
     }
     //    Using computed property because
     //    When saving an image to the local "In-App Gallery," a junior developer will often get the file's path (e.g., file:///var/mobile/Containers/Data/Application/1234-ABCD/Documents/photo.jpg) and save that entire String to UserDefaults or a local database.
-    //
-    //    It works perfectly in testing. But the moment the user downloads an app update from the App Store, iOS changes the app's internal sandbox UUID directory (1234-ABCD becomes 9999-WXYZ). Suddenly, every single saved URL is broken, and the user's entire In-App Gallery shows blank images.
+    //    Storing as a string works perfectly in testing. But the moment the user downloads an app update from the App Store, iOS changes the app's internal sandbox UUID directory (1234-ABCD becomes 9999-WXYZ). Suddenly, every single saved URL is broken, and the user's entire In-App Gallery shows blank images.
     
     
-    // Thumbnail URL — used in grid cells across AllPhotosViewController and AlbumDetailViewController
+    // Thumbnail URL — used in FilmstripCell for display, CameraViewController for the last-captured thumbnail circle, and in deleteImage() for cleanup.
+    // Will also be used in gallery grid cells when AllPhotosViewController is implemented.
     var thumbnailFileURL: URL? {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return nil

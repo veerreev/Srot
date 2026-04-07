@@ -8,14 +8,16 @@
 import UIKit
 
 class SingleImageViewViewController: UIViewController {
-
+    
+    @IBOutlet var timeSubtitleLabel: UILabel!
+    @IBOutlet var dateTitleLabel: UILabel!
+    @IBOutlet var customTitleView: UIView!
     @IBOutlet var shareButtonItem: UIBarButtonItem!
     @IBOutlet var trashButtonItem: UIBarButtonItem!
-    @IBOutlet var infoButtonItem: UIBarButtonItem!
-    @IBOutlet var heartButtonItem: UIBarButtonItem!
     @IBOutlet var filmstripCollectionView: UICollectionView!
     @IBOutlet var toolbar: UIToolbar!
-        
+    @IBOutlet var fluidBackgroundView: FluidBackgroundView!
+    
     // Set by whoever presents this VC before it appears.
     // CameraViewController sets startingIndex to the last captured image.
     // AllPhotosViewController sets it to the tapped cell's index.
@@ -33,86 +35,31 @@ class SingleImageViewViewController: UIViewController {
     // Tracks whether the chrome is currently visible.
     private var isChromeVisible: Bool = true
         
-    // The date label set as navigationItem.titleView.
-    // Created in code because it needs custom styling beyond what a standard title provides.
-    private let dateLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 15, weight: .medium)
-        label.textAlignment = .center
-        
-        // Capsule background — matches Apple's camera date pill style
-        label.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-        label.layer.cornerRadius = 14
-        label.clipsToBounds = true
-        
-        // Padding inside the capsule
-        label.layer.masksToBounds = true
-        
-        return label
-    }()
-        
+    // This object syncs the screen's transition with the user's finger
+    private var interactor: UIPercentDrivenInteractiveTransition?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         currentIndex = startingIndex
-            
-        setupNavigationBar()
-        setupToolbar()
         setupPageViewController()
-        setupFilmstrip()
-        setupGestures()
-        updateDateLabel(for: startingIndex)
-        updateHeartButton(for: startingIndex)
-        if images.isEmpty {
-            showEmptyState()
-        }
-            
-    }
-        
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-            
-        // Restore opaque nav bar for the previous screen when navigating back.
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .black
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-        
-    private func setupNavigationBar() {
-        // Transparent nav bar so the full screen image shows through behind it.
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground()
-        navigationController?.navigationBar.standardAppearance = appearance
-        navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.scrollEdgeAppearance = appearance
-        navigationController?.navigationBar.tintColor = .white
-            
-        // Date label as the navigation title — centered between back chevron and gallery button.
-        navigationItem.titleView = dateLabel
+        registerFilmstrip()
+        updateTitle(for: startingIndex)
+        showEmptyState()
+        navigationItem.titleView = customTitleView
     }
     
-    private func setupToolbar() {
-        let appearance = UIToolbarAppearance()
-        appearance.configureWithTransparentBackground()
-        toolbar.standardAppearance = appearance
-        toolbar.compactAppearance = appearance
-        toolbar.tintColor = .white
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(!isChromeVisible, animated: animated)
     }
-        
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.delegate = self
+    }
 
-        
     private func setupPageViewController() {
-        let pvc = SingleImagePageViewController(
-            transitionStyle: .scroll,
-            navigationOrientation: .horizontal,
-            options: nil
-        )
+        let pvc = SingleImagePageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         pvc.images = images
         pvc.pageChangeDelegate = self
             
@@ -128,42 +75,20 @@ class SingleImageViewViewController: UIViewController {
         pageVC = pvc
     }
         
-    private func setupFilmstrip() {
-        filmstripCollectionView.dataSource = self
-        filmstripCollectionView.delegate = self
-        filmstripCollectionView.backgroundColor = .clear
-        filmstripCollectionView.showsHorizontalScrollIndicator = false
-            
-        filmstripCollectionView.register(
-            UINib(nibName: "FilmstripCell", bundle: nil),
-            forCellWithReuseIdentifier: FilmstripCell.reuseIdentifier
-        )
-            
-        // Horizontal flow layout — cells scroll left and right.
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 60, height: 60)
-        layout.minimumLineSpacing = 4
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 8, bottom: 10, right: 8)
-        filmstripCollectionView.collectionViewLayout = layout
-            
+    private func registerFilmstrip() {
+                       
+        filmstripCollectionView.register(UINib(nibName: "FilmstripCell", bundle: nil), forCellWithReuseIdentifier: FilmstripCell.reuseIdentifier)
+                
         scrollFilmstrip(to: startingIndex, animated: false)
-    }
-        
-    private func setupGestures() {
-        // Single tap on the main area toggles chrome visibility.
-        // The delegate allows this to coexist with the page VC's pan gesture.
-        let tap = UITapGestureRecognizer(target: self, action: #selector(handleMainTap))
-        tap.delegate = self
-        view.addGestureRecognizer(tap)
     }
         
     // Shows the nav bar, filmstrip and toolbar together with a fade-in,
     private func showChrome() {
         guard !isChromeVisible else { return }
         isChromeVisible = true
+                
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         UIView.animate(withDuration: 0.25) {
-            self.navigationController?.navigationBar.alpha = 1
             self.filmstripCollectionView.alpha = 1
             self.toolbar.alpha = 1
         }
@@ -172,56 +97,41 @@ class SingleImageViewViewController: UIViewController {
     private func hideChrome() {
         guard isChromeVisible else { return }
         isChromeVisible = false
+                
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
         UIView.animate(withDuration: 0.25) {
-            self.navigationController?.navigationBar.alpha = 0
             self.filmstripCollectionView.alpha = 0
             self.toolbar.alpha = 0
         }
     }
         
-    @objc private func handleMainTap() {
-        if isChromeVisible {
-            hideChrome()
-        } else {
-            showChrome()
-        }
-    }
-        
-    // Updates the date label in the nav bar title view to show
-    // the capture date of the currently visible image.
-    private func updateDateLabel(for index: Int) {
-        guard images.indices.contains(index), let date = images[index].createdAt else {
-            dateLabel.text = ""
+    private func updateTitle(for index: Int) {
+        guard images.indices.contains(index),
+        let date = images[index].createdAt else {
+            dateTitleLabel.text = ""
+            timeSubtitleLabel.text = ""
             return
         }
+            
         let calendar = Calendar.current
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "h:mm a"
         let timeString = timeFormatter.string(from: date)
-            
+        
+        let datePart: String
         if calendar.isDateInToday(date) {
-            dateLabel.text = "Today, \(timeString)"
+            datePart = "Today"
         } else if calendar.isDateInYesterday(date) {
-            dateLabel.text = "Yesterday, \(timeString)"
+            datePart = "Yesterday"
         } else {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "d MMM yyyy"
-            dateLabel.text = "\(dateFormatter.string(from: date)), \(timeString)"
+            datePart = dateFormatter.string(from: date)
         }
-        dateLabel.sizeToFit()
-        var frame = dateLabel.frame
-        frame.size.width += 24
-        frame.size.height = 28
-        dateLabel.frame = frame
-    }
-        
-    // Updates the heart button icon and tint to reflect the
-    // current image's favourite state.
-    private func updateHeartButton(for index: Int) {
-        guard images.indices.contains(index) else { return }
-        let isFavourite = images[index].isFavourite
-        heartButtonItem.image = UIImage(systemName: isFavourite ? "heart.fill" : "heart")
-        heartButtonItem.tintColor = isFavourite ? .systemRed : .white
+            
+        // Just hand the strings to your Storyboard labels!
+        dateTitleLabel.text = datePart
+        timeSubtitleLabel.text = timeString
     }
     
     private func scrollFilmstrip(to index: Int, animated: Bool) {
@@ -229,82 +139,149 @@ class SingleImageViewViewController: UIViewController {
         filmstripCollectionView.scrollToItem(at: IndexPath(item: index, section: 0), at: .centeredHorizontally,animated: animated)
     }
     
-    private func showEmptyState() {
-        // Hide chrome elements that make no sense with no images.#imageLiteral(resourceName: "Screenshot 2026-03-19 at 11.14.59 AM.png")
-        filmstripCollectionView.isHidden = true
-        toolbar.isHidden = true
-        
-        // Show centred empty state label.
-        let label = UILabel()
-        label.text = "No Photos or Videos"
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(label)
-        
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-    }
+    private func showEmptyState(animated: Bool = false) {
+            let isEmpty = images.isEmpty
+            
+            // Group all the visibility changes together
+            let stateChanges = {
+                self.fluidBackgroundView.isHidden = !isEmpty
+                self.toolbar.isHidden = isEmpty
+                self.filmstripCollectionView.isHidden = isEmpty
+                self.pageVC?.view.isHidden = isEmpty
+            }
+            
+            // Perform the changes with or without animation
+            if animated {
+                UIView.transition(with: self.view, duration: 0.3, options: .transitionCrossDissolve, animations: stateChanges, completion: nil)
+            } else {
+                stateChanges()
+            }
+            
+            if isEmpty {
+                updateTitle(for: -1)
+            }
+        }
     
     @IBAction func shareTapped(_ sender: UIBarButtonItem) {
         guard images.indices.contains(currentIndex), let fileURL = images[currentIndex].localFileURL else { return }
         let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
         present(activityVC, animated: true)
     }
-        
-    @IBAction func heartTapped(_ sender: UIBarButtonItem) {
-        guard images.indices.contains(currentIndex) else { return }
-        PhotoManager.shared.toggleFavourite(images[currentIndex])
-        // Refresh local array from PhotoManager after the toggle.
-        images = PhotoManager.shared.allImages()
-        updateHeartButton(for: currentIndex)
-    }
-        
-    @IBAction func infoTapped(_ sender: UIBarButtonItem) {
-        #warning("Info panel not yet implemented")
-    }
+                
         
     @IBAction func trashTapped(_ sender: UIBarButtonItem) {
         guard images.indices.contains(currentIndex) else { return }
-            
-        // Confirm before permanently deleting — matches native iOS behaviour.
-        let alert = UIAlertController(
-            title: "Delete Photo",
-            message: "This photo will be permanently deleted from Axiomora.",
-            preferredStyle: .actionSheet
-        )
-            
-        alert.addAction(UIAlertAction(
-            title: "Delete Photo",
-            style: .destructive
-        ) { [weak self] _ in
-            guard let self = self else { return }
+                    
+            let alert = UIAlertController(title: "Delete Photo", message: "This photo will be permanently deleted from Axiomora.", preferredStyle: .actionSheet)
                 
+            alert.addAction(UIAlertAction(title: "Delete Photo", style: .destructive) { [weak self] _ in
+                guard let self = self else { return }
+                    
             PhotoManager.shared.deleteImage(self.images[self.currentIndex])
             self.images = PhotoManager.shared.allImages()
-            
+                    
             if self.images.isEmpty {
-                // No images left — pop back to camera.
-                self.navigationController?.popViewController(animated: true)
+                self.showEmptyState(animated: true)
             } else {
-                // Adjust index if we deleted the last item in the array.
-                let newIndex      = min(self.currentIndex, self.images.count - 1)
+                let newIndex = min(self.currentIndex, self.images.count - 1)
                 self.currentIndex = newIndex
                 self.pageVC?.images = self.images
                 self.pageVC?.showImage(at: newIndex, animated: false)
                 self.filmstripCollectionView.reloadData()
                 self.scrollFilmstrip(to: newIndex, animated: false)
-                self.updateDateLabel(for: newIndex)
-                self.updateHeartButton(for: newIndex)
+                self.updateTitle(for: newIndex)
             }
         })
-            
+                    
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+                
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = sender
+        }
+                
         present(alert, animated: true)
+    }
+    
+    
+    @IBAction func handleMainTap(_ sender: Any) {
+        guard !images.isEmpty else { return }
+        if isChromeVisible {
+                hideChrome()
+            } else {
+                showChrome()
+            }
+    }
+    
+    
+    @IBAction func handlePan(_ sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: view)
+        let verticalMovement = translation.y / view.bounds.height
+        let progress = max(0.0, min(1.0, verticalMovement))
+
+        let pageVC = self.children.first(where: { $0 is SingleImagePageViewController })
+
+        switch sender.state {
+            case .began:
+                interactor = UIPercentDrivenInteractiveTransition()
+                // Natively animate the nav bar away in perfect sync with the pull-down
+                self.navigationController?.setNavigationBarHidden(true, animated: true)
+                self.navigationController?.popViewController(animated: true)
+                    
+            case .changed:
+                interactor?.update(progress)
+                    
+                // 1:1 Finger Tracking
+                let scale = max(0.6, 1.0 - (progress * 0.5))
+                pageVC?.view.transform = CGAffineTransform(translationX: translation.x, y: translation.y).scaledBy(x: scale, y: scale)
+                    
+            case .ended, .cancelled:
+                let velocity = sender.velocity(in: view)
+                let isDismissing = progress > 0.25 || velocity.y > 300
+                            
+                if isDismissing {
+                    interactor?.finish()
+                } else {
+                    interactor?.cancel()
+                    // Bring the nav bar back safely if the user cancels the swipe
+                    self.navigationController?.setNavigationBarHidden(false, animated: true)
+                }
+                    
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                    if isDismissing {
+                        let finalY = self.view.bounds.height
+                        let finalX = translation.x + (velocity.x * 0.2)
+                        pageVC?.view.transform = CGAffineTransform(translationX: finalX, y: finalY).scaledBy(x: 0.6, y: 0.6)
+                    } else {
+                        pageVC?.view.transform = .identity
+                    }
+                })
+                    
+                interactor = nil
+                    
+            default:
+                break
+        }
+    }
+    // Called when popping back from the Gallery to instantly update the screen
+    func updateToDisplayImage(at index: Int, with newImages: [Image]) {
+        self.images = newImages
+        self.currentIndex = index
+        self.startingIndex = index
+            
+        // Force the UI to immediately reflect the new image
+        if let pageVC = self.pageVC {
+            pageVC.images = newImages
+            pageVC.showImage(at: index, animated: false)
+            updateTitle(for: index)
+            filmstripCollectionView.reloadData()
+                
+            // A slight delay ensures the collection view layout finishes before scrolling
+            Task { @MainActor in
+                // explicitly yield to the runloop to guarantee the layout pass finishes
+                await Task.yield()
+                self.scrollFilmstrip(to: index, animated: false)
+            }
+        }
     }
         
 }
@@ -315,8 +292,7 @@ extension SingleImageViewViewController: SingleImagePageChangeDelegate {
         
     func pageDidChange(to index: Int) {
         currentIndex = index
-        updateDateLabel(for: index)
-        updateHeartButton(for: index)
+        updateTitle(for: index)
         scrollFilmstrip(to: index, animated: true)
         filmstripCollectionView.reloadData()
         showChrome()
@@ -333,10 +309,7 @@ extension SingleImageViewViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FilmstripCell.reuseIdentifier,for: indexPath) as!FilmstripCell
             
-        cell.configure(
-            with: images[indexPath.item],
-            isSelected: indexPath.item == currentIndex
-        )
+        cell.configure(with: images[indexPath.item], isSelected: indexPath.item == currentIndex)
         return cell
     }
         
@@ -344,13 +317,12 @@ extension SingleImageViewViewController: UICollectionViewDataSource {
 
 extension SingleImageViewViewController: UICollectionViewDelegate {
         
-    // Tapping a filmstrip cell jumps the page VC to that image
-    // and syncs all chrome elements to the new current image.
+    // Tapping a filmstrip cell jumps the page VC to that image and syncs all chrome elements to the new current image.
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard indexPath.item != currentIndex else { return }
         currentIndex = indexPath.item
         pageVC?.showImage(at: currentIndex, animated: true)
-        updateDateLabel(for: currentIndex)
-        updateHeartButton(for: currentIndex)
+        updateTitle(for: currentIndex)
         scrollFilmstrip(to: currentIndex, animated: true)
         collectionView.reloadData()
         showChrome()
@@ -358,12 +330,131 @@ extension SingleImageViewViewController: UICollectionViewDelegate {
         
 }
 
-// Allows the single tap gesture and the page VC's pan gesture
-// to be recognised simultaneously without conflicting.
+//Custom Transitions
+extension SingleImageViewViewController: UINavigationControllerDelegate {
+    
+    //Tell the nav controller to use our custom Slide Down animation instead of the default sideways pop
+    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        if operation == .pop && fromVC === self {
+            return SlideDownAnimator()
+        }
+        return nil
+    }
+
+    //Attach our finger-tracking interactor to the animation
+    func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return interactor
+    }
+    //The actual animation that pushes the screen down
+    class SlideDownAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+        func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+            return 0.3
+        }
+
+        func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+            guard let fromVC = transitionContext.viewController(forKey: .from) as? SingleImageViewViewController, let fromView = transitionContext.view(forKey: .from), let toView = transitionContext.view(forKey: .to) else { transitionContext.completeTransition(false)
+                return
+            }
+
+            let containerView = transitionContext.containerView
+            containerView.insertSubview(toView, belowSubview: fromView)
+
+            let originalBackgroundColor = fromView.backgroundColor
+
+            UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: .curveEaseOut, animations: {
+                
+                fromView.backgroundColor = .clear
+                fromVC.toolbar?.alpha = 0
+                fromVC.filmstripCollectionView?.alpha = 0
+
+                // NEW: Only let the animator handle the image movement if this was a BUTTON click (!isInteractive).
+                // If it IS interactive, our handlePan gesture is already doing the math!
+                if !transitionContext.isInteractive {
+                    let translation = CGAffineTransform(translationX: 0, y: containerView.bounds.height)
+                    let scale = CGAffineTransform(scaleX: 0.6, y: 0.6)
+                    
+                    if let pageView = fromVC.children.first(where: { $0 is SingleImagePageViewController })?.view {
+                        pageView.transform = translation.concatenating(scale)
+                    }
+                }
+
+            }, completion: { _ in
+                let cancelled = transitionContext.transitionWasCancelled
+                
+                if cancelled {
+                    fromView.backgroundColor = originalBackgroundColor
+                    fromVC.toolbar?.alpha = 1
+                    fromVC.filmstripCollectionView?.alpha = 1
+                    
+                    if let pageView = fromVC.children.first(where: { $0 is SingleImagePageViewController })?.view {
+                        pageView.transform = .identity
+                    }
+                }
+                transitionContext.completeTransition(!cancelled)
+            })
+        }
+    }
+}
+
+
+
+// MARK: - Gesture Protections
 extension SingleImageViewViewController: UIGestureRecognizerDelegate {
-        
+    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-            return true
+            
+            // NEW: If the other gesture is our Double Tap, absolutely do NOT run simultaneously.
+            // We want them to be mutually exclusive.
+            if let tap = otherGestureRecognizer as? UITapGestureRecognizer, tap.numberOfTapsRequired == 2 {
+                return false
+            }
+            
+            // 1. We STILL want the Tap Gesture (to hide/show chrome) to work alongside scroll/pan gestures
+            if gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer {
+                return true
+            }
+            
+            // 2. CRITICAL FIX: Force Pan Gestures (our vertical drag vs the Page View's horizontal swipe) to be mutually exclusive.
+            return false
+        }
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
+            let velocity = panGesture.velocity(in: view)
+            
+            // 3. Only claim the gesture if the user is pulling DOWN, and doing so more vertically than horizontally.
+            // If they swipe horizontally, this returns false, letting the Page View comfortably take over.
+            return velocity.y > 0 && abs(velocity.y) > abs(velocity.x)
+        }
+        return true
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        // We only want to restrict the Tap Gesture
+        if gestureRecognizer is UITapGestureRecognizer {
+            
+            // Find out exactly which view the user's finger touched
+            if let touchedView = touch.view {
+                
+                // If they touched inside the filmstrip OR the toolbar, ignore the tap gesture!
+                if touchedView.isDescendant(of: filmstripCollectionView) || touchedView.isDescendant(of: toolbar) {
+                    return false // Let the tap pass through to the collection view cell
+                }
+            }
         }
         
+        // For all other touches (like tapping the main image), allow the gesture to work
+        return true
     }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            // If our main gesture is a tap, and it encounters another tap gesture that requires 2 taps (our double tap)...
+            if gestureRecognizer is UITapGestureRecognizer,
+               let otherTap = otherGestureRecognizer as? UITapGestureRecognizer,
+               otherTap.numberOfTapsRequired == 2 {
+                // ...force the single tap to wait and fail if the double tap succeeds!
+                return true
+            }
+            return false
+        }
+}
