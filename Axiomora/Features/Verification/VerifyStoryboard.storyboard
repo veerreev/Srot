@@ -104,7 +104,7 @@
                             <constraint firstAttribute="bottom" secondItem="lee-Du-yeW" secondAttribute="bottom" id="xfI-GA-GAa"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Verify" id="ECO-X2-TaM"/>
+                    <navigationItem key="navigationItem" title="Verify" largeTitleDisplayMode="never" id="ECO-X2-TaM"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="imageView" destination="bhU-ne-d5p" id="CoQ-9a-e3J"/>

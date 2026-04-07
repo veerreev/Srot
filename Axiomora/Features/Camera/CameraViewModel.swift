@@ -69,6 +69,7 @@ extension CameraViewModel: CameraManagerDelegate {
 
     func cameraManager(_ manager: CameraManager, didCapture savedImage: Image) {
         onPhotoCaptured?(savedImage)
+        
     }
 
     func cameraManager(_ manager: CameraManager, didFailWithError error: Error) {
@@ -76,5 +77,6 @@ extension CameraViewModel: CameraManagerDelegate {
     }
 
     func cameraManagerWillProcessPhoto(_ manager: CameraManager) {
+        
     }
 }

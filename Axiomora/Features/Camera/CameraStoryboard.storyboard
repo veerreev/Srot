@@ -115,6 +115,7 @@
                                                 <buttonConfiguration key="configuration" style="plain" cornerStyle="capsule"/>
                                                 <connections>
                                                     <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
+                                                    <segue destination="oT7-4f-cHU" kind="show" identifier="SegueToSingleImage" id="ISY-RZ-gJc"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9oL-DO-DY9" userLabel="Rotate Camera Button">
@@ -234,6 +235,16 @@
             </objects>
             <point key="canvasLocation" x="4598" y="397"/>
         </scene>
+        <!--SingleImageViewStoryboard-->
+        <scene sceneID="dXQ-nG-6lc">
+            <objects>
+                <viewControllerPlaceholder storyboardName="SingleImageViewStoryboard" id="oT7-4f-cHU" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Xau-yw-amR"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RKC-va-U2L" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3531" y="730"/>
+        </scene>
         <!--SignaturesViewController-->
         <scene sceneID="xNJ-fO-m6y">
             <objects>
@@ -250,9 +261,11 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="aiF-Cb-4yE" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Camera" id="PJQ-XF-lhc"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="3AV-b4-T5a">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="3AV-b4-T5a">
+                        <rect key="frame" x="0.0" y="118" width="393" height="106"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <navigationBarAppearance key="standardAppearance"/>
+                        <navigationBarAppearance key="scrollEdgeAppearance"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="eNt-XL-sD6">

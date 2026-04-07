@@ -36,6 +36,7 @@ class CameraViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        loadThumbnail()
         viewModel.startSession()
     }
     
@@ -117,25 +118,65 @@ class CameraViewController: UIViewController {
     
     // Shows the last captured image on launch if photos already exist.
     private func loadThumbnail() {
-        guard let latestImage = viewModel.latestImage() else { return }
-        updateThumbnail(with: latestImage)
-    }
+                // Check if there is at least one image
+                guard let lastImage = PhotoManager.shared.allImages().first else {
+                    // IF NO IMAGES EXIST: Clear the background image from the configuration
+                    DispatchQueue.main.async {
+                        var config = self.thumbnailButton.configuration ?? UIButton.Configuration.plain()
+                        config.background.image = nil
+                        self.thumbnailButton.configuration = config
+                    }
+                    return
+                }
+                
+                // IF IMAGES EXIST: Proceed as normal
+                updateThumbnail(with: lastImage)
+            }
     
     // Updates the thumbnail circle with a newly captured image.
     // Called from cameraManager(_:didCapture:) after a successful save.
     func updateThumbnail(with image: Image) {
-        guard let thumbURL = image.thumbnailFileURL,
-              let uiImage  = UIImage(contentsOfFile: thumbURL.path) else { return }
+        guard let thumbURL = image.thumbnailFileURL, let uiImage = UIImage(contentsOfFile: thumbURL.path) else { return }
         
         DispatchQueue.main.async {
             self.thumbnailButton.alpha = 0
-            self.thumbnailButton.setImage(uiImage, for: .normal)
-            self.thumbnailButton.imageView?.contentMode   = .scaleAspectFill
-            self.thumbnailButton.imageView?.clipsToBounds = true
-            self.thumbnailButton.backgroundColor          = Theme.Colors.clear
+            
+            // 1. Grab the existing configuration
+            var config = self.thumbnailButton.configuration ?? UIButton.Configuration.plain()
+            
+            // 2. Apply the image to the BACKGROUND, not the foreground
+            config.background.image = uiImage
+            
+            // 3. Tell the background exactly how to scale it!
+            // .scaleAspectFill is what the native Apple Camera uses (fills the circle completely)
+            // If you truly want to see the ENTIRE rectangle with empty space on the sides, change this to .scaleAspectFit
+            config.background.imageContentMode = .scaleAspectFill
+            
+            // 4. Re-apply the updated configuration
+            self.thumbnailButton.configuration = config
+            
+            // 5. Clear out any old foreground images so they don't overlap
+            self.thumbnailButton.setImage(nil, for: .normal)
             
             UIView.animate(withDuration: 0.3) {
                 self.thumbnailButton.alpha = 1
+            }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "SegueToSingleImage" {
+            // Check if the destination is our SingleImageViewViewController
+            if let singleImageVC = segue.destination as? SingleImageViewViewController {
+                
+                // 1. Fetch the latest images from the manager
+                let allImages = PhotoManager.shared.allImages()
+                
+                // 2. Pass the data!
+                singleImageVC.images = allImages
+                
+                // 3. Tapping the camera thumbnail always opens the most recent photo (index 0)
+                singleImageVC.startingIndex = 0
             }
         }
     }

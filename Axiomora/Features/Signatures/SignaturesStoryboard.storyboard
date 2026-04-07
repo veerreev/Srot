@@ -105,7 +105,7 @@
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" title="Signatures" id="eiY-Jb-qFM"/>
+                    <navigationItem key="navigationItem" title="Signatures" largeTitleDisplayMode="never" id="eiY-Jb-qFM"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
