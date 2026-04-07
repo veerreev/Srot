@@ -30,8 +30,8 @@ class VerifyViewController: UIViewController {
         
         Theme.Button.applyGlassStyle(to: verifyButton, title: "Verify", color: .systemBlue)
         
-//        uploadVisualEffectBackground.layer.cornerRadius = 32
-//        uploadVisualEffectBackground.clipsToBounds = true
+        uploadVisualEffectBackground.layer.cornerRadius = 32
+        uploadVisualEffectBackground.clipsToBounds = true
         uploadVisualEffectBackground.alpha = 0.5
 
     }
