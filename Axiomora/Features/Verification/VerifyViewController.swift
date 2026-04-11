@@ -17,6 +17,7 @@ class VerifyViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var infoMessageLabel: UILabel!
     @IBOutlet weak var imageViewAspectRatio: NSLayoutConstraint!
+    @IBOutlet weak var trashBarItem: UIBarButtonItem!
     
     private var isImageSelected: Bool = false
         
@@ -29,15 +30,11 @@ class VerifyViewController: UIViewController {
     private func setupUI() {
         
         Theme.Button.applyGlassStyle(to: verifyButton, title: "Verify", color: .systemBlue)
-        
-        uploadVisualEffectBackground.layer.cornerRadius = 32
-        uploadVisualEffectBackground.clipsToBounds = true
-        uploadVisualEffectBackground.alpha = 0.5
 
     }
     
     private func presentImagePicker() {
-//        UIView.animate
+        
         var config = PHPickerConfiguration()
         config.selectionLimit = 1
         config.filter = .images
@@ -72,12 +69,24 @@ class VerifyViewController: UIViewController {
         }
     }
 
+    @IBAction func deleteButtonTapped(_ sender: Any) {
+        
+        UIView.animate(withDuration: 0.1, delay: 0, options: [.curveEaseInOut], animations: {
+            self.uploadVisualEffectBackground.isHidden = false
+            self.imageView.isHidden = true
+        })
+        
+        imageView.image = nil
+        trashBarItem.isHidden = true
+        verifyButton.isEnabled = false
+        
+    }
 }
 
 extension VerifyViewController: PHPickerViewControllerDelegate {
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true)
+        
         
         guard let provider = results.first?.itemProvider,
               provider.canLoadObject(ofClass: UIImage.self) else {
@@ -96,6 +105,7 @@ extension VerifyViewController: PHPickerViewControllerDelegate {
             DispatchQueue.main.async {
                 self.isImageSelected = true
                 self.handleSelectedImage(selectedImage)
+                picker.dismiss(animated: true)
             }
         }
     }
@@ -107,7 +117,10 @@ extension VerifyViewController: PHPickerViewControllerDelegate {
             self.imageView.isHidden = false
         })
         
+        verifyButton.isEnabled = true
+        trashBarItem.isHidden = false
         imageView.image =  image
+        imageView.layer.borderColor = Theme.Colors.white.cgColor
 
     }
 }

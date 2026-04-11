@@ -38,6 +38,7 @@ class CameraViewController: UIViewController {
         super.viewWillAppear(animated)
         loadThumbnail()
         viewModel.startSession()
+        updateSignatureNumberButton()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -114,24 +115,41 @@ class CameraViewController: UIViewController {
         captureButton.configuration?.baseBackgroundColor = Theme.Colors.white
     }
     
+    private func updateSignatureNumberButton() {
+        let signatures = SignatureManager.shared.loadSignatures()
+        
+        if let currentIndex = signatures.firstIndex(where: { $0.isCurrent }) {
+            Theme.Button.applyGlassStyle(
+                to: signatureNumberButton,
+                title: "\(currentIndex + 1)",
+                color: Theme.Colors.systemBlue
+            )
+        } else {
+            // No signatures yet — fall back to the '+' icon
+            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .small)
+            let plusImage = UIImage(systemName: "plus", withConfiguration: symbolConfig)
+            Theme.Button.applyGlassStyle(to: signatureNumberButton, image: plusImage, color: Theme.Colors.systemBlue)
+        }
+    }
+    
     // MARK: - Thumbnail
     
     // Shows the last captured image on launch if photos already exist.
     private func loadThumbnail() {
-                // Check if there is at least one image
-                guard let lastImage = PhotoManager.shared.allImages().first else {
-                    // IF NO IMAGES EXIST: Clear the background image from the configuration
-                    DispatchQueue.main.async {
-                        var config = self.thumbnailButton.configuration ?? UIButton.Configuration.plain()
-                        config.background.image = nil
-                        self.thumbnailButton.configuration = config
-                    }
-                    return
-                }
-                
-                // IF IMAGES EXIST: Proceed as normal
-                updateThumbnail(with: lastImage)
+        // Check if there is at least one image
+        guard let lastImage = PhotoManager.shared.allImages().first else {
+            // IF NO IMAGES EXIST: Clear the background image from the configuration
+            DispatchQueue.main.async {
+                var config = self.thumbnailButton.configuration ?? UIButton.Configuration.plain()
+                config.background.image = nil
+                self.thumbnailButton.configuration = config
             }
+            return
+        }
+        
+        // IF IMAGES EXIST: Proceed as normal
+        updateThumbnail(with: lastImage)
+    }
     
     // Updates the thumbnail circle with a newly captured image.
     // Called from cameraManager(_:didCapture:) after a successful save.

@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -114,25 +115,81 @@
                         <outlet property="deleteButton" destination="igb-Rd-TBK" id="kvu-oy-zOu"/>
                         <outlet property="emptySignaturesStackView" destination="bxP-zW-KPu" id="2bD-YE-s1E"/>
                         <outlet property="selectButton" destination="szE-mh-vUp" id="YZh-xk-rIf"/>
+                        <segue destination="rnD-31-bjf" kind="show" identifier="SegueToSingleSignature" id="stP-UQ-uPs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="138.1679389312977" y="130.98591549295776"/>
         </scene>
+        <!--Single Signature View Controller-->
+        <scene sceneID="4pq-gT-yDa">
+            <objects>
+                <viewController storyboardIdentifier="SingleSignatureViewController" id="rnD-31-bjf" customClass="SingleSignatureViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Drw-27-xXP">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T6N-eM-DRQ">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="8" estimatedSectionHeaderHeight="-1" sectionFooterHeight="8" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="qHx-mz-ivU">
+                                        <rect key="frame" x="0.0" y="-32" width="393" height="884"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <sections/>
+                                    </tableView>
+                                </subviews>
+                                <color key="backgroundColor" name="primary_blue"/>
+                                <constraints>
+                                    <constraint firstItem="qHx-mz-ivU" firstAttribute="leading" secondItem="T6N-eM-DRQ" secondAttribute="leading" id="2PZ-qJ-aZS"/>
+                                    <constraint firstItem="qHx-mz-ivU" firstAttribute="top" secondItem="T6N-eM-DRQ" secondAttribute="top" constant="-32" id="IhM-pG-0w5"/>
+                                    <constraint firstAttribute="bottom" secondItem="qHx-mz-ivU" secondAttribute="bottom" id="UJm-C3-btH"/>
+                                    <constraint firstAttribute="trailing" secondItem="qHx-mz-ivU" secondAttribute="trailing" id="a55-jT-u9q"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="NQs-Wn-m6H"/>
+                        <color key="backgroundColor" name="primary_blue"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="T6N-eM-DRQ" secondAttribute="bottom" id="XHg-l1-QJ6"/>
+                            <constraint firstItem="T6N-eM-DRQ" firstAttribute="leading" secondItem="Drw-27-xXP" secondAttribute="leading" id="mss-Ml-Mmy"/>
+                            <constraint firstItem="T6N-eM-DRQ" firstAttribute="top" secondItem="Drw-27-xXP" secondAttribute="top" id="rzW-uN-8Ri"/>
+                            <constraint firstAttribute="trailing" secondItem="T6N-eM-DRQ" secondAttribute="trailing" id="y5m-SB-x3m"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="kKP-it-CFz">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="ItC-Yx-UJS">
+                            <connections>
+                                <action selector="editButtonTapped:" destination="rnD-31-bjf" id="SPY-jL-hse"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="tableView" destination="qHx-mz-ivU" id="cNE-Sy-QGp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rFL-kt-Uft" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1107.6335877862596" y="130.98591549295776"/>
+        </scene>
     </scenes>
     <resources>
+        <namedColor name="primary_blue">
+            <color red="0.10196078431372549" green="0.12549019607843137" blue="0.20784313725490197" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

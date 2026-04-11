@@ -9,6 +9,7 @@ import UIKit
 
 protocol NewSignatureDelegate: AnyObject {
     func didCreateSignature(_ signature: Signature)
+    func didUpdateSignature(_ signature: Signature)
 }
 
 class NewSignatureTableViewController: UITableViewController, UINavigationControllerDelegate {
@@ -21,11 +22,14 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
     @IBOutlet weak var locationSwitch: UISwitch!
     @IBOutlet weak var notesTextView: UITextView!
     @IBOutlet weak var doneButton: UIBarButtonItem!
+    @IBOutlet weak var cancelButton: UIBarButtonItem!
+    
+    var signatureToEdit: Signature?
     
     private var editingSocialLinkIndex: IndexPath?
     private var socialHandles: [(platform: SocialPlatform, handle: String)] = []
     private let socialSectionIndex = 2
-    
+    private var didValuesChange: Bool = false
     weak var delegate: NewSignatureDelegate?
     
     override func viewDidLoad() {
@@ -34,12 +38,31 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
         tableView.register(UINib(nibName: "SocialLinkCell", bundle: nil), forCellReuseIdentifier: "SocialLinkCell")
         tableView.register(UINib(nibName: "AddSocialCell", bundle: nil), forCellReuseIdentifier: "AddSocialCell")
         
-        nameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        titleTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+//        nameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+//        titleTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
 
         doneButton.isEnabled = false
         
         setupNotesTextView()
+        
+        if let sig = signatureToEdit {
+            prefill(with: sig)
+            title = "Edit Signature"
+            doneButton.isEnabled = true
+        }
+    }
+    
+    private func prefill(with sig: Signature) {
+        titleTextField.text = sig.title
+        nameTextField.text = sig.displayName
+        emailTextField.text = sig.email
+        portfolioTextField.text = sig.website
+        copyrightTextField.text = sig.copyrightText
+        locationSwitch.isOn = sig.shouldIncludeLocation
+        notesTextView.text = sig.notes
+
+        socialHandles = sig.socialHandles.map { ($0.platform, $0.userInput) }
+        tableView.reloadSections(IndexSet(integer: socialSectionIndex), with: .none)
     }
 
     // MARK: - Table view data source
@@ -97,52 +120,90 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
     // MARK: - Actions
     
     @IBAction func cancelButtonTapped(_ sender: Any) {
-        dismiss(animated: true)
+        if didValuesChange {
+            let alert = UIAlertController(
+                title: nil,
+                message: "Are you sure you want to discard the changes?",
+                preferredStyle: .actionSheet
+            )
+
+            alert.addAction(UIAlertAction(title: "Discard Changes", style: .destructive) { [weak self] _ in
+                self?.dismiss(animated: true)
+            })
+            
+            if let popover = alert.popoverPresentationController {
+                popover.barButtonItem = cancelButton
+            }
+
+            present(alert, animated: true)
+        } else {
+            dismiss(animated: true)
+        }
     }
     
     @IBAction func doneButtonTapped(_ sender: Any) {
-        
-        guard let name = nameTextField.text,
-            let title = titleTextField.text,
-            !name.isEmpty, !title.isEmpty else {
-                fatalError("Name, Title cannot be empty")
-            }
-        
+        guard let name = nameTextField.text, !name.isEmpty,
+              let title = titleTextField.text, !title.isEmpty else {
+            fatalError("Name, Title cannot be empty")
+        }
         guard let userID = AuthManager.shared.currentUser?.userId else {
             fatalError("No user logged in")
         }
-        
-        let handles: [SocialHandle] = socialHandles.map {
-            SocialHandle(platform: $0.platform, userInput: $0.handle)
+
+        let handles: [SocialHandle] = socialHandles
+            .filter { !$0.handle.trimmingCharacters(in: .whitespaces).isEmpty }
+            .map { SocialHandle(platform: $0.platform, userInput: $0.handle) }
+
+        if let existing = signatureToEdit {
+            // Edit mode — preserve the original id and creatorID
+            let updated = Signature(
+                id: existing.id,
+                creatorID: existing.creatorID,
+                title: title,
+                displayName: name,
+                copyrightText: copyrightTextField.text?.isEmpty == false ? copyrightTextField.text : nil,
+                email: emailTextField.text?.isEmpty == false ? emailTextField.text : nil,
+                website: portfolioTextField.text?.isEmpty == false ? portfolioTextField.text : nil,
+                socialHandles: handles,
+                shouldIncludeLocation: locationSwitch.isOn,
+                notes: notesTextView.text?.isEmpty == false ? notesTextView.text : nil
+            )
+            delegate?.didUpdateSignature(updated)
+        } else {
+            // Create mode
+            let newSignature = Signature(
+                id: UUID().uuidString,
+                creatorID: userID,
+                title: title,
+                displayName: name,
+                copyrightText: copyrightTextField.text?.isEmpty == false ? copyrightTextField.text : nil,
+                email: emailTextField.text?.isEmpty == false ? emailTextField.text : nil,
+                website: portfolioTextField.text?.isEmpty == false ? portfolioTextField.text : nil,
+                socialHandles: handles,
+                shouldIncludeLocation: locationSwitch.isOn,
+                notes: notesTextView.text?.isEmpty == false ? notesTextView.text : nil
+            )
+            delegate?.didCreateSignature(newSignature)
         }
 
-        let newSignature = Signature(
-            id: UUID().uuidString, // To be generated by the server later
-            creatorID: userID,
-            title: title,
-            displayName: name,
-            copyrightText: copyrightTextField.text?.isEmpty == false ? copyrightTextField.text : nil,
-            email: emailTextField.text?.isEmpty == false ? emailTextField.text : nil,
-            website: portfolioTextField.text?.isEmpty == false ? portfolioTextField.text : nil,
-            socialHandles: handles,
-            shouldIncludeLocation: locationSwitch.isOn
-        )
-
-        delegate?.didCreateSignature(newSignature)
-        
         dismiss(animated: true)
+    }
+    
+    @IBAction func valueChanged(_ sender: Any) {
+        didValuesChange = true
+        doneButton.isEnabled = true
     }
     
     // MARK: - Other functions (Helpers)
     
-    @objc private func textFieldDidChange() {
-        
-        let nameFilled = !(nameTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
-        let titleFilled = !(titleTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
-        
-        doneButton.isEnabled = nameFilled && titleFilled
-        
-    }
+//    @objc private func textFieldDidChange() {
+//        
+//        let nameFilled = !(nameTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
+//        let titleFilled = !(titleTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
+//        
+//        doneButton.isEnabled = nameFilled && titleFilled
+//        
+//    }
     
     private func addNewRow() {
         let oldAddSocialPath = IndexPath(row: socialHandles.count, section: socialSectionIndex)
@@ -211,6 +272,11 @@ extension NewSignatureTableViewController: SocialLinkCellDelegate {
             tableView.insertRows(at: [newAddSocialPath], with: .fade)
         }
         tableView.endUpdates()
+    }
+    
+    func didUpdateHandle(_ text: String, on cell: SocialLinkCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        socialHandles[indexPath.row].handle = text
     }
 }
 

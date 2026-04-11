@@ -150,11 +150,7 @@ class SignaturesViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Delete Signature", style: .destructive) { [weak self] _ in
             self?.deleteCurrentSignature()
         })
-
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-
-        // Anchor the popover to the bar button item (required on iPad,
-        // but good practice on iPhone too)
+        
         if let popover = alert.popoverPresentationController {
             popover.barButtonItem = deleteButton
         }
@@ -178,6 +174,7 @@ class SignaturesViewController: UIViewController {
         collectionView.indexPathsForVisibleItems.forEach { indexPath in
             guard let cell = collectionView.cellForItem(at: indexPath) as? SignatureCell else { return }
             cell.setAsCurrentSignature(indexPath.item == currentCenteredIndex && signatures[indexPath.item].isCurrent)
+            cell.numberLabel.text = "\(indexPath.item + 1)"
         }
 
         updateEmptyState()
@@ -212,7 +209,7 @@ extension SignaturesViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SignatureCell", for: indexPath) as! SignatureCell
-        cell.configure(with: signatures[indexPath.item])
+        cell.configure(with: signatures[indexPath.item], index: indexPath.item)
         return cell
     }
 }
@@ -221,7 +218,20 @@ extension SignaturesViewController: UICollectionViewDataSource {
 
 extension SignaturesViewController: UICollectionViewDelegate {
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) { }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "SingleSignatureViewController") as! SingleSignatureViewController
+        vc.signature = signatures[indexPath.item]
+        
+        vc.onSignatureUpdated = { [weak self] updated in
+            guard let self else { return }
+            self.signatures[indexPath.item] = updated
+            SignatureManager.shared.saveSignatures(self.signatures)
+            self.collectionView.reloadItems(at: [indexPath])
+        }
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard let cell = cell as? SignatureCell else { return }
@@ -233,6 +243,10 @@ extension SignaturesViewController: UICollectionViewDelegate {
 // MARK: - NewSignatureDelegate
 
 extension SignaturesViewController: NewSignatureDelegate {
+    
+    func didUpdateSignature(_ signature: Signature) {
+        
+    }
 
     func didCreateSignature(_ signature: Signature) {
         let isFirstSignature = signatures.isEmpty

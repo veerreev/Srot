@@ -113,7 +113,7 @@ final class CameraManager: NSObject {
     private func discoverDevice(for mode: CameraMode) -> AVCaptureDevice? {
         switch mode {
         case .normal:
-            if let triple = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back) {
+            if let triple = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
                 return triple
             } else if let dual = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) {
                 return dual

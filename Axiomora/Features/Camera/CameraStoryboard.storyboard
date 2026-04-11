@@ -42,7 +42,7 @@
                                                     <imageReference key="image" image="plus" catalog="system" symbolScale="small"/>
                                                 </buttonConfiguration>
                                                 <connections>
-                                                    <segue destination="vgY-Ng-vf8" kind="show" id="3UN-Ra-VJA"/>
+                                                    <segue destination="vgY-Ng-vf8" kind="show" identifier="SegueToSignatures" id="3UN-Ra-VJA"/>
                                                 </connections>
                                             </button>
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="db7-91-BSr" customClass="CameraControlPill" customModule="Axiomora" customModuleProvider="target">

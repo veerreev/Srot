@@ -10,6 +10,7 @@ import UIKit
 protocol SocialLinkCellDelegate: AnyObject {
     func didTapPlatformButton(on cell: SocialLinkCell)
     func didTapMinusButton(on cell: SocialLinkCell)
+    func didUpdateHandle(_ text: String, on cell: SocialLinkCell)
 }
 
 class SocialLinkCell: UITableViewCell {
@@ -20,12 +21,15 @@ class SocialLinkCell: UITableViewCell {
 
     weak var delegate: SocialLinkCellDelegate?
 
-    // Called when the platform button is tapped
     @IBAction func platformButtonTapped(_ sender: UIButton) {
         delegate?.didTapPlatformButton(on: self)
     }
     
     @IBAction func minusButtonTapped(_ sender: Any) {
         delegate?.didTapMinusButton(on: self)
+    }
+    
+    @IBAction func handleTextChanged(_ sender: UITextField) {
+        delegate?.didUpdateHandle(handleTextField.text ?? "", on: self)
     }
 }

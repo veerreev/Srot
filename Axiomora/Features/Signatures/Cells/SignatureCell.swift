@@ -19,6 +19,9 @@ class SignatureCell: UICollectionViewCell {
     @IBOutlet weak var portfolioEntryLabel: UILabel!
     @IBOutlet weak var portfolioCopyrightSeparator: UIView!
 
+    @IBOutlet weak var locationIcon: UIImageView!
+    @IBOutlet weak var locationLabel: UILabel!
+    
     @IBOutlet weak var addedSocialsLabel: UILabel!
     @IBOutlet weak var socialStack1: UIStackView!
 
@@ -72,12 +75,20 @@ class SignatureCell: UICollectionViewCell {
         rebuildSocialStack()
     }
 
-    func configure(with signature: Signature) {
+    func configure(with signature: Signature, index: Int) {
 
-        numberLabel.text = signature.title
+        numberLabel.text = "\(index+1)"
         nameEntryLabel.text = signature.displayName
         emailEntryLabel.text = signature.email
         portfolioEntryLabel.text = signature.website
+        
+        if signature.shouldIncludeLocation {
+            locationIcon.image = UIImage(systemName: "location")
+            locationLabel.text = "Location included"
+        } else {
+            locationIcon.image = UIImage(systemName: "location.slash")
+            locationLabel.text = "Location not included"
+        }
         copyrightEntryLabel.text = "© " + (signature.copyrightText ?? "")
 
         addedSocialsLabel.isHidden = signature.socialHandles.isEmpty
