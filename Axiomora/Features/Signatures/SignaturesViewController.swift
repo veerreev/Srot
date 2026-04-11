@@ -34,6 +34,12 @@ class SignaturesViewController: UIViewController {
         )
         setupUI()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            
+            self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        }
 
     // MARK: - UI Setup
 

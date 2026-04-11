@@ -181,6 +181,11 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
             return
         }
         
+        //Notify the delegate that heavy ML processing is about to begin
+        Task { @MainActor in
+                    self.delegate?.cameraManagerWillProcessPhoto(self)
+                }
+        
         // Disable shutter button here to prevent spamming if needed
         
         // Capture ratio here so we don't access `self` across an isolation boundary below

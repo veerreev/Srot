@@ -104,20 +104,38 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="IJr-7p-w6x" userLabel="Bottom Controls Stack View">
                                         <rect key="frame" x="24" y="766" width="345" height="50"/>
                                         <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRr-uY-0ZM" userLabel="Gallery Button">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E0R-0q-I2o">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
-                                                <gestureRecognizers/>
+                                                <subviews>
+                                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="lCY-Ht-ap4">
+                                                        <rect key="frame" x="15" y="15" width="20" height="20"/>
+                                                        <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </activityIndicatorView>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRr-uY-0ZM" userLabel="Gallery Button">
+                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                        <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                                                        <gestureRecognizers/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="50" id="H2f-Ga-s2j"/>
+                                                            <constraint firstAttribute="width" secondItem="rRr-uY-0ZM" secondAttribute="height" multiplier="1:1" id="cr1-kg-4ef"/>
+                                                        </constraints>
+                                                        <buttonConfiguration key="configuration" style="plain" cornerStyle="capsule"/>
+                                                        <connections>
+                                                            <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
+                                                            <segue destination="oT7-4f-cHU" kind="show" identifier="SegueToSingleImage" id="ISY-RZ-gJc"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="rRr-uY-0ZM" secondAttribute="height" multiplier="1:1" id="cr1-kg-4ef"/>
-                                                    <constraint firstAttribute="width" constant="50" id="iLf-4m-t0l"/>
+                                                    <constraint firstAttribute="bottom" secondItem="rRr-uY-0ZM" secondAttribute="bottom" id="0Dg-P4-oaf"/>
+                                                    <constraint firstAttribute="trailing" secondItem="rRr-uY-0ZM" secondAttribute="trailing" id="0WX-x3-f5a"/>
+                                                    <constraint firstItem="rRr-uY-0ZM" firstAttribute="leading" secondItem="E0R-0q-I2o" secondAttribute="leading" id="5Zg-lh-SmQ"/>
+                                                    <constraint firstItem="lCY-Ht-ap4" firstAttribute="centerY" secondItem="rRr-uY-0ZM" secondAttribute="centerY" id="DjV-iP-WJD"/>
+                                                    <constraint firstItem="rRr-uY-0ZM" firstAttribute="top" secondItem="E0R-0q-I2o" secondAttribute="top" id="Ght-VU-EVh"/>
+                                                    <constraint firstItem="lCY-Ht-ap4" firstAttribute="centerX" secondItem="rRr-uY-0ZM" secondAttribute="centerX" id="Rfi-Ck-oD1"/>
                                                 </constraints>
-                                                <buttonConfiguration key="configuration" style="plain" cornerStyle="capsule"/>
-                                                <connections>
-                                                    <action selector="thumbnailTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="p3w-KU-rsm"/>
-                                                    <segue destination="oT7-4f-cHU" kind="show" identifier="SegueToSingleImage" id="ISY-RZ-gJc"/>
-                                                </connections>
-                                            </button>
+                                            </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9oL-DO-DY9" userLabel="Rotate Camera Button">
                                                 <rect key="frame" x="295" y="0.0" width="50" height="50"/>
                                                 <constraints>
@@ -214,6 +232,7 @@
                         <outlet property="livePreviewAspectRatioConstraint" destination="rrt-2C-763" id="XDK-yZ-oDJ"/>
                         <outlet property="livePreviewTopConstraint" destination="c5w-Pq-cEg" id="ltp-kM-Mgr"/>
                         <outlet property="livePreviewView" destination="pqg-Tc-ze0" id="jmZ-zZ-Zgf"/>
+                        <outlet property="progressSpinner" destination="lCY-Ht-ap4" id="ubW-o5-Vgn"/>
                         <outlet property="rotateCameraButton" destination="9oL-DO-DY9" id="pkG-zj-p5n"/>
                         <outlet property="signatureNumberButton" destination="BbR-tt-HSx" id="bwV-EC-AeG"/>
                         <outlet property="thumbnailButton" destination="rRr-uY-0ZM" id="h89-Fu-3G9"/>
@@ -286,7 +305,7 @@
         <image name="bolt.slash.fill" catalog="system" width="98" height="128"/>
         <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

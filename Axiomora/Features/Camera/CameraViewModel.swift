@@ -15,6 +15,8 @@ class CameraViewModel: NSObject {
     var onPhotoCaptured: ((Image) -> Void)?
     var onUnauthorized: (() -> Void)?
     var onError: ((Error) -> Void)?
+    
+    var onProcessingStarted: (() -> Void)?
 
     override init() {
         super.init()
@@ -77,6 +79,10 @@ extension CameraViewModel: CameraManagerDelegate {
     }
 
     func cameraManagerWillProcessPhoto(_ manager: CameraManager) {
+        
+        Task { @MainActor [weak self] in
+                    self?.onProcessingStarted?()
+                }
         
     }
 }

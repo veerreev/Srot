@@ -10,6 +10,7 @@ import AVFoundation
 
 class CameraViewController: UIViewController {
     
+    @IBOutlet var progressSpinner: UIActivityIndicatorView!
     @IBOutlet var thumbnailButton: UIButton!
     @IBOutlet weak var livePreviewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var livePreviewAspectRatioConstraint: NSLayoutConstraint!
@@ -58,14 +59,26 @@ class CameraViewController: UIViewController {
         viewModel.onPhotoCaptured = { [weak self] savedImage in
             self?.updateThumbnail(with: savedImage)
         }
+        
+        //Start the spinner and dim the thumbnail
+        viewModel.onProcessingStarted = { [weak self] in
+            self?.progressSpinner.startAnimating()
+            UIView.animate(withDuration: 0.2) {
+                self?.thumbnailButton.alpha = 0.5
+            }
+        }
  
         viewModel.onUnauthorized = { [weak self] in
             self?.presentCameraSettingsAlert()
         }
  
-        viewModel.onError = { error in
-            print("Camera error: \(error.localizedDescription)")
-        }
+        viewModel.onError = { [weak self] error in
+                    print("Camera error: \(error.localizedDescription)")
+                    self?.progressSpinner.stopAnimating()
+                    UIView.animate(withDuration: 0.2) {
+                        self?.thumbnailButton.alpha = 1.0
+                    }
+                }
     }
     
     // MARK: - SETUP
@@ -156,7 +169,10 @@ class CameraViewController: UIViewController {
     func updateThumbnail(with image: Image) {
         guard let thumbURL = image.thumbnailFileURL, let uiImage = UIImage(contentsOfFile: thumbURL.path) else { return }
         
-        DispatchQueue.main.async {
+        Task { @MainActor in
+            
+            self.progressSpinner.stopAnimating()
+            
             self.thumbnailButton.alpha = 0
             
             // 1. Grab the existing configuration
