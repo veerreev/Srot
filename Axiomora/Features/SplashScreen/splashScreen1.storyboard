@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Splash Screen1 View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" customClass="splashScreen1ViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eb9-x7-k16" customClass="FluidBackgroundView" customModule="Axiomora" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="4" translatesAutoresizingMaskIntoConstraints="NO" id="s7X-0z-nI9">
+                                        <rect key="frame" x="151.33333333333334" y="637" width="90.666666666666657" height="26"/>
+                                        <color key="pageIndicatorTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <action selector="pageControlTapped:" destination="Y6W-OH-hqX" eventType="valueChanged" id="ssp-fj-rFm"/>
+                                        </connections>
+                                    </pageControl>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wqn-y8-leI">
+                                        <rect key="frame" x="38" y="440" width="317" height="86"/>
+                                        <string key="text">Own Every Image
+You Capture</string>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pbn-FK-NBC">
+                                        <rect key="frame" x="38" y="542" width="317" height="61"/>
+                                        <string key="text">Add an invisible identity to your photos,
+ensuring provenance and protection
+across the web</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" systemColor="systemGray2Color"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SignIt" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iMw-u1-Mfi">
+                                        <rect key="frame" x="74" y="400" width="55.333333333333343" height="24"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DY1-VB-dlK">
+                                        <rect key="frame" x="32" y="687" width="329" height="35"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Next"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="nextTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Kjw-aJ-oeC"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iof-3F-V9Y">
+                                        <rect key="frame" x="168" y="746" width="57" height="35"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Skip"/>
+                                        <connections>
+                                            <action selector="skipTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="vJF-O0-8MH"/>
+                                        </connections>
+                                    </button>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Axiomora Icon Image" translatesAutoresizingMaskIntoConstraints="NO" id="ecc-WW-cnw">
+                                        <rect key="frame" x="38" y="400" width="28" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="ecc-WW-cnw" secondAttribute="height" multiplier="1:1" id="CNn-U1-KZ2"/>
+                                            <constraint firstAttribute="width" constant="28" id="KiR-af-xha"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstItem="iof-3F-V9Y" firstAttribute="top" secondItem="DY1-VB-dlK" secondAttribute="bottom" constant="24" id="1ua-YS-Vu9"/>
+                                    <constraint firstItem="ecc-WW-cnw" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="38" id="6gR-kx-JoL"/>
+                                    <constraint firstItem="s7X-0z-nI9" firstAttribute="centerX" secondItem="eb9-x7-k16" secondAttribute="centerX" id="7vK-AR-zrf"/>
+                                    <constraint firstItem="Wqn-y8-leI" firstAttribute="top" secondItem="iMw-u1-Mfi" secondAttribute="bottom" constant="16" id="A05-oT-ioB"/>
+                                    <constraint firstItem="iMw-u1-Mfi" firstAttribute="leading" secondItem="ecc-WW-cnw" secondAttribute="trailing" constant="8" id="Avn-0X-5cU"/>
+                                    <constraint firstAttribute="trailing" secondItem="Pbn-FK-NBC" secondAttribute="trailing" constant="38" id="BQC-mh-2DD"/>
+                                    <constraint firstAttribute="trailing" secondItem="Wqn-y8-leI" secondAttribute="trailing" constant="38" id="IR1-8A-FCa"/>
+                                    <constraint firstItem="iMw-u1-Mfi" firstAttribute="top" secondItem="eb9-x7-k16" secondAttribute="top" constant="400" id="LdG-SQ-hcC"/>
+                                    <constraint firstItem="DY1-VB-dlK" firstAttribute="top" secondItem="s7X-0z-nI9" secondAttribute="bottom" constant="24" id="MXj-1G-MLx"/>
+                                    <constraint firstItem="Pbn-FK-NBC" firstAttribute="top" secondItem="Wqn-y8-leI" secondAttribute="bottom" constant="16" id="Nb2-4c-BG4"/>
+                                    <constraint firstItem="Pbn-FK-NBC" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="38" id="Ouw-oi-faa"/>
+                                    <constraint firstItem="Wqn-y8-leI" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="38" id="Xdq-RT-m6l"/>
+                                    <constraint firstItem="DY1-VB-dlK" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="32" id="YY8-ys-pFx"/>
+                                    <constraint firstItem="ecc-WW-cnw" firstAttribute="top" secondItem="eb9-x7-k16" secondAttribute="top" constant="400" id="fh7-vP-O45"/>
+                                    <constraint firstAttribute="bottom" secondItem="iof-3F-V9Y" secondAttribute="bottom" constant="71" id="i3R-i7-8ZF"/>
+                                    <constraint firstAttribute="trailing" secondItem="iof-3F-V9Y" secondAttribute="trailing" constant="168" id="lHz-iO-MeP"/>
+                                    <constraint firstAttribute="trailing" secondItem="DY1-VB-dlK" secondAttribute="trailing" constant="32" id="uha-Kc-rKu"/>
+                                    <constraint firstItem="iof-3F-V9Y" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="168" id="vID-su-IPL"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="zgJ-cT-H0Z" appends="YES" id="lcx-Iw-bfW"/>
+                                    <outletCollection property="gestureRecognizers" destination="zgJ-cT-H0Z" appends="YES" id="qeg-vz-7vE"/>
+                                    <outletCollection property="gestureRecognizers" destination="LYC-8R-cHs" appends="YES" id="DmR-nr-YOY"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="darkTextColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="eb9-x7-k16" secondAttribute="trailing" id="EFJ-RZ-uXE"/>
+                            <constraint firstItem="eb9-x7-k16" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="HH5-63-qZi"/>
+                            <constraint firstItem="eb9-x7-k16" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" id="TOd-hj-jJK"/>
+                            <constraint firstAttribute="bottom" secondItem="eb9-x7-k16" secondAttribute="bottom" id="jIB-iq-81u"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="nextButton" destination="DY1-VB-dlK" id="rkY-hP-kmm"/>
+                        <outlet property="pageControl" destination="s7X-0z-nI9" id="fym-Cy-fKp"/>
+                        <outlet property="signitLabel" destination="iMw-u1-Mfi" id="lt1-xt-Kuf"/>
+                        <outlet property="skipButton" destination="iof-3F-V9Y" id="jta-6X-bes"/>
+                        <outlet property="subtitleLabel" destination="Pbn-FK-NBC" id="xfx-Vr-YaA"/>
+                        <outlet property="titleLabel" destination="Wqn-y8-leI" id="kHh-Cq-eoa"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="zgJ-cT-H0Z">
+                    <connections>
+                        <action selector="swipeDetected:" destination="Y6W-OH-hqX" id="YtL-G4-4Uz"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="LYC-8R-cHs">
+                    <connections>
+                        <action selector="swipeDetected:" destination="Y6W-OH-hqX" id="fjU-uD-6IV"/>
+                    </connections>
+                </swipeGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="138.1679389312977" y="130.98591549295776"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Axiomora Icon Image" width="1024" height="1024"/>
+        <systemColor name="darkTextColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray2Color">
+            <color red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
