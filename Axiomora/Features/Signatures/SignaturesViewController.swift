@@ -276,15 +276,16 @@ extension SignaturesViewController: NewSignatureDelegate {
         if isFirstSignature && OnboardingManager.shared.isOnboardingActive {
             OnboardingManager.shared.completeOnboarding()
 
-            let alert = UIAlertController(
-                title: "You're all set! 🎉",
-                message: "Your signature has been created. Head back to the camera — everything is now unlocked.",
-                preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(title: "Go to Camera", style: .default) { [weak self] _ in
-                self?.navigationController?.popViewController(animated: true)
-            })
-            present(alert, animated: true)
+            let storyboard = UIStoryboard(name: "OnboardingSignatureStoryboard", bundle: nil)
+            
+            guard let viewController = storyboard.instantiateInitialViewController() else {
+                print("Error: Could not instantiate the OnboardingSignatureStoryboard")
+                return
+            }
+            
+            viewController.modalTransitionStyle = .coverVertical
+            viewController.modalPresentationStyle = .formSheet
+            present(viewController, animated: true)
         }
     }
 }

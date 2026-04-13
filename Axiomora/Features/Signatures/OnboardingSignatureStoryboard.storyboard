@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Onboarding Signature View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController id="Y6W-OH-hqX" customClass="OnboardingSignatureViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="Gkt-4E-Ooa">
+                                <rect key="frame" x="32" y="198" width="329" height="189.33333333333337"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You are all set!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uw6-lY-dkz">
+                                        <rect key="frame" x="0.0" y="0.0" width="329" height="26.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="izU-Ej-eEt">
+                                        <rect key="frame" x="0.0" y="58.333333333333314" width="329" height="131"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your first signature has been created. " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g6u-bI-HrQ">
+                                                <rect key="frame" x="0.0" y="0.0" width="329" height="19.333333333333332"/>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The selected signature will be embedded in all the images that you capture using SignIt." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EtF-si-94U">
+                                                <rect key="frame" x="0.0" y="27.333333333333375" width="329" height="38.333333333333343"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="textColor" name="tertiary_blue"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Other users can use Verify via SignIt to extract your signature from your images, to find out about you." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yin-HZ-1U3">
+                                                <rect key="frame" x="0.0" y="73.666666666666686" width="329" height="57.333333333333343"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="textColor" name="tertiary_blue"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="EtF-si-94U" firstAttribute="top" secondItem="g6u-bI-HrQ" secondAttribute="bottom" constant="12" id="e0a-Wx-pSs"/>
+                                        </constraints>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cX6-gy-mk4">
+                                <rect key="frame" x="32" y="749.66666666666663" width="329" height="34.333333333333371"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Go to Camera"/>
+                                <connections>
+                                    <action selector="goToCameraTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="fdc-sJ-RvV"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" name="secondary_blue"/>
+                        <constraints>
+                            <constraint firstItem="Gkt-4E-Ooa" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="32" id="THR-7x-4Mx"/>
+                            <constraint firstItem="Gkt-4E-Ooa" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="80" id="bAW-f8-qqq"/>
+                            <constraint firstAttribute="trailing" secondItem="Gkt-4E-Ooa" secondAttribute="trailing" constant="32" id="iM0-9x-7BL"/>
+                            <constraint firstItem="cX6-gy-mk4" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" constant="32" id="inY-QY-7pW"/>
+                            <constraint firstItem="cX6-gy-mk4" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="nHp-MK-ZSf"/>
+                            <constraint firstItem="cX6-gy-mk4" firstAttribute="bottom" secondItem="vDu-zF-Fre" secondAttribute="bottom" id="wfX-bS-LvX"/>
+                            <constraint firstAttribute="trailing" secondItem="cX6-gy-mk4" secondAttribute="trailing" constant="32" id="wsR-hz-7tJ"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="goToCameraButton" destination="cX6-gy-mk4" id="8SK-bT-GCj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="392" y="-250"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="secondary_blue">
+            <color red="0.066666666666666666" green="0.086274509803921567" blue="0.16470588235294117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="tertiary_blue">
+            <color red="0.21176470588235294" green="0.27450980392156865" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>
