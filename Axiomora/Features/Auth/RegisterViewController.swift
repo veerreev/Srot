@@ -56,7 +56,9 @@ class RegisterViewController: BaseAuthViewController {
             self.registerButton.isEnabled = true
             
             if success {
-                
+                // Mark that this brand-new user needs to complete onboarding
+                // before the full camera UI is unlocked.
+                OnboardingManager.shared.beginOnboarding()
                 launchCameraStoryboard()
                 
             } else {

@@ -28,6 +28,7 @@
 			membershipExceptions = (
 				AuthManager.swift,
 				CameraManager.swift,
+				OnboardingManager.swift,
 				PhotoManager.swift,
 				SignatureManager.swift,
 				WatermarkEmbedder.swift,
