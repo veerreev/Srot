@@ -21,12 +21,10 @@ class CameraViewController: UIViewController {
     @IBOutlet weak var signatureNumberButton: UIButton!
     @IBOutlet weak var cameraControlPillVisualEffectView: CameraControlPill!
     @IBOutlet weak var verifyButton: UIButton!
+    @IBOutlet weak var onboardingTooltipContainer: UIView!
     
     private let viewModel = CameraViewModel()
     private var previewLayer: AVCaptureVideoPreviewLayer?
-
-    // Retained so we can remove them when onboarding ends
-    private weak var onboardingTooltip: OnboardingTooltipView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,12 +43,6 @@ class CameraViewController: UIViewController {
         updateSignatureNumberButton()
         // Button enable/disable doesn't need resolved frames — safe in viewWillAppear.
         refreshOnboardingButtonStates()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        // Tooltip positioning needs resolved Auto Layout frames — must be viewDidAppear.
-        refreshOnboardingTooltip()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -112,7 +104,7 @@ class CameraViewController: UIViewController {
     private func setupUI() {
         let symbolConfigSignatureButton = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .small)
         let imageSignatureButton = UIImage(systemName: "plus", withConfiguration: symbolConfigSignatureButton)
-        Theme.Button.applyGlassStyle(to: signatureNumberButton, image: imageSignatureButton, color: Theme.Colors.systemBlue)
+        Theme.Button.applyGlassStyle(to: signatureNumberButton, image: imageSignatureButton, color: Theme.Colors.tertiaryBlue)
         
         let glassEffect = UIGlassEffect()
         glassEffect.tintColor = Theme.Colors.blobBlue
@@ -136,7 +128,7 @@ class CameraViewController: UIViewController {
                 color: Theme.Colors.systemBlue
             )
         } else {
-            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .small)
+            let symbolConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium, scale: .medium)
             let plusImage = UIImage(systemName: "plus", withConfiguration: symbolConfig)
             Theme.Button.applyGlassStyle(to: signatureNumberButton, image: plusImage, color: Theme.Colors.systemBlue)
         }
@@ -146,29 +138,17 @@ class CameraViewController: UIViewController {
 
     /// Handles button enable/disable — no frame needed, safe in viewWillAppear.
     private func refreshOnboardingButtonStates() {
-        if OnboardingManager.shared.isOnboardingActive {
+        let active = OnboardingManager.shared.isOnboardingActive
+        onboardingTooltipContainer.isHidden = !active   // ← entire tooltip logic now
+
+        if active {
             applyOnboardingRestrictions()
         } else {
             removeOnboardingRestrictions()
         }
     }
 
-    /// Handles the tooltip — requires resolved frames, called from viewDidAppear.
-    private func refreshOnboardingTooltip() {
-        if OnboardingManager.shared.isOnboardingActive {
-            // Only add the tooltip if it isn't already on screen.
-            guard onboardingTooltip == nil else { return }
-            let tip = OnboardingTooltipView.show(
-                in: view,
-                pointingTo: signatureNumberButton,
-                text: "Tap here to add your first signature."
-            )
-            onboardingTooltip = tip
-        } else {
-            onboardingTooltip?.remove()
-            onboardingTooltip = nil
-        }
-    }
+    
 
     /// Disables every interactive element except `signatureNumberButton` and
     /// adds a pulsing blue glow to it so the user knows exactly what to tap.
@@ -189,6 +169,7 @@ class CameraViewController: UIViewController {
         signatureNumberButton.layer.shadowOffset = .zero
         signatureNumberButton.layer.shadowRadius = 8
         signatureNumberButton.layer.shadowOpacity = 1.0
+        
 
         let glow = CABasicAnimation(keyPath: "shadowRadius")
         glow.fromValue = 5

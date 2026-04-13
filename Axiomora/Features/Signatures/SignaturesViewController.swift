@@ -14,9 +14,6 @@ class SignaturesViewController: UIViewController {
     @IBOutlet weak var selectButton: UIButton!
     @IBOutlet weak var deleteButton: UIBarButtonItem!
     @IBOutlet weak var collectionView: UICollectionView!
-    /// Connect this outlet in SignaturesStoryboard to the "Create New Signature"
-    /// button inside emptySignaturesStackView.
-    @IBOutlet weak var createNewSignatureButton: UIButton!
 
     private var signatures: [Signature] = []
     private var currentCenteredIndex: Int = 0
@@ -29,8 +26,6 @@ class SignaturesViewController: UIViewController {
         // If there's exactly one signature and nothing is marked current auto select it the app requires at least one selection at all times.
         autoSelectIfNeeded()
 
-        collectionView.dataSource = self
-        collectionView.delegate = self
         collectionView.register(
             UINib(nibName: "SignatureCell", bundle: nil),
             forCellWithReuseIdentifier: "SignatureCell"
@@ -41,7 +36,6 @@ class SignaturesViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
-        refreshOnboardingState()
     }
 
     // MARK: - UI Setup
@@ -89,7 +83,7 @@ class SignaturesViewController: UIViewController {
     private func updateEmptyState() {
         let isEmpty = signatures.isEmpty
         emptySignaturesStackView.isHidden = !isEmpty
-        deleteButton.isHidden = isEmpty
+        deleteButton.isHidden = signatures.count <= 1
         collectionView.isHidden = isEmpty
 
         updateSelectButtonVisibility()
@@ -121,64 +115,6 @@ class SignaturesViewController: UIViewController {
             signatures[0].isCurrent = true
             SignatureManager.shared.saveSignatures(signatures)
         }
-    }
-
-    // MARK: - Onboarding
-
-    private func refreshOnboardingState() {
-        if OnboardingManager.shared.isOnboardingActive {
-            applyOnboardingRestrictions()
-        } else {
-            removeOnboardingRestrictions()
-        }
-    }
-
-    /// During onboarding only the "Create New Signature" button is active.
-    /// Everything else is disabled so the user has exactly one thing to tap.
-    private func applyOnboardingRestrictions() {
-        // Disable the nav bar buttons
-        addBarButtonItem.isEnabled = false
-        deleteButton.isEnabled = false
-
-        // The collection view is empty during onboarding so nothing to block there,
-        // but disable selectButton for safety.
-        selectButton.isEnabled = false
-
-        // Find the create button: prefer the wired outlet, fall back to scanning
-        // the empty-state stack view for the first UIButton.
-        guard let createButton = createNewSignatureButton
-                ?? emptySignaturesStackView.subviews.compactMap({ $0 as? UIButton }).first
-        else { return }
-
-        createButton.isEnabled = true
-        createButton.alpha = 1.0
-
-        // Pulsing shadow glow
-        createButton.layer.masksToBounds = false
-        createButton.layer.shadowColor = UIColor.systemBlue.cgColor
-        createButton.layer.shadowOffset = .zero
-        createButton.layer.shadowRadius = 8
-        createButton.layer.shadowOpacity = 1.0
-
-        let glow = CABasicAnimation(keyPath: "shadowRadius")
-        glow.fromValue = 5
-        glow.toValue = 18
-        glow.duration = 0.85
-        glow.autoreverses = true
-        glow.repeatCount = .infinity
-        glow.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        createButton.layer.add(glow, forKey: "onboardingGlow")
-    }
-
-    private func removeOnboardingRestrictions() {
-        addBarButtonItem.isEnabled = true
-        deleteButton.isEnabled = true
-        selectButton.isEnabled = true
-
-        let createButton = createNewSignatureButton
-            ?? emptySignaturesStackView.subviews.compactMap({ $0 as? UIButton }).first
-        createButton?.layer.removeAnimation(forKey: "onboardingGlow")
-        createButton?.layer.shadowOpacity = 0
     }
 
     // MARK: - Navigation

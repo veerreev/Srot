@@ -37,9 +37,6 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
         
         tableView.register(UINib(nibName: "SocialLinkCell", bundle: nil), forCellReuseIdentifier: "SocialLinkCell")
         tableView.register(UINib(nibName: "AddSocialCell", bundle: nil), forCellReuseIdentifier: "AddSocialCell")
-        
-//        nameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-//        titleTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
 
         doneButton.isEnabled = false
         
@@ -168,7 +165,10 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
                 shouldIncludeLocation: locationSwitch.isOn,
                 notes: notesTextView.text?.isEmpty == false ? notesTextView.text : nil
             )
-            delegate?.didUpdateSignature(updated)
+            dismiss(animated: true) { [weak self] in
+                self?.delegate?.didUpdateSignature(updated)
+            }
+            
         } else {
             // Create mode
             let newSignature = Signature(
@@ -183,10 +183,12 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
                 shouldIncludeLocation: locationSwitch.isOn,
                 notes: notesTextView.text?.isEmpty == false ? notesTextView.text : nil
             )
-            delegate?.didCreateSignature(newSignature)
+            dismiss(animated: true) { [weak self] in
+                self?.delegate?.didCreateSignature(newSignature)
+            }
         }
 
-        dismiss(animated: true)
+        
     }
     
     @IBAction func valueChanged(_ sender: Any) {
@@ -195,15 +197,6 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
     }
     
     // MARK: - Other functions (Helpers)
-    
-//    @objc private func textFieldDidChange() {
-//        
-//        let nameFilled = !(nameTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
-//        let titleFilled = !(titleTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
-//        
-//        doneButton.isEnabled = nameFilled && titleFilled
-//        
-//    }
     
     private func addNewRow() {
         let oldAddSocialPath = IndexPath(row: socialHandles.count, section: socialSectionIndex)
