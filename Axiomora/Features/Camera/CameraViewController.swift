@@ -25,6 +25,28 @@ class CameraViewController: UIViewController {
     
     private let viewModel = CameraViewModel()
     private var previewLayer: AVCaptureVideoPreviewLayer?
+    
+    // Tracks how many images are currently being processed by the ML model
+        private var processingCount: Int = 0 {
+            didSet {
+                // Safety check to ensure it never goes negative
+                if processingCount < 0 { processingCount = 0 }
+                
+                if processingCount > 0 {
+                    thumbnailButton.isUserInteractionEnabled = false
+                    progressSpinner.startAnimating()
+                    UIView.animate(withDuration: 0.2) {
+                        self.thumbnailButton.alpha = 0.5
+                    }
+                } else {
+                    thumbnailButton.isUserInteractionEnabled = true
+                    progressSpinner.stopAnimating()
+                    UIView.animate(withDuration: 0.2) {
+                        self.thumbnailButton.alpha = 1.0
+                    }
+                }
+            }
+        }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,31 +78,30 @@ class CameraViewController: UIViewController {
     }
     
     private func bindViewModel() {
-//        The alternative would be to have the ViewModel call a method on the ViewController directly, but then the ViewModel would need to import and know about the ViewController, which defeats the whole point of separation
-        viewModel.onPhotoCaptured = { [weak self] savedImage in
-            self?.updateThumbnail(with: savedImage)
-        }
-        
-        viewModel.onProcessingStarted = { [weak self] in
-            self?.progressSpinner.startAnimating()
-            UIView.animate(withDuration: 0.2) {
-                self?.thumbnailButton.alpha = 0.5
+            viewModel.onPhotoCaptured = { [weak self] savedImage in
+                Task { @MainActor in
+                    self?.processingCount -= 1
+                    self?.updateThumbnail(with: savedImage)
+                }
+            }
+            
+            viewModel.onProcessingStarted = { [weak self] in
+                Task { @MainActor in
+                    self?.processingCount += 1
+                }
+            }
+     
+            viewModel.onUnauthorized = { [weak self] in
+                self?.presentCameraSettingsAlert()
+            }
+     
+            viewModel.onError = { [weak self] error in
+                print("Camera error: \(error.localizedDescription)")
+                Task { @MainActor in
+                    self?.processingCount -= 1
+                }
             }
         }
- 
-        viewModel.onUnauthorized = { [weak self] in
-            self?.presentCameraSettingsAlert()
-        }
- 
-        viewModel.onError = { [weak self] error in
-            print("Camera error: \(error.localizedDescription)")
-            self?.progressSpinner.stopAnimating()
-            UIView.animate(withDuration: 0.2) {
-                self?.thumbnailButton.alpha = 1.0
-            }
-        }
-    }
-    
     // MARK: - SETUP
     
     private func setupCamera() {
@@ -210,23 +231,20 @@ class CameraViewController: UIViewController {
     }
     
     func updateThumbnail(with image: Image) {
-        guard let thumbURL = image.thumbnailFileURL, let uiImage = UIImage(contentsOfFile: thumbURL.path) else { return }
-        
-        Task { @MainActor in
-            self.progressSpinner.stopAnimating()
-            self.thumbnailButton.alpha = 0
+            guard let thumbURL = image.thumbnailFileURL, let uiImage = UIImage(contentsOfFile: thumbURL.path) else { return }
             
-            var config = self.thumbnailButton.configuration ?? UIButton.Configuration.plain()
-            config.background.image = uiImage
-            config.background.imageContentMode = .scaleAspectFill
-            self.thumbnailButton.configuration = config
-            self.thumbnailButton.setImage(nil, for: .normal)
-            
-            UIView.animate(withDuration: 0.3) {
-                self.thumbnailButton.alpha = 1
+            Task { @MainActor in
+                var config = self.thumbnailButton.configuration ?? UIButton.Configuration.plain()
+                config.background.image = uiImage
+                config.background.imageContentMode = .scaleAspectFill
+                
+                // Smoothly cross-dissolve the image while keeping the spinner overlay intact
+                UIView.transition(with: self.thumbnailButton, duration: 0.3, options: .transitionCrossDissolve) {
+                    self.thumbnailButton.configuration = config
+                    self.thumbnailButton.setImage(nil, for: .normal)
+                }
             }
         }
-    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SegueToSingleImage" {
