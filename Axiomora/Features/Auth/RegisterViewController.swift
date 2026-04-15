@@ -58,6 +58,7 @@ class RegisterViewController: BaseAuthViewController {
             if success {
                 // Mark that this brand-new user needs to complete onboarding
                 // before the full camera UI is unlocked.
+                UserDefaults.standard.set(true, forKey: "hasRegistered")
                 OnboardingManager.shared.beginOnboarding()
                 launchCameraStoryboard()
                 

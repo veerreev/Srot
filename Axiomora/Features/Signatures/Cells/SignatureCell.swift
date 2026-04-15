@@ -196,7 +196,7 @@ class SignatureCell: UICollectionViewCell {
         let glassEffect = UIGlassEffect()
         glassEffect.tintColor = Theme.Colors.signatureBackground
         visualEffectViewBackground.effect = glassEffect
-        visualEffectViewBackground.layer.cornerRadius = 32
+        visualEffectViewBackground.layer.cornerRadius = 36
         glassEffect.tintColor = .primaryPurple
 
     }

@@ -97,7 +97,8 @@ class splashScreen1ViewController: UIViewController {
         
         updateUI(animated: true)
     }
-    private func finishOnboarding() {
+    
+    func finishOnboarding() {
         // Save that the user has seen the onboarding
         UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
         

@@ -17,6 +17,7 @@ class SingleImageViewViewController: UIViewController {
     @IBOutlet var filmstripCollectionView: UICollectionView!
     @IBOutlet var toolbar: UIToolbar!
     @IBOutlet var fluidBackgroundView: FluidBackgroundView!
+    @IBOutlet weak var signatureNumberButton: UIBarButtonItem!
     
     // Set by whoever presents this VC before it appears.
     // CameraViewController sets startingIndex to the last captured image.
@@ -283,6 +284,42 @@ class SingleImageViewViewController: UIViewController {
             }
         }
     }
+    
+    // MARK: - Signature Preview
+
+    @IBAction func signatureNumberTapped(_ sender: UIBarButtonItem) {
+        guard images.indices.contains(currentIndex) else { return }
+        performSegue(withIdentifier: "showSignaturePreview", sender: nil)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showSignaturePreview",
+           let previewVC = segue.destination as? SignaturePreviewViewController,
+           images.indices.contains(currentIndex) {
+
+            let image = images[currentIndex]
+            let signatures = SignatureManager.shared.loadSignatures()
+
+            guard let matchedSig = signatures.first(where: { $0.id == image.signatureId }),
+                  let matchedIndex = signatures.firstIndex(where: { $0.id == image.signatureId })
+            else { return }
+
+            previewVC.signature = matchedSig
+            previewVC.signatureIndex = matchedIndex
+            previewVC.delegate = self
+
+            if let sheet = previewVC.sheetPresentationController {
+                let cardDetent = UISheetPresentationController.Detent.custom(
+                    identifier: .init("signatureCard")
+                ) { _ in
+                    return 690
+                }
+                sheet.detents = [cardDetent]
+                sheet.prefersGrabberVisible = true
+                sheet.preferredCornerRadius = 56
+            }
+        }
+    }
         
 }
 
@@ -457,4 +494,24 @@ extension SingleImageViewViewController: UIGestureRecognizerDelegate {
             }
             return false
         }
+}
+
+// MARK: - SignaturePreviewDelegate
+
+extension SingleImageViewViewController: SignaturePreviewDelegate {
+
+    func signaturePreview(
+        _ vc: SignaturePreviewViewController,
+        didTapSignature signature: Signature
+    ) {
+        // Dismiss the sheet, then push SingleSignatureViewController onto the existing nav stack
+        vc.dismiss(animated: true) { [weak self] in
+            let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
+            let singleSigVC = storyboard.instantiateViewController(
+                withIdentifier: "SingleSignatureViewController"
+            ) as! SingleSignatureViewController
+            singleSigVC.signature = signature
+            self?.navigationController?.pushViewController(singleSigVC, animated: true)
+        }
+    }
 }

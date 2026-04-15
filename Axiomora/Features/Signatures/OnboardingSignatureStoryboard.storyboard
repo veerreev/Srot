@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="Gkt-4E-Ooa">
-                                <rect key="frame" x="32" y="198" width="329" height="189.33333333333337"/>
+                                <rect key="frame" x="32" y="218" width="329" height="189.33333333333337"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You are all set!" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uw6-lY-dkz">
                                         <rect key="frame" x="0.0" y="0.0" width="329" height="26.333333333333332"/>
@@ -30,7 +30,7 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your first signature has been created. " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g6u-bI-HrQ">
                                                 <rect key="frame" x="0.0" y="0.0" width="329" height="19.333333333333332"/>
-                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -63,10 +63,10 @@
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
-                        <color key="backgroundColor" name="secondary_blue"/>
+                        <color key="backgroundColor" name="primary_blue"/>
                         <constraints>
                             <constraint firstItem="Gkt-4E-Ooa" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="32" id="THR-7x-4Mx"/>
-                            <constraint firstItem="Gkt-4E-Ooa" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="80" id="bAW-f8-qqq"/>
+                            <constraint firstItem="Gkt-4E-Ooa" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="100" id="bAW-f8-qqq"/>
                             <constraint firstAttribute="trailing" secondItem="Gkt-4E-Ooa" secondAttribute="trailing" constant="32" id="iM0-9x-7BL"/>
                             <constraint firstItem="cX6-gy-mk4" firstAttribute="leading" secondItem="5EZ-qb-Rvc" secondAttribute="leading" constant="32" id="inY-QY-7pW"/>
                             <constraint firstItem="cX6-gy-mk4" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="nHp-MK-ZSf"/>
@@ -86,8 +86,8 @@
         </scene>
     </scenes>
     <resources>
-        <namedColor name="secondary_blue">
-            <color red="0.066666666666666666" green="0.086274509803921567" blue="0.16470588235294117" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="primary_blue">
+            <color red="0.10196078431372549" green="0.12549019607843137" blue="0.20784313725490197" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <namedColor name="tertiary_blue">
             <color red="0.21176470588235294" green="0.27450980392156865" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
