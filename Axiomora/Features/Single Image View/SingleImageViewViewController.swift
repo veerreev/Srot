@@ -300,19 +300,20 @@ class SingleImageViewViewController: UIViewController {
             let image = images[currentIndex]
             let signatures = SignatureManager.shared.loadSignatures()
 
-            guard let matchedSig = signatures.first(where: { $0.id == image.signatureId }),
-                  let matchedIndex = signatures.firstIndex(where: { $0.id == image.signatureId })
-            else { return }
-
-            previewVC.signature = matchedSig
-            previewVC.signatureIndex = matchedIndex
-            previewVC.delegate = self
+            if let matchedSig = signatures.first(where: { $0.id == image.signatureId }),
+               let matchedIndex = signatures.firstIndex(where: { $0.id == image.signatureId }) {
+                previewVC.signature = matchedSig
+                previewVC.signatureIndex = matchedIndex
+                previewVC.delegate = self
+            }
+            // If no match, previewVC.signature stays nil → shows the "deleted" message
 
             if let sheet = previewVC.sheetPresentationController {
+                let detentHeight: CGFloat = previewVC.signature != nil ? 690 : 240
                 let cardDetent = UISheetPresentationController.Detent.custom(
                     identifier: .init("signatureCard")
                 ) { _ in
-                    return 690
+                    return detentHeight
                 }
                 sheet.detents = [cardDetent]
                 sheet.prefersGrabberVisible = true
@@ -511,6 +512,19 @@ extension SingleImageViewViewController: SignaturePreviewDelegate {
                 withIdentifier: "SingleSignatureViewController"
             ) as! SingleSignatureViewController
             singleSigVC.signature = signature
+
+            // Without this closure, NewSignatureTableViewController calls didUpdateSignature
+            // which updates SingleSignatureVC's in-memory copy — so the UI temporarily looks
+            // correct — but nothing writes to disk. The edit vanishes the next time the
+            // signature is reloaded from disk. This closure is the missing link.
+            singleSigVC.onSignatureUpdated = { updated in
+                var all = SignatureManager.shared.loadSignatures()
+                if let idx = all.firstIndex(where: { $0.id == updated.id }) {
+                    all[idx] = updated
+                    SignatureManager.shared.saveSignatures(all)
+                }
+            }
+
             self?.navigationController?.pushViewController(singleSigVC, animated: true)
         }
     }

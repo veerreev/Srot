@@ -270,9 +270,6 @@ extension SignaturesViewController: NewSignatureDelegate {
 
         updateEmptyState()
 
-        // ── Onboarding completion ────────────────────────────────────────────
-        // The user has just created their very first signature.
-        // Unlock the full app and send them back to the camera.
         if isFirstSignature && OnboardingManager.shared.isOnboardingActive {
             OnboardingManager.shared.completeOnboarding()
 
@@ -284,7 +281,7 @@ extension SignaturesViewController: NewSignatureDelegate {
             }
             
             viewController.modalTransitionStyle = .coverVertical
-            viewController.modalPresentationStyle = .formSheet
+            viewController.modalPresentationStyle = .fullScreen
             present(viewController, animated: true)
         }
     }
