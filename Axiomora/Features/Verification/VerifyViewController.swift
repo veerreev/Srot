@@ -76,15 +76,15 @@ class VerifyViewController: UIViewController {
         scannerOverlayView.startScanning()
 
         Task { @MainActor in
-            // Run the engine off the main thread so the animations aren't blocked.
-            var verificationReport: VerificationReport?
-            await Task.detached(priority: .userInitiated) {
-                verificationReport = await WatermarkDecoder.shared.decode(self.imageView.image!)
-            }.value
-
-            self.fluidBackgroundView.stopVerifyingAnimation()
-            self.scannerOverlayView.stopScanning()
-            self.verifyButton.isEnabled = true
+                guard let image = imageView.image else { return }
+        
+                let report = await WatermarkDecoder.shared.decodeWithHashFallback(image)
+        
+                self.fluidBackgroundView.stopVerifyingAnimation()
+                self.scannerOverlayView.stopScanning()
+                self.verifyButton.isEnabled = true
+        
+                self.presentVerificationResult(report)
         }
     }
     
@@ -148,4 +148,41 @@ extension VerifyViewController: PHPickerViewControllerDelegate {
         imageView.layer.borderColor = Theme.Colors.white.cgColor
 
     }
+    
+    private func presentVerificationResult(_ report: VerificationReport) {
+        switch report.status {
+
+        case .authentic:
+            let name = report.matchedSignature?.displayName ?? "Unknown"
+            let method = report.verificationMethod == .hash
+                         ? "Hash Fingerprint" : "Neural Watermark"
+            showAlert(
+                title: "✅ Authentic",
+                message: "Signed by: \(name)\nVerified via \(method)."
+            )
+
+        case .tampered:
+            let name = report.matchedSignature?.displayName ?? "Unknown"
+            let dmg  = report.tamperMessage ?? "Some tiles were altered."
+            showAlert(
+                title: "⚠️ Tampered Image",
+                message: "Originally signed by: \(name)\n\(dmg)"
+            )
+
+        case .noWatermarkFound:
+            showAlert(
+                title: "❌ No Signature Found",
+                message: "This image does not contain a recognised digital signature."
+            )
+        }
+    }
+
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
 }
