@@ -2,7 +2,9 @@
 //  WatermarkDecoder.swift
 //  Axiomora
 //
-//  New file — does not modify any existing source.
+//  Created by GEU on 24/04/26.
+//
+
 //
 //  Pipeline:
 //    1. Correct UIImage orientation into an up-right sRGB pixel buffer.
@@ -33,7 +35,7 @@ final class WatermarkDecoder {
     }
 
     private lazy var model: MLModel = {
-        guard let url = Bundle.main.url(forResource: "AxiomarkDecoder",
+        guard let url = Bundle.main.url(forResource: "AxiomoraDecoder",
                                         withExtension: "mlmodelc") else {
             fatalError(
                 "[WatermarkDecoder] AxiomarkDecoder.mlmodelc not found.\n"
@@ -148,7 +150,7 @@ final class WatermarkDecoder {
         }
 
         var probs = [Float](repeating: 0.5, count: 256)
-        multi.withUnsafeBufferPointer(ofType: Float.self) { ptr, _ in
+        multi.withUnsafeBufferPointer(ofType: Float.self) { ptr in
             guard let base = ptr.baseAddress else { return }
             for i in 0..<256 { probs[i] = base[i] }
         }
