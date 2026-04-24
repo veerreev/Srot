@@ -71,7 +71,7 @@ class SignaturesViewController: UIViewController {
             let newIndex = centeredItem.indexPath.item
             guard newIndex != self.currentCenteredIndex else { return }
 
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            UIImpactFeedbackGenerator(style: .rigid).impactOccurred(intensity: 0.6)
             
             self.currentCenteredIndex = newIndex
 

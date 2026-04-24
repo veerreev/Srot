@@ -297,6 +297,7 @@ class SingleImageViewViewController: UIViewController {
            let previewVC = segue.destination as? SignaturePreviewViewController,
            images.indices.contains(currentIndex) {
 
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
             let image = images[currentIndex]
             let signatures = SignatureManager.shared.loadSignatures()
             
