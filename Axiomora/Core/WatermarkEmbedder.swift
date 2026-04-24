@@ -136,7 +136,7 @@ class WatermarkEmbedder {
     private lazy var model: MLModel = {
         print("[WatermarkEmbedder] Loading model from bundle...")
         
-        guard let url = Bundle.main.url(forResource: "AxiomarkEncoder",
+        guard let url = Bundle.main.url(forResource: "AxiomoraEncoder",
                                         withExtension: "mlmodelc") else {
             if let resourcePath = Bundle.main.resourcePath {
                 print("[WatermarkEmbedder] Bundle resources:")

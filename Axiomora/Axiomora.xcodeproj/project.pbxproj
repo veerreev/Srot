@@ -32,6 +32,7 @@
 				OnboardingManager.swift,
 				PhotoManager.swift,
 				SignatureManager.swift,
+				WatermarkDecoder.swift,
 				WatermarkEmbedder.swift,
 			);
 			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
@@ -202,7 +203,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 75TRFG7HW8;
+				DEVELOPMENT_TEAM = H42V5WU8M5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SignIt;
@@ -220,7 +221,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora12345;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora1234;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -239,7 +240,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 75TRFG7HW8;
+				DEVELOPMENT_TEAM = H42V5WU8M5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SignIt;
@@ -257,7 +258,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora12345;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora1234;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
