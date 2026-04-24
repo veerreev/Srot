@@ -71,6 +71,8 @@ class SignaturesViewController: UIViewController {
             let newIndex = centeredItem.indexPath.item
             guard newIndex != self.currentCenteredIndex else { return }
 
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            
             self.currentCenteredIndex = newIndex
 
             // Update the select button every time the centred card changes.
@@ -186,6 +188,8 @@ class SignaturesViewController: UIViewController {
     @IBAction func setAsCurrentTapped(_ sender: Any) {
         guard currentCenteredIndex < signatures.count else { return }
 
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        
         // Deselect all, then select the centred one.
         for i in signatures.indices {
             signatures[i].isCurrent = (i == currentCenteredIndex)
@@ -254,6 +258,8 @@ extension SignaturesViewController: NewSignatureDelegate {
     func didCreateSignature(_ signature: Signature) {
         let isFirstSignature = signatures.isEmpty
 
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        
         var newSignature = signature
 
         // The very first signature a user creates must be auto-selected

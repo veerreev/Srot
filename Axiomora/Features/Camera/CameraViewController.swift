@@ -114,6 +114,7 @@ class CameraViewController: UIViewController {
     private func setupCamera() {
         Task {
             await viewModel.configureCamera()
+            LocationManager.shared.requestPermissionIfNeeded()
             setupPreviewLayer()
         }
     }

@@ -125,7 +125,7 @@ extension PhotoManager {
         }
     }
     
-    func saveImage(_ uiImage: UIImage, creatorId: String, signatureId: String, device: String?) throws -> Image {
+    func saveImage(_ uiImage: UIImage, creatorId: String, signatureId: String, device: String?, capturedLocation: String? = nil) throws -> Image {
         guard let directory = documentsDirectory else {
             throw ImageSaveError.documentsDirectoryUnavailable
         }
@@ -171,6 +171,7 @@ extension PhotoManager {
             remoteURL:         nil,
             createdAt:         Date(),
             device:            device,
+            capturedLocation: capturedLocation,
             isFavourite:       false,
             albumIds:          []
         )
@@ -266,24 +267,41 @@ extension PhotoManager {
                 return
             }
 
-            let savedImage: Image?
-            do {
-                savedImage = try self.saveImage(
-                    watermarkedImage,
-                    creatorId:   AuthManager.shared.currentUser?.userId ?? "unknown",
-                    signatureId: currentSignature.id,
-                    device:      UIDevice.current.name
-                )
-                print ("\(currentSignature.id) embedded")
-            } catch {
-                print("PhotoManager: Failed to save to in-app gallery — \(error)")
-                DispatchQueue.main.async { completion(false, nil, error) }
-                return
-            }
+            let needsLocation = currentSignature.shouldIncludeLocation
+            
+            let finishSave = { (locationString: String?) in
+                let savedImage: Image?
+                do {
+                    savedImage = try self.saveImage(
+                        watermarkedImage,
+                        creatorId:   AuthManager.shared.currentUser?.userId ?? "unknown",
+                        signatureId: currentSignature.id,
+                        device:      UIDevice.current.name,
+                        capturedLocation: locationString
+                    )
+                    print ("\(currentSignature.id) embedded")
+                } catch {
+                    print("PhotoManager: Failed to save to in-app gallery — \(error)")
+                    DispatchQueue.main.async { completion(false, nil, error) }
+                    return
+                }
 
-            self.saveToLibrary(image: watermarkedImage) { success, error in
-                DispatchQueue.main.async { completion(success, savedImage, error) }
+                self.saveToLibrary(image: watermarkedImage) { success, error in
+                    DispatchQueue.main.async { completion(success, savedImage, error) }
+                }
             }
+            
+            if needsLocation {
+                
+                LocationManager.shared.reverseGeocodeCurrentLocation { locationString in
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        finishSave(locationString)
+                    }
+                }
+            } else {
+                finishSave(nil)
+            }
+            
         }
     }
     

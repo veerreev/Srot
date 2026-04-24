@@ -23,6 +23,7 @@ class SignaturePreviewViewController: UIViewController {
     // Set by SingleImageViewViewController before presenting
     var signature: Signature?
     var signatureIndex: Int = 0
+    var image: Image?
     weak var delegate: SignaturePreviewDelegate?
 
     private var cardCell: SignatureCell?
@@ -49,7 +50,7 @@ class SignaturePreviewViewController: UIViewController {
         guard let cell = Bundle.main.loadNibNamed("SignatureCell", owner: nil, options: nil)?.first as? SignatureCell
         else { return }
 
-        cell.configure(with: sig, index: signatureIndex)
+        cell.configure(with: sig, index: signatureIndex, capturedLocation: image?.capturedLocation)
         let glassEffect = UIGlassEffect()
         glassEffect.tintColor = Theme.Colors.selectedSignatureBackground
         cell.visualEffectViewBackground.effect = glassEffect

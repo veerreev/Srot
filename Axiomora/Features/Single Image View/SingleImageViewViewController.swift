@@ -299,6 +299,8 @@ class SingleImageViewViewController: UIViewController {
 
             let image = images[currentIndex]
             let signatures = SignatureManager.shared.loadSignatures()
+            
+            previewVC.image = image
 
             if let matchedSig = signatures.first(where: { $0.id == image.signatureId }),
                let matchedIndex = signatures.firstIndex(where: { $0.id == image.signatureId }) {

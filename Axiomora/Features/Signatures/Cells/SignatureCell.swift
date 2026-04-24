@@ -75,7 +75,7 @@ class SignatureCell: UICollectionViewCell {
         rebuildSocialStack()
     }
 
-    func configure(with signature: Signature, index: Int) {
+    func configure(with signature: Signature, index: Int, capturedLocation: String? = nil) {
 
         numberLabel.text = "\(index+1)"
         nameEntryLabel.text = signature.displayName
@@ -84,7 +84,7 @@ class SignatureCell: UICollectionViewCell {
         
         if signature.shouldIncludeLocation {
             locationIcon.image = UIImage(systemName: "location")
-            locationLabel.text = "Location included"
+            locationLabel.text = capturedLocation ?? "Location included"
         } else {
             locationIcon.image = UIImage(systemName: "location.slash")
             locationLabel.text = "Location not included"
@@ -204,7 +204,7 @@ class SignatureCell: UICollectionViewCell {
     func setAsCurrentSignature(_ isCurrent: Bool) {
         let glassEffect = UIGlassEffect()
         glassEffect.tintColor = isCurrent ? Theme.Colors.selectedSignatureBackground : .clear
-        UIView.animate(withDuration: 0.3,
+        UIView.animate(withDuration: 0.5,
                        delay: 0,
                        options: [.curveEaseInOut, .allowUserInteraction]) {
             self.visualEffectViewBackground.effect = glassEffect

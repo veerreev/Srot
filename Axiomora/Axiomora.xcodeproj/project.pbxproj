@@ -28,6 +28,7 @@
 			membershipExceptions = (
 				AuthManager.swift,
 				CameraManager.swift,
+				LocationManager.swift,
 				OnboardingManager.swift,
 				PhotoManager.swift,
 				SignatureManager.swift,
@@ -207,12 +208,12 @@
 				INFOPLIST_KEY_CFBundleDisplayName = SignIt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Access to your camera is needed to capture images and embed secure watermarks.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SignIt saves your location when you take a photo, so it can be included in the image signature.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Access to your photo library is needed to save your securely watermarked images to the gallery.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access to your photo library is needed to select an image for signature verification.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -244,12 +245,12 @@
 				INFOPLIST_KEY_CFBundleDisplayName = SignIt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Access to your camera is needed to capture images and embed secure watermarks.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "SignIt saves your location when you take a photo, so it can be included in the image signature.";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Access to your photo library is needed to save your securely watermarked images to the gallery.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access to your photo library is needed to select an image for signature verification.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
