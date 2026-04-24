@@ -23,17 +23,9 @@ struct Image: Codable {
     var createdAt: Date?
     var device: String?
     var capturedLocation: String?
-    
     // Must include ISO/Shutter-Speed/etc. when implementing pro mode
     
-    #warning("To be implemented in gallery")
-    // State
-    var isFavourite: Bool = false // Whether the user has hearted this image.
-                                 // When toggled, PhotoManager automatically adds/removes it from the Favourites album.
-    var albumIds: [String] = [] // IDs of every album this image belongs to.(An image can belong to multiple albums simultaneously.)
-    
     // Computed URLs
-    
     // Full-resolution image URL used in SingleImageViewController
     var localFileURL: URL? {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {

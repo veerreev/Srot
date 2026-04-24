@@ -172,8 +172,6 @@ extension PhotoManager {
             createdAt:         Date(),
             device:            device,
             capturedLocation: capturedLocation,
-            isFavourite:       false,
-            albumIds:          []
         )
         
         images.append(newImage)
