@@ -77,8 +77,9 @@ class VerifyViewController: UIViewController {
 
         Task { @MainActor in
             // Run the engine off the main thread so the animations aren't blocked.
+            var verificationReport: VerificationReport?
             await Task.detached(priority: .userInitiated) {
-                try? await Task.sleep(for: .seconds(15))
+                verificationReport = await WatermarkDecoder.shared.decode(self.imageView.image!)
             }.value
 
             self.fluidBackgroundView.stopVerifyingAnimation()
