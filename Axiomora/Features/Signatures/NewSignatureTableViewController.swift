@@ -157,6 +157,7 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
                 id: existing.id,
                 creatorID: existing.creatorID,
                 title: title,
+                isCurrent: existing.isCurrent,
                 displayName: name,
                 copyrightText: copyrightTextField.text?.isEmpty == false ? copyrightTextField.text : nil,
                 email: emailTextField.text?.isEmpty == false ? emailTextField.text : nil,

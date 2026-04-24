@@ -22,6 +22,7 @@ struct Image: Codable {
     // Metadata
     var createdAt: Date?
     var device: String?
+    var capturedLocation: String?
     
     // Must include ISO/Shutter-Speed/etc. when implementing pro mode
     

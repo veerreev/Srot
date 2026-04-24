@@ -71,6 +71,8 @@ class SignaturesViewController: UIViewController {
             let newIndex = centeredItem.indexPath.item
             guard newIndex != self.currentCenteredIndex else { return }
 
+            UIImpactFeedbackGenerator(style: .rigid).impactOccurred(intensity: 0.6)
+            
             self.currentCenteredIndex = newIndex
 
             // Update the select button every time the centred card changes.
@@ -186,6 +188,8 @@ class SignaturesViewController: UIViewController {
     @IBAction func setAsCurrentTapped(_ sender: Any) {
         guard currentCenteredIndex < signatures.count else { return }
 
+        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        
         // Deselect all, then select the centred one.
         for i in signatures.indices {
             signatures[i].isCurrent = (i == currentCenteredIndex)
@@ -254,6 +258,8 @@ extension SignaturesViewController: NewSignatureDelegate {
     func didCreateSignature(_ signature: Signature) {
         let isFirstSignature = signatures.isEmpty
 
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        
         var newSignature = signature
 
         // The very first signature a user creates must be auto-selected
@@ -270,9 +276,6 @@ extension SignaturesViewController: NewSignatureDelegate {
 
         updateEmptyState()
 
-        // ── Onboarding completion ────────────────────────────────────────────
-        // The user has just created their very first signature.
-        // Unlock the full app and send them back to the camera.
         if isFirstSignature && OnboardingManager.shared.isOnboardingActive {
             OnboardingManager.shared.completeOnboarding()
 
@@ -284,7 +287,7 @@ extension SignaturesViewController: NewSignatureDelegate {
             }
             
             viewController.modalTransitionStyle = .coverVertical
-            viewController.modalPresentationStyle = .formSheet
+            viewController.modalPresentationStyle = .fullScreen
             present(viewController, animated: true)
         }
     }

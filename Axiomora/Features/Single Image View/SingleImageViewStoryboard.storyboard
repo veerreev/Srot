@@ -4,20 +4,21 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Single Image View View Controller-->
         <scene sceneID="SlU-Ob-Z3S">
             <objects>
-                <viewController storyboardIdentifier="SingleImageViewViewController" id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SingleImageViewViewController" modalPresentationStyle="fullScreen" id="Ymf-RX-0EY" customClass="SingleImageViewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="G0d-V3-Fgr">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0Re-YY-i6A">
-                                <rect key="frame" x="0.0" y="656" width="393" height="80"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="0.0" y="648" width="393" height="80"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="B6Y-Yk-jBg"/>
@@ -36,10 +37,16 @@
                                 </connections>
                             </collectionView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sXq-Aj-dHl">
-                                <rect key="frame" x="0.0" y="736" width="393" height="48"/>
+                                <rect key="frame" x="12" y="736" width="369" height="48"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <items>
+                                    <barButtonItem title="Item" image="info.circle" catalog="system" style="plain" id="Ryz-LK-t7X">
+                                        <color key="tintColor" systemColor="systemBlueColor"/>
+                                        <connections>
+                                            <action selector="signatureNumberTapped:" destination="Ymf-RX-0EY" id="Qap-Cs-G5P"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem systemItem="flexibleSpace" id="cxu-DB-qk9"/>
                                     <barButtonItem systemItem="action" id="mF4-lp-55b">
                                         <connections>
@@ -72,7 +79,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="fqL-Da-OHg" firstAttribute="centerX" secondItem="7c4-RG-vvD" secondAttribute="centerX" id="FL3-hk-WGH"/>
                                     <constraint firstItem="fqL-Da-OHg" firstAttribute="centerY" secondItem="7c4-RG-vvD" secondAttribute="centerY" id="g84-76-qCe"/>
@@ -80,25 +87,26 @@
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="EQF-tR-8Lq"/>
-                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="7c4-RG-vvD" secondAttribute="trailing" id="427-AI-fee"/>
                             <constraint firstAttribute="bottom" secondItem="7c4-RG-vvD" secondAttribute="bottom" id="45A-sw-ZIV"/>
                             <constraint firstItem="7c4-RG-vvD" firstAttribute="top" secondItem="G0d-V3-Fgr" secondAttribute="top" id="S76-Xa-gE1"/>
                             <constraint firstItem="7c4-RG-vvD" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="Tcp-G8-oXK"/>
-                            <constraint firstItem="sXq-Aj-dHl" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="Ygn-NS-yfY"/>
+                            <constraint firstItem="sXq-Aj-dHl" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" constant="12" id="Ygn-NS-yfY"/>
                             <constraint firstItem="EQF-tR-8Lq" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="bottom" id="cMp-LB-x5B"/>
-                            <constraint firstItem="0Re-YY-i6A" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="top" id="g92-cC-vtJ"/>
+                            <constraint firstItem="0Re-YY-i6A" firstAttribute="bottom" secondItem="sXq-Aj-dHl" secondAttribute="top" constant="-8" id="g92-cC-vtJ"/>
                             <constraint firstItem="0Re-YY-i6A" firstAttribute="leading" secondItem="G0d-V3-Fgr" secondAttribute="leading" id="ghq-5A-2Du"/>
                             <constraint firstAttribute="trailing" secondItem="0Re-YY-i6A" secondAttribute="trailing" id="kJx-IZ-aAO"/>
-                            <constraint firstAttribute="trailing" secondItem="sXq-Aj-dHl" secondAttribute="trailing" id="zSk-N6-RLG"/>
+                            <constraint firstAttribute="trailing" secondItem="sXq-Aj-dHl" secondAttribute="trailing" constant="12" id="zSk-N6-RLG"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="mSL-0g-xcQ" appends="YES" id="axI-Fi-Q5b"/>
                             <outletCollection property="gestureRecognizers" destination="iQY-PM-Nhx" appends="YES" id="RCH-yi-z54"/>
                         </connections>
                     </view>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" id="NRU-PY-rhT">
                         <nil key="title"/>
                         <barButtonItem key="rightBarButtonItem" image="photo.on.rectangle" catalog="system" id="2jM-tJ-F7k">
@@ -108,15 +116,18 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="customTitleView" destination="yev-sF-pyO" id="eq9-5y-UgZ"/>
                         <outlet property="dateTitleLabel" destination="GBr-Zc-gI2" id="lMT-or-nJv"/>
                         <outlet property="filmstripCollectionView" destination="0Re-YY-i6A" id="3Es-ON-Hqo"/>
                         <outlet property="fluidBackgroundView" destination="7c4-RG-vvD" id="sdV-oK-xKW"/>
                         <outlet property="shareButtonItem" destination="mF4-lp-55b" id="fFw-Uv-BzG"/>
+                        <outlet property="signatureNumberButton" destination="Ryz-LK-t7X" id="rOn-MI-5ek"/>
                         <outlet property="timeSubtitleLabel" destination="rGo-gg-yqX" id="htF-yv-Akm"/>
                         <outlet property="toolbar" destination="sXq-Aj-dHl" id="CsT-Gp-KhM"/>
                         <outlet property="trashButtonItem" destination="0pU-9H-Xm0" id="8hD-up-vVZ"/>
+                        <segue destination="USO-y7-OCP" kind="presentation" identifier="showSignaturePreview" modalPresentationStyle="automatic" id="hhF-KE-GJG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Am8-7t-jDk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -167,6 +178,22 @@
             </objects>
             <point key="canvasLocation" x="-359.5419847328244" y="-430.28169014084511"/>
         </scene>
+        <!--Signature Preview View Controller-->
+        <scene sceneID="DZc-hz-FS2">
+            <objects>
+                <viewController storyboardIdentifier="SignaturePreviewViewController" id="USO-y7-OCP" customClass="SignaturePreviewViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Riv-Nj-2Ll">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="793"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="DRd-7A-P4s"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ldY-Ul-vCP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="503" y="-430"/>
+        </scene>
         <!--AllPhotosViewController-->
         <scene sceneID="47L-b3-E9E">
             <objects>
@@ -175,10 +202,14 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Zq-Ef-J72" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="515" y="-430"/>
+            <point key="canvasLocation" x="-360" y="-18"/>
         </scene>
     </scenes>
     <resources>
+        <image name="info.circle" catalog="system" width="128" height="123"/>
         <image name="photo.on.rectangle" catalog="system" width="128" height="98"/>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

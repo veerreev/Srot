@@ -95,18 +95,26 @@ class CameraViewController: UIViewController {
                 self?.presentCameraSettingsAlert()
             }
      
-            viewModel.onError = { [weak self] error in
-                print("Camera error: \(error.localizedDescription)")
-                Task { @MainActor in
-                    self?.processingCount -= 1
-                }
+        viewModel.onError = { [weak self] error in
+            Task { @MainActor in
+                self?.processingCount -= 1
+                
+                let alert = UIAlertController(
+                    title: "Capture Failed",
+                    message: error.localizedDescription,
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self?.present(alert, animated: true)
             }
         }
+    }
     // MARK: - SETUP
     
     private func setupCamera() {
         Task {
             await viewModel.configureCamera()
+            LocationManager.shared.requestPermissionIfNeeded()
             setupPreviewLayer()
         }
     }

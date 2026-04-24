@@ -17,6 +17,7 @@ class SingleImageViewViewController: UIViewController {
     @IBOutlet var filmstripCollectionView: UICollectionView!
     @IBOutlet var toolbar: UIToolbar!
     @IBOutlet var fluidBackgroundView: FluidBackgroundView!
+    @IBOutlet weak var signatureNumberButton: UIBarButtonItem!
     
     // Set by whoever presents this VC before it appears.
     // CameraViewController sets startingIndex to the last captured image.
@@ -283,6 +284,46 @@ class SingleImageViewViewController: UIViewController {
             }
         }
     }
+    
+    // MARK: - Signature Preview
+
+    @IBAction func signatureNumberTapped(_ sender: UIBarButtonItem) {
+        guard images.indices.contains(currentIndex) else { return }
+        performSegue(withIdentifier: "showSignaturePreview", sender: nil)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showSignaturePreview",
+           let previewVC = segue.destination as? SignaturePreviewViewController,
+           images.indices.contains(currentIndex) {
+
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            let image = images[currentIndex]
+            let signatures = SignatureManager.shared.loadSignatures()
+            
+            previewVC.image = image
+
+            if let matchedSig = signatures.first(where: { $0.id == image.signatureId }),
+               let matchedIndex = signatures.firstIndex(where: { $0.id == image.signatureId }) {
+                previewVC.signature = matchedSig
+                previewVC.signatureIndex = matchedIndex
+                previewVC.delegate = self
+            }
+            // If no match, previewVC.signature stays nil → shows the "deleted" message
+
+            if let sheet = previewVC.sheetPresentationController {
+                let detentHeight: CGFloat = previewVC.signature != nil ? 690 : 240
+                let cardDetent = UISheetPresentationController.Detent.custom(
+                    identifier: .init("signatureCard")
+                ) { _ in
+                    return detentHeight
+                }
+                sheet.detents = [cardDetent]
+                sheet.prefersGrabberVisible = true
+                sheet.preferredCornerRadius = 56
+            }
+        }
+    }
         
 }
 
@@ -457,4 +498,37 @@ extension SingleImageViewViewController: UIGestureRecognizerDelegate {
             }
             return false
         }
+}
+
+// MARK: - SignaturePreviewDelegate
+
+extension SingleImageViewViewController: SignaturePreviewDelegate {
+
+    func signaturePreview(
+        _ vc: SignaturePreviewViewController,
+        didTapSignature signature: Signature
+    ) {
+        // Dismiss the sheet, then push SingleSignatureViewController onto the existing nav stack
+        vc.dismiss(animated: true) { [weak self] in
+            let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
+            let singleSigVC = storyboard.instantiateViewController(
+                withIdentifier: "SingleSignatureViewController"
+            ) as! SingleSignatureViewController
+            singleSigVC.signature = signature
+
+            // Without this closure, NewSignatureTableViewController calls didUpdateSignature
+            // which updates SingleSignatureVC's in-memory copy — so the UI temporarily looks
+            // correct — but nothing writes to disk. The edit vanishes the next time the
+            // signature is reloaded from disk. This closure is the missing link.
+            singleSigVC.onSignatureUpdated = { updated in
+                var all = SignatureManager.shared.loadSignatures()
+                if let idx = all.firstIndex(where: { $0.id == updated.id }) {
+                    all[idx] = updated
+                    SignatureManager.shared.saveSignatures(all)
+                }
+            }
+
+            self?.navigationController?.pushViewController(singleSigVC, animated: true)
+        }
+    }
 }

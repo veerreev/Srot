@@ -125,7 +125,7 @@ extension PhotoManager {
         }
     }
     
-    func saveImage(_ uiImage: UIImage, creatorId: String, signatureId: String, device: String?) throws -> Image {
+    func saveImage(_ uiImage: UIImage, creatorId: String, signatureId: String, device: String?, capturedLocation: String? = nil) throws -> Image {
         guard let directory = documentsDirectory else {
             throw ImageSaveError.documentsDirectoryUnavailable
         }
@@ -171,6 +171,7 @@ extension PhotoManager {
             remoteURL:         nil,
             createdAt:         Date(),
             device:            device,
+            capturedLocation: capturedLocation,
             isFavourite:       false,
             albumIds:          []
         )
@@ -232,59 +233,75 @@ extension PhotoManager {
     }
         
 }
-extension PhotoManager{
+
+extension PhotoManager {
     
     func applyWatermarkAndSave(image: UIImage, completion: @escaping (Bool, Image?, Error?) -> Void) {
-        
-        // 1. Hop onto a background thread so we don't freeze the camera UI
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
-            
+
             var watermarkedImage: UIImage!
+            var currentSignature: Signature!
+
             do {
-                let dummySignature = Signature(
-                    id: UUID().uuidString,
-                    creatorID: "1234",
-                    title: "dummy",
-                    displayName: "John",
-                    socialHandles: [],
-                    shouldIncludeLocation: false
-                )
-                
-                print ("Yet to be signed")
-                
-                watermarkedImage = try WatermarkEmbedder.shared.embed(image, signature: dummySignature)
-                print ("Signed yet to save")
+                let signatures = SignatureManager.shared.loadSignatures()
+
+                guard let found = signatures.first(where: { $0.isCurrent }) else {
+                    DispatchQueue.main.async {
+                        let error = NSError(
+                            domain: "PhotoManager",
+                            code: 2,
+                            userInfo: [NSLocalizedDescriptionKey: "No current signature selected. Please set a signature before capturing."]
+                        )
+                        completion(false, nil, error)
+                    }
+                    return
+                }
+
+                currentSignature = found
+                watermarkedImage = try WatermarkEmbedder.shared.embed(image, signature: currentSignature)
+
             } catch {
                 print("Watermark Engine Error: \(error.localizedDescription)")
-                
-                DispatchQueue.main.async {
-                    completion(false, nil, error)
-                }
-                
-            }
-            
-            let savedImage: Image?
-            do {
-                savedImage = try self.saveImage(
-                    watermarkedImage,
-                    creatorId:   AuthManager.shared.currentUser?.userId ?? "unknown",
-                    signatureId: "pending",
-                    device:      UIDevice.current.name
-                )
-            } catch {
-                print("PhotoManager: Failed to save to in-app gallery — \(error)")
-                DispatchQueue.main.async {
-                    completion(false, nil, error)
-                }
+                DispatchQueue.main.async { completion(false, nil, error) }
                 return
             }
+
+            let needsLocation = currentSignature.shouldIncludeLocation
             
-            self.saveToLibrary(image: watermarkedImage) { success, error in
-                DispatchQueue.main.async {
-                    completion(success, savedImage, error)
+            let finishSave = { (locationString: String?) in
+                let savedImage: Image?
+                do {
+                    savedImage = try self.saveImage(
+                        watermarkedImage,
+                        creatorId:   AuthManager.shared.currentUser?.userId ?? "unknown",
+                        signatureId: currentSignature.id,
+                        device:      UIDevice.current.name,
+                        capturedLocation: locationString
+                    )
+                    print ("\(currentSignature.id) embedded")
+                } catch {
+                    print("PhotoManager: Failed to save to in-app gallery — \(error)")
+                    DispatchQueue.main.async { completion(false, nil, error) }
+                    return
+                }
+
+                self.saveToLibrary(image: watermarkedImage) { success, error in
+                    DispatchQueue.main.async { completion(success, savedImage, error) }
                 }
             }
+            
+            if needsLocation {
+                
+                LocationManager.shared.reverseGeocodeCurrentLocation { locationString in
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        finishSave(locationString)
+                    }
+                }
+            } else {
+                finishSave(nil)
+            }
+            
         }
     }
     
