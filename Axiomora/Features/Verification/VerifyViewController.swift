@@ -18,6 +18,8 @@ class VerifyViewController: UIViewController {
     @IBOutlet weak var infoMessageLabel: UILabel!
     @IBOutlet weak var imageViewAspectRatio: NSLayoutConstraint!
     @IBOutlet weak var trashBarItem: UIBarButtonItem!
+    @IBOutlet weak var verificationReportStatusLabel: UILabel!
+    @IBOutlet weak var signatureIDLabel: UILabel!
     
     @IBOutlet weak var fluidBackgroundView: FluidBackgroundView!
     @IBOutlet weak var scannerOverlayView: ScannerOverlayView!
@@ -84,6 +86,24 @@ class VerifyViewController: UIViewController {
 
             self.fluidBackgroundView.stopVerifyingAnimation()
             self.scannerOverlayView.stopScanning()
+            
+            if verificationReport?.status == .authentic {
+                verificationReportStatusLabel.isHidden = false
+                signatureIDLabel.isHidden = false
+                verificationReportStatusLabel.text = "Signature Found"
+                verificationReportStatusLabel.textColor = .systemGreen
+                signatureIDLabel.text = verificationReport?.extractedSignatureId
+            } else {
+                verificationReportStatusLabel.isHidden = false
+                verificationReportStatusLabel.text = "Signature Not Found"
+                verificationReportStatusLabel.textColor = .systemRed
+                signatureIDLabel.isHidden = true
+                UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5) {
+                    self.verificationReportStatusLabel.alpha = 1
+                    self.verificationReportStatusLabel.transform = CGAffineTransform(translationX: 0, y: 8)
+                }
+//                verificationReportStatusLabel.shake()
+            }
             self.verifyButton.isEnabled = true
         }
     }

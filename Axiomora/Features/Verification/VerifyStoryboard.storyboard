@@ -105,10 +105,28 @@
                                             <action selector="verifyButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="4za-KF-1Zf"/>
                                         </connections>
                                     </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="UBc-sH-PW1">
+                                        <rect key="frame" x="196.66666666666666" y="717.66666666666663" width="0.0" height="0.0"/>
+                                        <subviews>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kq6-hh-3PY">
+                                                <rect key="frame" x="0.0" y="0.0" width="43.333333333333336" height="0.0"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z6Z-Eq-LRd">
+                                                <rect key="frame" x="0.0" y="0.0" width="43.333333333333336" height="0.0"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="RDR-n2-0jI" firstAttribute="width" secondItem="lee-Du-yeW" secondAttribute="width" multiplier="0.85" id="3h5-0M-V8b"/>
+                                    <constraint firstItem="RDR-n2-0jI" firstAttribute="top" secondItem="UBc-sH-PW1" secondAttribute="bottom" constant="56" id="5iV-aA-BnG"/>
                                     <constraint firstItem="QiX-9P-rf2" firstAttribute="centerX" secondItem="lee-Du-yeW" secondAttribute="centerX" id="5uv-5Z-asO"/>
                                     <constraint firstAttribute="bottom" secondItem="RDR-n2-0jI" secondAttribute="bottom" constant="44" id="8PS-Ah-rtr"/>
                                     <constraint firstItem="bhU-ne-d5p" firstAttribute="centerX" secondItem="lee-Du-yeW" secondAttribute="centerX" id="BZd-bP-8YG"/>
@@ -120,6 +138,7 @@
                                     <constraint firstItem="TPt-zI-fHx" firstAttribute="centerY" secondItem="lee-Du-yeW" secondAttribute="centerY" multiplier="0.95" id="pJV-6B-Xke"/>
                                     <constraint firstItem="TPt-zI-fHx" firstAttribute="centerX" secondItem="lee-Du-yeW" secondAttribute="centerX" id="pvw-5n-Nul"/>
                                     <constraint firstItem="RDR-n2-0jI" firstAttribute="centerX" secondItem="lee-Du-yeW" secondAttribute="centerX" id="uXb-cb-wrs"/>
+                                    <constraint firstItem="UBc-sH-PW1" firstAttribute="centerX" secondItem="lee-Du-yeW" secondAttribute="centerX" id="wXD-10-ypq"/>
                                     <constraint firstItem="QiX-9P-rf2" firstAttribute="height" secondItem="bhU-ne-d5p" secondAttribute="height" id="xmn-GN-rpC"/>
                                 </constraints>
                             </view>
@@ -154,9 +173,11 @@
                         <outlet property="infoMessageLabel" destination="X4V-I2-g4g" id="rK7-wR-hmh"/>
                         <outlet property="plusImage" destination="taQ-n7-uiu" id="Xyy-vl-10S"/>
                         <outlet property="scannerOverlayView" destination="QiX-9P-rf2" id="a7j-pw-d6x"/>
+                        <outlet property="signatureIDLabel" destination="Z6Z-Eq-LRd" id="6oJ-qj-PjW"/>
                         <outlet property="trashBarItem" destination="USA-yS-7gc" id="Q2D-UE-R0k"/>
                         <outlet property="uploadViewBackground" destination="l5S-SF-nlK" id="M0U-DZ-n2G"/>
                         <outlet property="uploadVisualEffectBackground" destination="TPt-zI-fHx" id="Bq9-Wq-fuh"/>
+                        <outlet property="verificationReportStatusLabel" destination="kq6-hh-3PY" id="wGB-8r-6RH"/>
                         <outlet property="verifyButton" destination="RDR-n2-0jI" id="aoh-Gu-CN7"/>
                     </connections>
                 </viewController>
