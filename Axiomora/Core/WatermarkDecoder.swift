@@ -355,10 +355,11 @@ private struct BCHDecoder {
         for n in 1...(2 * t) {
             // Discrepancy d = S[n] + Σ_{i=1}^{L} C[i]*S[n-i]
             var d: UInt8 = S[n]
-            for i in 1...L where i < n {
-                d ^= mul(C[i], S[n - i])
+            if L>1 {
+                for i in 1...L where i < n {
+                    d ^= mul(C[i], S[n - i])
+                }
             }
-
             if d == 0 {
                 m += 1
             } else if 2 * L <= n - 1 {
