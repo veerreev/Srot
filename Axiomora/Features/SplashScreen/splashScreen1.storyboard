@@ -27,7 +27,7 @@
                                         </connections>
                                     </pageControl>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wqn-y8-leI">
-                                        <rect key="frame" x="38" y="440" width="317" height="86"/>
+                                        <rect key="frame" x="38" y="340" width="317" height="86"/>
                                         <string key="text">Own Every Image
 You Capture</string>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
@@ -35,7 +35,7 @@ You Capture</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pbn-FK-NBC">
-                                        <rect key="frame" x="38" y="542" width="317" height="61"/>
+                                        <rect key="frame" x="38" y="442" width="317" height="61"/>
                                         <string key="text">Add an invisible identity to your photos,
 ensuring provenance and protection
 across the web</string>
@@ -44,7 +44,7 @@ across the web</string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SignIt" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iMw-u1-Mfi">
-                                        <rect key="frame" x="74" y="400" width="55.333333333333343" height="24"/>
+                                        <rect key="frame" x="74" y="300" width="55.333333333333343" height="24"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -72,7 +72,7 @@ across the web</string>
                                         </connections>
                                     </button>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Axiomora Icon Image" translatesAutoresizingMaskIntoConstraints="NO" id="ecc-WW-cnw">
-                                        <rect key="frame" x="38" y="400" width="28" height="28"/>
+                                        <rect key="frame" x="38" y="300" width="28" height="28"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="ecc-WW-cnw" secondAttribute="height" multiplier="1:1" id="CNn-U1-KZ2"/>
                                             <constraint firstAttribute="width" constant="28" id="KiR-af-xha"/>
@@ -88,13 +88,13 @@ across the web</string>
                                     <constraint firstItem="iMw-u1-Mfi" firstAttribute="leading" secondItem="ecc-WW-cnw" secondAttribute="trailing" constant="8" id="Avn-0X-5cU"/>
                                     <constraint firstAttribute="trailing" secondItem="Pbn-FK-NBC" secondAttribute="trailing" constant="38" id="BQC-mh-2DD"/>
                                     <constraint firstAttribute="trailing" secondItem="Wqn-y8-leI" secondAttribute="trailing" constant="38" id="IR1-8A-FCa"/>
-                                    <constraint firstItem="iMw-u1-Mfi" firstAttribute="top" secondItem="eb9-x7-k16" secondAttribute="top" constant="400" id="LdG-SQ-hcC"/>
+                                    <constraint firstItem="iMw-u1-Mfi" firstAttribute="top" secondItem="eb9-x7-k16" secondAttribute="top" constant="300" id="LdG-SQ-hcC"/>
                                     <constraint firstItem="DY1-VB-dlK" firstAttribute="top" secondItem="s7X-0z-nI9" secondAttribute="bottom" constant="24" id="MXj-1G-MLx"/>
                                     <constraint firstItem="Pbn-FK-NBC" firstAttribute="top" secondItem="Wqn-y8-leI" secondAttribute="bottom" constant="16" id="Nb2-4c-BG4"/>
                                     <constraint firstItem="Pbn-FK-NBC" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="38" id="Ouw-oi-faa"/>
                                     <constraint firstItem="Wqn-y8-leI" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="38" id="Xdq-RT-m6l"/>
                                     <constraint firstItem="DY1-VB-dlK" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="32" id="YY8-ys-pFx"/>
-                                    <constraint firstItem="ecc-WW-cnw" firstAttribute="top" secondItem="eb9-x7-k16" secondAttribute="top" constant="400" id="fh7-vP-O45"/>
+                                    <constraint firstItem="ecc-WW-cnw" firstAttribute="top" secondItem="eb9-x7-k16" secondAttribute="top" constant="300" id="fh7-vP-O45"/>
                                     <constraint firstAttribute="bottom" secondItem="iof-3F-V9Y" secondAttribute="bottom" constant="71" id="i3R-i7-8ZF"/>
                                     <constraint firstAttribute="trailing" secondItem="iof-3F-V9Y" secondAttribute="trailing" constant="168" id="lHz-iO-MeP"/>
                                     <constraint firstAttribute="trailing" secondItem="DY1-VB-dlK" secondAttribute="trailing" constant="32" id="uha-Kc-rKu"/>
@@ -146,7 +146,7 @@ across the web</string>
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGray2Color">
-            <color red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
