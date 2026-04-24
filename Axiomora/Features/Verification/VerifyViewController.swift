@@ -19,6 +19,9 @@ class VerifyViewController: UIViewController {
     @IBOutlet weak var imageViewAspectRatio: NSLayoutConstraint!
     @IBOutlet weak var trashBarItem: UIBarButtonItem!
     
+    @IBOutlet weak var fluidBackgroundView: FluidBackgroundView!
+    @IBOutlet weak var scannerOverlayView: ScannerOverlayView!
+    
     private var isImageSelected: Bool = false
         
     override func viewDidLoad() {
@@ -65,6 +68,22 @@ class VerifyViewController: UIViewController {
     @IBAction func verifyButtonTapped(_ sender: Any) {
         if !isImageSelected {
             infoMessageLabel.shake()
+            return
+        }
+        
+        verifyButton.isEnabled = false
+        fluidBackgroundView.startVerifyingAnimation()
+        scannerOverlayView.startScanning()
+
+        Task { @MainActor in
+            // Run the engine off the main thread so the animations aren't blocked.
+            await Task.detached(priority: .userInitiated) {
+                try? await Task.sleep(for: .seconds(15))
+            }.value
+
+            self.fluidBackgroundView.stopVerifyingAnimation()
+            self.scannerOverlayView.stopScanning()
+            self.verifyButton.isEnabled = true
         }
     }
     
