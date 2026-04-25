@@ -18,8 +18,6 @@ class VerifyViewController: UIViewController {
     @IBOutlet weak var infoMessageLabel: UILabel!
     @IBOutlet weak var imageViewAspectRatio: NSLayoutConstraint!
     @IBOutlet weak var trashBarItem: UIBarButtonItem!
-    @IBOutlet weak var verificationReportStatusLabel: UILabel!
-    @IBOutlet weak var signatureIDLabel: UILabel!
     
     @IBOutlet weak var fluidBackgroundView: FluidBackgroundView!
     @IBOutlet weak var scannerOverlayView: ScannerOverlayView!
@@ -78,33 +76,15 @@ class VerifyViewController: UIViewController {
         scannerOverlayView.startScanning()
 
         Task { @MainActor in
-            // Run the engine off the main thread so the animations aren't blocked.
-            var verificationReport: VerificationReport?
-            await Task.detached(priority: .userInitiated) {
-                verificationReport = await WatermarkDecoder.shared.decode(self.imageView.image!)
-            }.value
-
-            self.fluidBackgroundView.stopVerifyingAnimation()
-            self.scannerOverlayView.stopScanning()
-            
-            if verificationReport?.status == .authentic {
-                verificationReportStatusLabel.isHidden = false
-                signatureIDLabel.isHidden = false
-                verificationReportStatusLabel.text = "Signature Found"
-                verificationReportStatusLabel.textColor = .systemGreen
-                signatureIDLabel.text = verificationReport?.extractedSignatureId
-            } else {
-                verificationReportStatusLabel.isHidden = false
-                verificationReportStatusLabel.text = "Signature Not Found"
-                verificationReportStatusLabel.textColor = .systemRed
-                signatureIDLabel.isHidden = true
-                UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5) {
-                    self.verificationReportStatusLabel.alpha = 1
-                    self.verificationReportStatusLabel.transform = CGAffineTransform(translationX: 0, y: 8)
-                }
-//                verificationReportStatusLabel.shake()
-            }
-            self.verifyButton.isEnabled = true
+                guard let image = imageView.image else { return }
+        
+                let report = await WatermarkDecoder.shared.decodeWithHashFallback(image)
+        
+                self.fluidBackgroundView.stopVerifyingAnimation()
+                self.scannerOverlayView.stopScanning()
+                self.verifyButton.isEnabled = true
+        
+                self.presentVerificationResult(report)
         }
     }
     
@@ -125,6 +105,50 @@ class VerifyViewController: UIViewController {
         trashBarItem.isHidden = true
         verifyButton.isEnabled = false
         
+    }
+    
+    // MARK: - Verification Result
+    
+    private func presentVerificationResult(_ report: VerificationReport) {
+
+        let storyboard = UIStoryboard(name: "SingleImageViewStoryboard", bundle: nil)
+        guard let previewVC = storyboard.instantiateViewController(
+            withIdentifier: "SignaturePreviewViewController"
+        ) as? SignaturePreviewViewController else { return }
+
+        // Card is never tappable from the verify flow
+        previewVC.isCardTappable = false
+
+        switch report.status {
+
+        case .authentic, .tampered:
+            if let sig = report.matchedSignature {
+                let all = SignatureManager.shared.loadSignatures()
+                previewVC.signature     = sig
+                previewVC.signatureIndex = all.firstIndex(where: { $0.id == sig.id }) ?? 0
+            }
+            // If matchedSignature is nil despite a watermark being found, fall through to
+            // the default empty-state strings (extremely unlikely, but safe).
+
+        case .noWatermarkFound:
+            // Leave signature = nil so the empty-state path is taken
+            previewVC.emptyTitle = "No Signature Found"
+            previewVC.emptyBody  = "This image does not appear to contain an embedded signature."
+        }
+
+        let hasCard = report.matchedSignature != nil && report.status != .noWatermarkFound
+        let detentHeight: CGFloat = hasCard ? 690 : 240
+
+        if let sheet = previewVC.sheetPresentationController {
+            let cardDetent = UISheetPresentationController.Detent.custom(
+                identifier: .init("verifyResultCard")
+            ) { _ in detentHeight }
+            sheet.detents            = [cardDetent]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 56
+        }
+
+        present(previewVC, animated: true)
     }
 }
 
@@ -168,4 +192,5 @@ extension VerifyViewController: PHPickerViewControllerDelegate {
         imageView.layer.borderColor = Theme.Colors.white.cgColor
 
     }
+
 }

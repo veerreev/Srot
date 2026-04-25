@@ -360,6 +360,7 @@ private struct BCHDecoder {
                     d ^= mul(C[i], S[n - i])
                 }
             }
+                
             if d == 0 {
                 m += 1
             } else if 2 * L <= n - 1 {

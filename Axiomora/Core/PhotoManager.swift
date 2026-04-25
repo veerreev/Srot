@@ -172,6 +172,8 @@ extension PhotoManager {
             createdAt:         Date(),
             device:            device,
             capturedLocation: capturedLocation,
+            isFavourite:       false,
+            albumIds:          []
         )
         
         images.append(newImage)
@@ -283,6 +285,26 @@ extension PhotoManager {
                     DispatchQueue.main.async { completion(false, nil, error) }
                     return
                 }
+
+                // ── Hash registration ────────────────────────────────────────
+                // IMPORTANT: hash the image as read back FROM DISK, not the
+                // in-memory UIImage. HEIC encoding can subtly alter pixel values,
+                // so hashing the in-memory UIImage produces tile hashes that will
+                // never match at verification time (when the file is read from disk
+                // and decoded again). Reading back the saved file guarantees both
+                // sides of the comparison operate on identical pixel data.
+                if let saved = savedImage,
+                   let fileURL = saved.localFileURL,
+                   let diskImage = UIImage(contentsOfFile: fileURL.path),
+                   let tileHashes = ImageHasher.tileHashes(diskImage) {
+                    HashStore.shared.register(imageId: saved.id,
+                                             signatureId: currentSignature.id,
+                                             tileHashes: tileHashes)
+                    print("[PhotoManager] ✓ Hash registered: \(tileHashes.count) tiles for image \(saved.id)")
+                } else {
+                    print("[PhotoManager] ⚠️ Could not register hash — file unreadable or image too small.")
+                }
+                // ────────────────────────────────────────────────────────────
 
                 self.saveToLibrary(image: watermarkedImage) { success, error in
                     DispatchQueue.main.async { completion(success, savedImage, error) }
