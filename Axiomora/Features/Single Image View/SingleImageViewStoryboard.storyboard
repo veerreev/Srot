@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -41,7 +42,8 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <items>
-                                    <barButtonItem title="Item" image="info.circle" catalog="system" style="plain" id="Ryz-LK-t7X">
+                                    <barButtonItem title="Item" style="plain" id="Ryz-LK-t7X">
+                                        <imageReference key="image" image="info" catalog="system" symbolScale="large"/>
                                         <color key="tintColor" systemColor="systemBlueColor"/>
                                         <connections>
                                             <action selector="signatureNumberTapped:" destination="Ymf-RX-0EY" id="Qap-Cs-G5P"/>
@@ -206,7 +208,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="info.circle" catalog="system" width="128" height="123"/>
+        <image name="info" catalog="system" width="88" height="128"/>
         <image name="photo.on.rectangle" catalog="system" width="128" height="98"/>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

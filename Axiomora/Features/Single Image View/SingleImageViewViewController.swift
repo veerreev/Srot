@@ -46,6 +46,7 @@ class SingleImageViewViewController: UIViewController {
         registerFilmstrip()
         updateTitle(for: startingIndex)
         showEmptyState()
+        signatureNumberButton.style = .prominent
         navigationItem.titleView = customTitleView
     }
     

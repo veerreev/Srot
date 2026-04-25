@@ -171,9 +171,7 @@ extension PhotoManager {
             remoteURL:         nil,
             createdAt:         Date(),
             device:            device,
-            capturedLocation: capturedLocation,
-            isFavourite:       false,
-            albumIds:          []
+            capturedLocation: capturedLocation
         )
         
         images.append(newImage)
