@@ -2,46 +2,22 @@
 //  WatermarkDecoder+Hash.swift
 //  Axiomora
 //
-//  Adds `decodeWithHashFallback(_:)` — a two-stage verification pipeline
-//  that combines the neural watermark decoder with tile-hash tamper detection.
+//  Two-stage verification pipeline:
 //
-//  ┌─────────────────────────────────────────────────────────────────────┐
-//  │  STAGE 1 — Neural (existing WatermarkDecoder.decode)                │
-//  │  Runs the CoreML decoder, averages tile bit-probabilities, applies   │
-//  │  BCH error correction, and looks up the UUID in SignatureManager.    │
-//  │  Survives: JPEG compression, rotation, crop, colour shifts, blur.   │
-//  │  Does NOT produce tamper-damage percentage.                          │
-//  ├─────────────────────────────────────────────────────────────────────┤
-//  │  STAGE 2 — Tile-hash fallback (this file)                           │
-//  │  Only reached when Stage 1 returns .noWatermarkFound.               │
-//  │  Recomputes per-tile SHA-256 hashes of the candidate image and       │
-//  │  compares against every TileRecord in HashStore.                     │
-//  │                                                                     │
-//  │  Decision table:                                                     │
-//  │    ≥ 35% tiles match  AND  100% match → .authentic  (pristine)      │
-//  │    ≥ 35% tiles match  AND  < 100%     → .tampered   (with % damage) │
-//  │    < 35% tiles match                  → .noWatermarkFound           │
-//  └─────────────────────────────────────────────────────────────────────┘
+//  STAGE 1 — Neural (WatermarkDecoder.decode)
+//  ────────────────────────────────────────────
+//  CoreML decoder → BCH correction → UUID → fetch Signature.
 //
-//  USAGE
-//  ─────
-//  Replace every call to `WatermarkDecoder.shared.decode(_:)` with:
-//
-//      Task.detached(priority: .userInitiated) {
-//          let report = await WatermarkDecoder.shared.decodeWithHashFallback(image)
-//          await MainActor.run { self.handleReport(report) }
-//      }
-//
-//  Then read `report.hashComparison` for the tile-level statistics and
-//  `report.verificationMethod` to know which pipeline produced the result.
+//  STAGE 2 — pHash fallback (this file)
+//  ──────────────────────────────────────
+//  Only reached when Stage 1 returns .noWatermarkFound.
 
 import UIKit
 
 // ---------------------------------------------------------------------------
-// MARK: - Supporting types
+// MARK: - VerificationMethod tag
 // ---------------------------------------------------------------------------
 
-/// Which pipeline produced a VerificationReport.
 enum VerificationMethod: String, Codable {
     case neural = "Neural Watermark"
     case hash   = "Hash Fingerprint"
@@ -54,21 +30,13 @@ enum VerificationMethod: String, Codable {
 
 extension WatermarkDecoder {
 
-    // MARK: Two-stage decode
+    // MARK: - Two-stage decode
 
-    /// Run Stage 1 (neural); if it fails, run Stage 2 (tile-hash fallback).
-    ///
-    /// Always returns a `VerificationReport`.  Check:
-    ///   • `report.status`              → .authentic / .tampered / .noWatermarkFound
-    ///   • `report.verificationMethod`  → .neural / .hash / .none
-    ///   • `report.hashComparison`      → tile-level stats (hash path only)
-    ///   • `report.damagedPercent`      → convenience accessor for UI display
+    /// Run Stage 1 (neural); fall back to Stage 2 (pHash).
     func decodeWithHashFallback(_ image: UIImage) async -> VerificationReport {
 
         // ── Stage 1: neural ───────────────────────────────────────────────────
-        let neuralReport = await Task.detached(priority: .userInitiated) {
-            self.decode(image)
-        }.value
+        let neuralReport = await decode(image)
 
         if neuralReport.status != .noWatermarkFound {
             var tagged = neuralReport
@@ -77,26 +45,24 @@ extension WatermarkDecoder {
             return tagged
         }
 
-        print("[Decoder+Hash] Neural path found nothing — running tile-hash fallback…")
+        print("[Decoder+Hash] Neural path found nothing — running pHash fallback…")
 
-        // ── Stage 2: tile-hash ─────────────────────────────────────────────────
-        return await Task.detached(priority: .userInitiated) {
-            self.hashFallback(image)
-        }.value
+        // ── Stage 2: pHash ────────────────────────────────────────────────────
+        return await hashFallback(image)
     }
 
-    // MARK: Hash fallback (private)
+    // MARK: - Hash fallback
 
-    private func hashFallback(_ image: UIImage) -> VerificationReport {
+    private func hashFallback(_ image: UIImage) async -> VerificationReport {
 
-        // 1. Hash the candidate image.
+        // 1. Compute pHash tiles for the candidate image.
         guard let candidateHashes = ImageHasher.tileHashes(image) else {
             print("[Decoder+Hash] Image too small to tile-hash.")
             return noMatchReport()
         }
         print("[Decoder+Hash] Candidate: \(candidateHashes.count) tile hashes computed.")
 
-        // 2. Find best match in HashStore.
+        // 2. Find best match in the on-device HashStore.
         guard let match = HashStore.shared.bestMatch(for: candidateHashes) else {
             return noMatchReport()
         }
@@ -105,28 +71,34 @@ extension WatermarkDecoder {
         print("[Decoder+Hash] Match: \(cmp.matchedCount)/\(cmp.totalCount) tiles "
             + "(\(cmp.damagedPercent)% damaged).")
 
-        // 3. Resolve Signature from SignatureManager.
-        let signature = resolveSignature(id: match.record.signatureId)
+        // 3. Resolve Signature (Local First, then Server)
+        var signature: Signature? = SignatureManager.shared.loadSignatures()
+            .first { $0.id.lowercased() == match.record.signatureId.lowercased() }
 
-        // 4. Choose status.
-        //    • 100 % match  → .authentic  (pixel-perfect, no tampering)
-        //    • ≥ 35 % match → .tampered   (signature present but image was altered)
-        //    (< 35 % is ruled out by bestMatch returning nil)
+        if signature != nil {
+            print("[Decoder+Hash] ✓ Found signature locally for \(match.record.signatureId)")
+        } else {
+            do {
+                signature = try await AxiomoraAPIClient.shared.fetchSignature(uuid: match.record.signatureId)
+                print("[Decoder+Hash] ✓ Server returned signature for \(match.record.signatureId)")
+            } catch APIError.notFound {
+                print("[Decoder+Hash] signatureId \(match.record.signatureId) not found on server.")
+            } catch {
+                print("[Decoder+Hash] Server error during hash fallback: \(error.localizedDescription)")
+            }
+        }
+
+        // 4. Decide status.
         let status: VerificationStatus = cmp.isPristine ? .authentic : .tampered
 
-        var report = makeHashReport(status: status,
-                                    uuid: match.record.signatureId,
-                                    signature: signature,
-                                    comparison: cmp)
-        return report
+        var rep = makeHashReport(status: status,
+                                  uuid: match.record.signatureId,
+                                  signature: signature,
+                                  comparison: cmp)
+        return rep
     }
 
-    // MARK: Helpers
-
-    private func resolveSignature(id: String) -> Signature? {
-        SignatureManager.shared.loadSignatures()
-            .first { $0.id.lowercased() == id.lowercased() }
-    }
+    // MARK: - Helpers
 
     private func noMatchReport() -> VerificationReport {
         var r = VerificationReport(
@@ -145,7 +117,6 @@ extension WatermarkDecoder {
                                  uuid: String,
                                  signature: Signature?,
                                  comparison: ImageHasher.ComparisonResult) -> VerificationReport {
-        // Confidence = match fraction (0 – 1).
         var r = VerificationReport(
             id:                   UUID().uuidString,
             scanDate:             Date(),
