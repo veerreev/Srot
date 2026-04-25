@@ -41,6 +41,7 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
         doneButton.isEnabled = false
         
         setupNotesTextView()
+        emailTextField.delegate = self
         
         if let sig = signatureToEdit {
             prefill(with: sig)
@@ -145,6 +146,12 @@ class NewSignatureTableViewController: UITableViewController, UINavigationContro
         }
         guard let userID = AuthManager.shared.currentUser?.userId else {
             fatalError("No user logged in")
+        }
+
+        let emailText = emailTextField.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        if !emailText.isEmpty && !isValidEmail(emailText) {
+            emailTextField.textColor = Theme.Colors.secondaryRed.withAlphaComponent(0.5)
+            return
         }
 
         let handles: [SocialHandle] = socialHandles
@@ -284,6 +291,28 @@ extension NewSignatureTableViewController: AddSocialCellDelegate {
         addNewRow()
     }
     
+}
+
+// MARK: - UITextFieldDelegate (email validation)
+
+extension NewSignatureTableViewController: UITextFieldDelegate {
+
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        guard textField == emailTextField else { return }
+        // Reset placeholder color as soon as the user starts editing
+        emailTextField.placeholderColor = nil
+    }
+}
+
+// MARK: - Validation
+
+extension NewSignatureTableViewController {
+
+    private func isValidEmail(_ email: String) -> Bool {
+        let pattern = #"^[A-Z0-9a-z._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"#
+        let predicate = NSPredicate(format: "SELF MATCHES %@", pattern)
+        return predicate.evaluate(with: email)
+    }
 }
 
 extension NewSignatureTableViewController: PlatformPickerDelegate {

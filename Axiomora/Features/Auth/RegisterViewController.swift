@@ -30,51 +30,46 @@ class RegisterViewController: BaseAuthViewController {
         passwordTextField.delegate = self
         confirmPasswordTextField.delegate = self
         
+//        errorLabel.isHidden = true
     }
 
     // MARK: - Actions
+
     @IBAction func registerTapped(_ sender: Any) {
-        
-        guard let username = usernameTextField.text, !username.isEmpty,
-              let email = emailTextField.text, !email.isEmpty,
-              let password = passwordTextField.text, !password.isEmpty,
-        let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty else {
+        if let errorMessage = validateFields() {
+            showError(errorMessage)
             handleValidationError()
             return
         }
-        
-        // Proceed with register logic (Firebase/AuthManager)
-        // errorLabel.text = ""
-        
+
+        clearError()
+
+        let username = usernameTextField.text!
+        let email    = emailTextField.text!.trimmingCharacters(in: .whitespaces)
+        let password = passwordTextField.text!
+
         // Disable button to prevent multiple taps during "network" call
         registerButton.isEnabled = false
-        
+
         AuthManager.shared.pseudoRegister(username: username, password: password, email: email) { [weak self] success in
             guard let self = self else { return }
-            
-            // Re-enable button on the main thread
+
             self.registerButton.isEnabled = true
-            
+
             if success {
-                // Mark that this brand-new user needs to complete onboarding
-                // before the full camera UI is unlocked.
                 UserDefaults.standard.set(true, forKey: "hasRegistered")
                 OnboardingManager.shared.beginOnboarding()
                 launchCameraStoryboard()
-                
             } else {
                 print("Registration Failed.")
                 #warning("Show an error alert to the user")
             }
         }
-            
     }
     
     private func handleValidationError() {
-        
-        // Use the base class method for error feedback!
         triggerErrorFeedback(on: registerButton)
-        
+
         if usernameTextField.text!.isEmpty {
             usernameTextField.placeholderColor = Theme.Colors.secondaryRed
         }
@@ -104,32 +99,67 @@ class RegisterViewController: BaseAuthViewController {
     }
     
     private func setupUI(for button: UIButton) {
-        
         Theme.Button.applyGlassStyle(to: registerButton, title: "Register", color: Theme.Colors.systemBlue)
     }
     
 }
 
+// MARK: - UITextFieldDelegate
+
 extension RegisterViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == usernameTextField {
-            // Move focus from Username -> Email
             emailTextField.becomeFirstResponder()
-            
         } else if textField == emailTextField {
-            // Move focus from Email -> Password
             passwordTextField.becomeFirstResponder()
-            
         } else if textField == passwordTextField {
-            // Move focus from Password -> ConfirmPassword
             confirmPasswordTextField.becomeFirstResponder()
-            
         } else if textField == confirmPasswordTextField {
-            // Password finished -> Trigger Register
             textField.resignFirstResponder()
             registerTapped(registerButton as Any)
         }
         return true
+    }
+
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        clearError()
+    }
+}
+
+// MARK: - Validation
+
+extension RegisterViewController {
+  
+    private func isValidEmail(_ email: String) -> Bool {
+        let pattern = #"^[A-Z0-9a-z._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"#
+        let predicate = NSPredicate(format: "SELF MATCHES %@", pattern)
+        return predicate.evaluate(with: email)
+    }
+  
+    /// Returns an error message string, or nil if all fields are valid.
+    private func validateFields() -> String? {
+        let username = usernameTextField.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let email    = emailTextField.text?.trimmingCharacters(in: .whitespaces) ?? ""
+        let password = passwordTextField.text ?? ""
+        let confirm  = confirmPasswordTextField.text ?? ""
+
+        if username.isEmpty  { return "Please enter a username." }
+        if email.isEmpty     { return "Please enter your email address." }
+        if !isValidEmail(email) { return "Please enter a valid email address." }
+        if password.isEmpty  { return "Please enter a password." }
+        if confirm.isEmpty   { return "Please confirm your password." }
+        if password != confirm { return "Passwords do not match." }
+
+        return nil
+    }
+  
+    private func showError(_ message: String) {
+        errorLabel.text = message
+    }
+ 
+    private func clearError() {
+        guard !errorLabel.isHidden else { return }
+        errorLabel.text = ""
     }
 }
