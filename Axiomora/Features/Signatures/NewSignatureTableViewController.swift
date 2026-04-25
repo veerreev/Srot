@@ -300,7 +300,7 @@ extension NewSignatureTableViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         guard textField == emailTextField else { return }
         // Reset placeholder color as soon as the user starts editing
-        emailTextField.placeholderColor = nil
+        emailTextField.textColor = nil
     }
 }
 
