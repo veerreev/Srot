@@ -526,6 +526,9 @@ extension SingleImageViewViewController: SignaturePreviewDelegate {
                 if let idx = all.firstIndex(where: { $0.id == updated.id }) {
                     all[idx] = updated
                     SignatureManager.shared.saveSignatures(all)
+                    for sign in all {
+                        Task { await SignatureManager.shared.syncNewSignature(sign) }
+                    }
                 }
             }
 

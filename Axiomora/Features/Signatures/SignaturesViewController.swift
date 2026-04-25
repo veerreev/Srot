@@ -116,6 +116,7 @@ class SignaturesViewController: UIViewController {
         if noneSelected {
             signatures[0].isCurrent = true
             SignatureManager.shared.saveSignatures(signatures)
+            Task { await SignatureManager.shared.syncNewSignature(signatures[0]) }
         }
     }
 
@@ -169,6 +170,8 @@ class SignaturesViewController: UIViewController {
 
         signatures.remove(at: indexToDelete)
         SignatureManager.shared.saveSignatures(signatures)
+        // Deletion is local-only — surviving signatures are already on the server.
+        // If you add a DELETE /signatures/{uuid} endpoint later, call it here.
 
         collectionView.deleteItems(at: [IndexPath(item: indexToDelete, section: 0)])
 
@@ -195,6 +198,7 @@ class SignaturesViewController: UIViewController {
             signatures[i].isCurrent = (i == currentCenteredIndex)
         }
         SignatureManager.shared.saveSignatures(signatures)
+        // isCurrent is device-local state — the server does not need to know about it.
 
         // Refresh visible cells.
         collectionView.indexPathsForVisibleItems.forEach { indexPath in
@@ -234,6 +238,8 @@ extension SignaturesViewController: UICollectionViewDelegate {
             guard let self else { return }
             self.signatures[indexPath.item] = updated
             SignatureManager.shared.saveSignatures(self.signatures)
+            // Sync only the updated signature — its profile fields may have changed.
+            Task { await SignatureManager.shared.syncNewSignature(updated) }
             self.collectionView.reloadItems(at: [indexPath])
         }
         
@@ -270,6 +276,7 @@ extension SignaturesViewController: NewSignatureDelegate {
 
         signatures.append(newSignature)
         SignatureManager.shared.saveSignatures(signatures)
+        Task { await SignatureManager.shared.syncNewSignature(newSignature) }
 
         let newIndex = IndexPath(item: signatures.count - 1, section: 0)
         collectionView.insertItems(at: [newIndex])

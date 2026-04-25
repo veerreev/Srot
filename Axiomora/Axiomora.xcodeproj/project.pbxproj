@@ -27,6 +27,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AuthManager.swift,
+				AxiomoraAPIClient.swift,
 				CameraManager.swift,
 				HashStore.swift,
 				ImageHasher.swift,
@@ -34,11 +35,11 @@
 				OnboardingManager.swift,
 				PhotoManager.swift,
 				SignatureManager.swift,
+				"SignatureManager+API.swift",
 				"VerificationReport+Hash.swift",
 				WatermarkDecoder.swift,
 				"WatermarkDecoder+Hash.swift",
 				WatermarkEmbedder.swift,
-				"WatermarkEmbedder+Hash.swift",
 			);
 			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
 		};
