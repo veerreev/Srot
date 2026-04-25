@@ -329,7 +329,27 @@ class CameraViewController: UIViewController {
     // MARK: - Actions
     
     @IBAction func rotateButtonTapped(_ sender: Any) {
-        rotateCameraButton.shake()
+        rotateCameraButton.isEnabled = false
+        
+        // Fade out the preview, switch cameras, fade back in — mimics the native camera flip feel
+        UIView.animate(withDuration: 0.15, animations: {
+            self.livePreviewView.alpha = 0
+        }) { _ in
+            Task {
+                do {
+                    try await self.viewModel.switchCamera()
+                } catch {
+                    print("Camera switch failed: \(error)")
+                }
+                
+                await MainActor.run {
+                    UIView.animate(withDuration: 0.2) {
+                        self.livePreviewView.alpha = 1
+                    }
+                    self.rotateCameraButton.isEnabled = true
+                }
+            }
+        }
     }
     
     @IBAction func captureButtonTapped(_ sender: Any) {

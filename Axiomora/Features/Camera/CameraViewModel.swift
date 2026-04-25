@@ -50,6 +50,10 @@ class CameraViewModel: NSObject {
         cameraManager.toggleFlash()
     }
 
+    func switchCamera() async throws {
+        try await cameraManager.switchCamera()
+    }
+
     func changeAspectRatio() -> CameraAspectRatio {
         cameraManager.changeAspectRatio()
     }

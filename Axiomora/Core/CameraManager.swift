@@ -35,6 +35,7 @@ final class CameraManager: NSObject {
     private(set) var currentMode: CameraMode = .normal // 'set' forces the controller to use configureSession to change to '.pro' mode
     private var videoDeviceInput: AVCaptureDeviceInput? // Need to track for changing modes without error, will be useful when '.pro' mode is implemented
     private(set) var currentAspectRatio: CameraAspectRatio = .standard
+    private(set) var currentCameraPosition: AVCaptureDevice.Position = .back
     
     var isFlashEnabled: Bool = false
     
@@ -148,7 +149,8 @@ final class CameraManager: NSObject {
         } else {
             photoSettings = AVCapturePhotoSettings()
         }
-        if isFlashEnabled {
+        // Front camera does not support flash — guard before setting to avoid unexpected behaviour
+        if isFlashEnabled && photoOutput.supportedFlashModes.contains(.on) {
             photoSettings.flashMode = .on
         }
         return photoSettings
@@ -168,6 +170,47 @@ final class CameraManager: NSObject {
     func toggleFlash() -> String {
         isFlashEnabled = !isFlashEnabled
         return isFlashEnabled ? "bolt.fill" : "bolt.slash.fill"
+    }
+    
+    /// Switches between the front and rear camera.
+    func switchCamera() async throws {
+        let newPosition: AVCaptureDevice.Position = currentCameraPosition == .back ? .front : .back
+        
+        // After
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            sessionQueue.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.captureSession.beginConfiguration()
+                
+                if let existingInput = self.videoDeviceInput {
+                    self.captureSession.removeInput(existingInput)
+                }
+                
+                guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: newPosition) else {
+                    self.captureSession.commitConfiguration()
+                    continuation.resume(throwing: CameraError.deviceUnavailable)
+                    return
+                }
+                
+                do {
+                    let newInput = try AVCaptureDeviceInput(device: device)
+                    guard self.captureSession.canAddInput(newInput) else {
+                        self.captureSession.commitConfiguration()
+                        continuation.resume(throwing: CameraError.configurationFailed)
+                        return
+                    }
+                    self.captureSession.addInput(newInput)
+                    self.videoDeviceInput = newInput
+                    self.currentCameraPosition = newPosition
+                    self.captureSession.commitConfiguration()
+                    continuation.resume()
+                } catch {
+                    self.captureSession.commitConfiguration()
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
     
 }
