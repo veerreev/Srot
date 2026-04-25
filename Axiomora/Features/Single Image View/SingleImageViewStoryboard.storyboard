@@ -42,22 +42,22 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <gestureRecognizers/>
                                 <items>
-                                    <barButtonItem title="Item" style="plain" id="Ryz-LK-t7X">
-                                        <imageReference key="image" image="info" catalog="system" symbolScale="large"/>
-                                        <color key="tintColor" systemColor="systemBlueColor"/>
+                                    <barButtonItem systemItem="trash" id="0pU-9H-Xm0">
                                         <connections>
-                                            <action selector="signatureNumberTapped:" destination="Ymf-RX-0EY" id="Qap-Cs-G5P"/>
+                                            <action selector="trashTapped:" destination="Ymf-RX-0EY" id="j4F-hw-AKq"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="flexibleSpace" id="cxu-DB-qk9"/>
                                     <barButtonItem systemItem="action" id="mF4-lp-55b">
                                         <connections>
                                             <action selector="shareTapped:" destination="Ymf-RX-0EY" id="p59-Oh-vGN"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="trash" id="0pU-9H-Xm0">
+                                    <barButtonItem systemItem="flexibleSpace" id="B6S-Vy-12x"/>
+                                    <barButtonItem title="Item" style="plain" id="Ryz-LK-t7X">
+                                        <imageReference key="image" image="info.circle.fill" catalog="system" symbolScale="large"/>
+                                        <color key="tintColor" systemColor="systemBlueColor"/>
                                         <connections>
-                                            <action selector="trashTapped:" destination="Ymf-RX-0EY" id="j4F-hw-AKq"/>
+                                            <action selector="signatureNumberTapped:" destination="Ymf-RX-0EY" id="Qap-Cs-G5P"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -208,7 +208,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="info" catalog="system" width="88" height="128"/>
+        <image name="info.circle.fill" catalog="system" width="128" height="123"/>
         <image name="photo.on.rectangle" catalog="system" width="128" height="98"/>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
