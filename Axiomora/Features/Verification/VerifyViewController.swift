@@ -106,6 +106,50 @@ class VerifyViewController: UIViewController {
         verifyButton.isEnabled = false
         
     }
+    
+    // MARK: - Verification Result
+    
+    private func presentVerificationResult(_ report: VerificationReport) {
+
+        let storyboard = UIStoryboard(name: "SingleImageViewStoryboard", bundle: nil)
+        guard let previewVC = storyboard.instantiateViewController(
+            withIdentifier: "SignaturePreviewViewController"
+        ) as? SignaturePreviewViewController else { return }
+
+        // Card is never tappable from the verify flow
+        previewVC.isCardTappable = false
+
+        switch report.status {
+
+        case .authentic, .tampered:
+            if let sig = report.matchedSignature {
+                let all = SignatureManager.shared.loadSignatures()
+                previewVC.signature     = sig
+                previewVC.signatureIndex = all.firstIndex(where: { $0.id == sig.id }) ?? 0
+            }
+            // If matchedSignature is nil despite a watermark being found, fall through to
+            // the default empty-state strings (extremely unlikely, but safe).
+
+        case .noWatermarkFound:
+            // Leave signature = nil so the empty-state path is taken
+            previewVC.emptyTitle = "No Signature Found"
+            previewVC.emptyBody  = "This image does not appear to contain an embedded signature."
+        }
+
+        let hasCard = report.matchedSignature != nil && report.status != .noWatermarkFound
+        let detentHeight: CGFloat = hasCard ? 690 : 240
+
+        if let sheet = previewVC.sheetPresentationController {
+            let cardDetent = UISheetPresentationController.Detent.custom(
+                identifier: .init("verifyResultCard")
+            ) { _ in detentHeight }
+            sheet.detents            = [cardDetent]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 56
+        }
+
+        present(previewVC, animated: true)
+    }
 }
 
 extension VerifyViewController: PHPickerViewControllerDelegate {
@@ -147,42 +191,6 @@ extension VerifyViewController: PHPickerViewControllerDelegate {
         imageView.image =  image
         imageView.layer.borderColor = Theme.Colors.white.cgColor
 
-    }
-    
-    private func presentVerificationResult(_ report: VerificationReport) {
-        switch report.status {
-
-        case .authentic:
-            let name = report.matchedSignature?.displayName ?? "Unknown"
-            let method = report.verificationMethod == .hash
-                         ? "Hash Fingerprint" : "Neural Watermark"
-            showAlert(
-                title: "✅ Authentic",
-                message: "Signed by: \(name)\nVerified via \(method)."
-            )
-
-        case .tampered:
-            let name = report.matchedSignature?.displayName ?? "Unknown"
-            let dmg  = report.tamperMessage ?? "Some tiles were altered."
-            showAlert(
-                title: "⚠️ Tampered Image",
-                message: "Originally signed by: \(name)\n\(dmg)"
-            )
-
-        case .noWatermarkFound:
-            showAlert(
-                title: "❌ No Signature Found",
-                message: "This image does not contain a recognised digital signature."
-            )
-        }
-    }
-
-    private func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title,
-                                      message: message,
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
     }
 
 }

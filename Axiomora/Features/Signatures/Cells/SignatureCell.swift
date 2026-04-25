@@ -25,6 +25,7 @@ class SignatureCell: UICollectionViewCell {
     @IBOutlet weak var addedSocialsLabel: UILabel!
     @IBOutlet weak var socialStack1: UIStackView!
 
+    @IBOutlet weak var chevronImageView: UIImageView!
     @IBOutlet weak var separatorView: UIView!
     @IBOutlet weak var copyrightEntryLabel: UILabel!
 
@@ -199,6 +200,13 @@ class SignatureCell: UICollectionViewCell {
         visualEffectViewBackground.layer.cornerRadius = 36
         glassEffect.tintColor = .primaryPurple
 
+    }
+
+    /// Hides/shows the signature number label and the chevron navigation indicator.
+    /// Pass `false` when displaying the card in a non-navigable context (e.g. the Verify flow).
+    func setNavigationElementsVisible(_ visible: Bool) {
+        numberLabel.isHidden   = !visible
+        chevronImageView.isHidden = !visible
     }
 
     func setAsCurrentSignature(_ isCurrent: Bool) {

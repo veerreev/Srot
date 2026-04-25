@@ -140,6 +140,7 @@
             <size key="customSize" width="414" height="691"/>
             <connections>
                 <outlet property="addedSocialsLabel" destination="Zv8-tJ-eGl" id="pfy-U5-4a7"/>
+                <outlet property="chevronImageView" destination="kIY-8W-Md2" id="3IX-S7-Eeo"/>
                 <outlet property="copyrightEntryLabel" destination="iTg-ok-t65" id="aDv-Ca-S8D"/>
                 <outlet property="emailEntryLabel" destination="vKY-ex-ahW" id="zNT-Me-UDa"/>
                 <outlet property="locationIcon" destination="qad-fc-cq4" id="kYh-sI-F9A"/>

@@ -26,6 +26,13 @@ class SignaturePreviewViewController: UIViewController {
     var image: Image?
     weak var delegate: SignaturePreviewDelegate?
 
+    /// Set to false to suppress the tap-to-navigate gesture on the signature card.
+    var isCardTappable: Bool = true
+
+    /// Overridable strings for the empty-state message shown when `signature` is nil.
+    var emptyTitle: String = "Signature Deleted"
+    var emptyBody: String  = "The signature embedded in this image has been deleted and is no longer available."
+
     private var cardCell: SignatureCell?
 
     override func viewDidLoad() {
@@ -65,8 +72,12 @@ class SignaturePreviewViewController: UIViewController {
             cell.heightAnchor.constraint(equalToConstant: 690)
         ])
 
-        let tap = UITapGestureRecognizer(target: self, action: #selector(cardTapped))
-        cell.addGestureRecognizer(tap)
+        if isCardTappable {
+            let tap = UITapGestureRecognizer(target: self, action: #selector(cardTapped))
+            cell.addGestureRecognizer(tap)
+        } else {
+            cell.setNavigationElementsVisible(false)
+        }
         cardCell = cell
     }
 
@@ -83,14 +94,14 @@ class SignaturePreviewViewController: UIViewController {
         iconView.translatesAutoresizingMaskIntoConstraints = false
 
         let titleLabel = UILabel()
-        titleLabel.text = "Signature Deleted"
+        titleLabel.text = emptyTitle
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         titleLabel.textColor = .secondaryLabel
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         let bodyLabel = UILabel()
-        bodyLabel.text = "The signature embedded in this image has been deleted and is no longer available."
+        bodyLabel.text = emptyBody
         bodyLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         bodyLabel.textColor = .tertiaryLabel
         bodyLabel.textAlignment = .center
