@@ -11,6 +11,10 @@ class SingleSignatureViewController: UIViewController {
 
     var signature: Signature?
     var onSignatureUpdated: ((Signature) -> Void)?
+
+    /// When `true`, the edit bar button is hidden and the Notes section is omitted.
+    /// Set to `true` when launching from the Verify flow.
+    var isReadOnly: Bool = false
     
     @IBOutlet weak var tableView: UITableView!
 
@@ -20,6 +24,8 @@ class SingleSignatureViewController: UIViewController {
         let label: String
         let entry: String
         let iconName: String
+        /// Non-nil for tappable rows; opens in Safari / Mail / etc.
+        let url: URL?
     }
 
     private struct Section {
@@ -36,6 +42,9 @@ class SingleSignatureViewController: UIViewController {
         super.viewDidLoad()
         buildSections()
         setupTableView()
+        if isReadOnly {
+            navigationItem.rightBarButtonItem = nil
+        }
     }
 
     @IBAction func editButtonTapped(_ sender: UIBarButtonItem) {
@@ -58,18 +67,30 @@ class SingleSignatureViewController: UIViewController {
         // ── Section 1: Identity & Contact ─────────────────────────
         var identityRows: [Row] = []
 
-        identityRows.append(Row(label: "Name", entry: sig.displayName, iconName: "person"))
+        // Name — display only, not tappable
+        identityRows.append(Row(label: "Name", entry: sig.displayName, iconName: "person", url: nil))
 
         if let email = sig.email, !email.isEmpty {
-            identityRows.append(Row(label: "Email", entry: email, iconName: "envelope"))
+            identityRows.append(Row(
+                label: "Email",
+                entry: email,
+                iconName: "envelope",
+                url: URL(string: "mailto:\(email)")
+            ))
         }
 
         if let website = sig.website, !website.isEmpty {
-            identityRows.append(Row(label: "Portfolio", entry: website, iconName: "link"))
+            identityRows.append(Row(
+                label: "Portfolio",
+                entry: website,
+                iconName: "link",
+                url: sig.websiteURL
+            ))
         }
 
         if let copyright = sig.copyrightText, !copyright.isEmpty {
-            identityRows.append(Row(label: "Copyright", entry: "© \(copyright)", iconName: "c.circle"))
+            // Copyright — display only, not tappable
+            identityRows.append(Row(label: "Copyright", entry: "© \(copyright)", iconName: "c.circle", url: nil))
         }
 
         if !identityRows.isEmpty {
@@ -81,7 +102,8 @@ class SingleSignatureViewController: UIViewController {
             Row(
                 label: handle.platform.rawValue,
                 entry: handle.userInput,
-                iconName: handle.platform.iconName
+                iconName: handle.platform.iconName,
+                url: handle.profileURL
             )
         }
 
@@ -90,9 +112,10 @@ class SingleSignatureViewController: UIViewController {
         }
 
         // ── Section 3: Notes ───────────────────────────────────────
-        if let notes = sig.notes, !notes.isEmpty {
+        if !isReadOnly, let notes = sig.notes, !notes.isEmpty {
+            // Notes — display only, not tappable
             contentSections.append(Section(title: "Notes", rows: [
-                Row(label: "Notes", entry: notes, iconName: "note.text")
+                Row(label: "Notes", entry: notes, iconName: "note.text", url: nil)
             ]))
         }
     }
@@ -150,15 +173,12 @@ extension SingleSignatureViewController: UITableViewDataSource {
             return cell
         }
 
-        
         let cell = tableView.dequeueReusableCell(
             withIdentifier: "SingleSignatureCell", for: indexPath
         ) as! SingleSignatureCell
 
         let row = contentSections[indexPath.section - 1].rows[indexPath.row]
-        cell.label.text = row.label
-        cell.labelEntry.text = row.entry
-
+        cell.configure(label: row.label, entry: row.entry, url: row.url)
 
         return cell
     }
@@ -166,7 +186,18 @@ extension SingleSignatureViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 
-extension SingleSignatureViewController: UITableViewDelegate { }
+extension SingleSignatureViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        guard indexPath.section > 0 else { return }
+        let row = contentSections[indexPath.section - 1].rows[indexPath.row]
+        guard let url = row.url, UIApplication.shared.canOpenURL(url) else { return }
+
+        UIApplication.shared.open(url)
+    }
+}
 
 extension SingleSignatureViewController: NewSignatureDelegate {
     func didCreateSignature(_ signature: Signature) { }  // not used here

@@ -330,7 +330,7 @@ class CameraViewController: UIViewController {
     
     @IBAction func rotateButtonTapped(_ sender: Any) {
         rotateCameraButton.isEnabled = false
-        
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
         // Fade out the preview, switch cameras, fade back in — mimics the native camera flip feel
         UIView.animate(withDuration: 0.15, animations: {
             self.livePreviewView.alpha = 0

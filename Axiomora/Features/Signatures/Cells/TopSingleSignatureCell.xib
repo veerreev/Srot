@@ -17,7 +17,7 @@
                 <rect key="frame" x="0.0" y="0.0" width="335" height="89"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gjr-Bh-SNE">
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="gjr-Bh-SNE">
                         <rect key="frame" x="0.0" y="0.0" width="335" height="89"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Signature Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="jde-Av-ogO">
@@ -27,10 +27,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Pnr-VC-3Le">
-                                <rect key="frame" x="88.333333333333329" y="46.333333333333343" width="158.66666666666669" height="42.666666666666657"/>
+                                <rect key="frame" x="88.333333333333329" y="42.333333333333343" width="158.66666666666669" height="46.666666666666657"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="location" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="KD9-cK-kwy">
-                                        <rect key="frame" x="0.0" y="13.999999999999993" width="20" height="15"/>
+                                        <rect key="frame" x="0.0" y="15.999999999999993" width="20" height="15"/>
                                         <color key="tintColor" systemColor="systemBlueColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="KD9-cK-kwy" secondAttribute="height" multiplier="1:1" id="Giz-ed-onW"/>
@@ -39,7 +39,7 @@
                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location included" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MJj-jW-LQ2">
-                                        <rect key="frame" x="24" y="11.333333333333327" width="134.66666666666666" height="20.333333333333329"/>
+                                        <rect key="frame" x="24" y="13.333333333333327" width="134.66666666666666" height="20.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" systemColor="systemBlueColor"/>
                                         <nil key="highlightedColor"/>

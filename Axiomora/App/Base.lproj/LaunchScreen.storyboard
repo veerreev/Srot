@@ -16,11 +16,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Axiomora Icon Image" translatesAutoresizingMaskIntoConstraints="NO" id="YsQ-NM-vcD">
-                                <rect key="frame" x="146.66666666666666" y="338" width="100" height="120"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Axiomora Icon Image" translatesAutoresizingMaskIntoConstraints="NO" id="YsQ-NM-vcD">
+                                <rect key="frame" x="136.66666666666666" y="338" width="119.99999999999997" height="120"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="R9Y-rw-2Gj"/>
-                                    <constraint firstAttribute="width" constant="100" id="mAz-h5-9E9"/>
+                                    <constraint firstAttribute="width" secondItem="YsQ-NM-vcD" secondAttribute="height" multiplier="1:1" id="1UZ-xa-zwC"/>
+                                    <constraint firstAttribute="width" constant="120" id="mAz-h5-9E9"/>
                                 </constraints>
                             </imageView>
                         </subviews>

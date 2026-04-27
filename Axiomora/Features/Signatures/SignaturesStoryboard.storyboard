@@ -137,7 +137,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T6N-eM-DRQ">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="8" estimatedSectionHeaderHeight="-1" sectionFooterHeight="8" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="qHx-mz-ivU">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="8" estimatedSectionHeaderHeight="-1" sectionFooterHeight="8" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="qHx-mz-ivU">
                                         <rect key="frame" x="0.0" y="-32" width="393" height="884"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -163,7 +163,7 @@
                             <constraint firstAttribute="trailing" secondItem="T6N-eM-DRQ" secondAttribute="trailing" id="y5m-SB-x3m"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="kKP-it-CFz">
+                    <navigationItem key="navigationItem" largeTitleDisplayMode="always" id="kKP-it-CFz">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="ItC-Yx-UJS">
                             <connections>
                                 <action selector="editButtonTapped:" destination="rnD-31-bjf" id="SPY-jL-hse"/>
@@ -187,13 +187,13 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

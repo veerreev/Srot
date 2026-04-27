@@ -47,6 +47,7 @@ class SingleImageViewViewController: UIViewController {
         updateTitle(for: startingIndex)
         showEmptyState()
         signatureNumberButton.style = .prominent
+        updateSignatureButton(for: startingIndex)
         navigationItem.titleView = customTitleView
     }
     
@@ -164,6 +165,27 @@ class SingleImageViewViewController: UIViewController {
             }
         }
     
+
+    // MARK: - Signature Button
+
+    /// Updates the signature bar button image to the numbered circle SF Symbol matching
+    /// the 1-based index of the signature embedded in the image at `index`,
+    /// or "questionmark.circle.fill" if that signature has been deleted.
+    private func updateSignatureButton(for index: Int) {
+        guard images.indices.contains(index) else {
+            signatureNumberButton.image = UIImage(systemName: "questionmark.circle.fill")
+            return
+        }
+        let image = images[index]
+        let signatures = SignatureManager.shared.loadSignatures()
+        if let sigIndex = signatures.firstIndex(where: { $0.id == image.signatureId }) {
+            let number = sigIndex + 1
+            signatureNumberButton.image = UIImage(systemName: "\(number).circle.fill")
+        } else {
+            signatureNumberButton.image = UIImage(systemName: "questionmark.circle.fill")
+        }
+    }
+
     @IBAction func shareTapped(_ sender: UIBarButtonItem) {
         guard images.indices.contains(currentIndex), let fileURL = images[currentIndex].localFileURL else { return }
         let activityVC = UIActivityViewController(activityItems: [fileURL], applicationActivities: nil)
@@ -275,6 +297,7 @@ class SingleImageViewViewController: UIViewController {
             pageVC.images = newImages
             pageVC.showImage(at: index, animated: false)
             updateTitle(for: index)
+            updateSignatureButton(for: index)
             filmstripCollectionView.reloadData()
                 
             // A slight delay ensures the collection view layout finishes before scrolling
@@ -337,6 +360,7 @@ extension SingleImageViewViewController: SingleImagePageChangeDelegate {
         updateTitle(for: index)
         scrollFilmstrip(to: index, animated: true)
         filmstripCollectionView.reloadData()
+        updateSignatureButton(for: index)
         showChrome()
     }
         

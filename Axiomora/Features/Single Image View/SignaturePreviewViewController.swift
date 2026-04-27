@@ -29,6 +29,9 @@ class SignaturePreviewViewController: UIViewController {
     /// Set to false to suppress the tap-to-navigate gesture on the signature card.
     var isCardTappable: Bool = true
 
+    /// Set to true to hide the signature number label on the card (e.g. in the Verify flow).
+    var hidesSignatureNumber: Bool = false
+
     /// Overridable strings for the empty-state message shown when `signature` is nil.
     var emptyTitle: String = "Signature Deleted"
     var emptyBody: String  = "The signature embedded in this image has been deleted and is no longer available."
@@ -77,6 +80,10 @@ class SignaturePreviewViewController: UIViewController {
             cell.addGestureRecognizer(tap)
         } else {
             cell.setNavigationElementsVisible(false)
+        }
+
+        if hidesSignatureNumber {
+            cell.numberLabel.isHidden = true
         }
         cardCell = cell
     }

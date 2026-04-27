@@ -116,8 +116,9 @@ class VerifyViewController: UIViewController {
             withIdentifier: "SignaturePreviewViewController"
         ) as? SignaturePreviewViewController else { return }
 
-        // Card is never tappable from the verify flow
-        previewVC.isCardTappable = false
+        // Card is tappable — opens SingleSignatureViewController in read-only mode
+        previewVC.delegate = self
+        previewVC.hidesSignatureNumber = true
 
         switch report.status {
 
@@ -149,6 +150,26 @@ class VerifyViewController: UIViewController {
         }
 
         present(previewVC, animated: true)
+    }
+}
+
+// MARK: - SignaturePreviewDelegate
+
+extension VerifyViewController: SignaturePreviewDelegate {
+
+    func signaturePreview(
+        _ vc: SignaturePreviewViewController,
+        didTapSignature signature: Signature
+    ) {
+        vc.dismiss(animated: true) { [weak self] in
+            let storyboard = UIStoryboard(name: "SignaturesStoryboard", bundle: nil)
+            let singleSigVC = storyboard.instantiateViewController(
+                withIdentifier: "SingleSignatureViewController"
+            ) as! SingleSignatureViewController
+            singleSigVC.signature = signature
+            singleSigVC.isReadOnly = true
+            self?.navigationController?.pushViewController(singleSigVC, animated: true)
+        }
     }
 }
 
