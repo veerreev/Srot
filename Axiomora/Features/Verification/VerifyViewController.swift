@@ -180,6 +180,7 @@ extension VerifyViewController: PHPickerViewControllerDelegate {
         
         guard let provider = results.first?.itemProvider,
               provider.canLoadObject(ofClass: UIImage.self) else {
+            picker.dismiss(animated: true)
             return
         }
         
