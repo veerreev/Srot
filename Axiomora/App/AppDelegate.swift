@@ -13,8 +13,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        
+        // Ensure every local signature is correctly registered on the server.
+        // This runs silently in the background and fixes any corrupt rows
+        // caused by previous failed registrations (e.g. network errors, CORS issues).
+        SignatureManager.shared.syncAllSignaturesOnStartup()
+
         return true
     }
     

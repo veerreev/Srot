@@ -29,8 +29,8 @@ enum APIError: LocalizedError {
     case networkError(Error)
     case httpError(statusCode: Int, body: String)
     case decodingError(Error)
-    case notFound          // 404 — signature UUID not registered on the server
-    case unauthorized      // 401 — bad API key
+    case notFound
+    case unauthorized
 
     var errorDescription: String? {
         switch self {
@@ -46,15 +46,45 @@ enum APIError: LocalizedError {
 
 // ---------------------------------------------------------------------------
 // MARK: - Wire types
-//
-//  These match the JSON shapes defined in the Python backend exactly.
-//  Keep them in sync with backend/models.py.
 // ---------------------------------------------------------------------------
 
-/// Sent to POST /signatures when a user creates a new Signature profile.
+struct RegisterHashRequest: Encodable {
+    let imageId: String
+    let signatureId: String
+    let tileHashes: [String]
+}
+
+struct VerifyHashRequest: Encodable {
+    let candidateHashes: [String]
+}
+
+struct MatchResultResponse: Decodable {
+    let imageId: String
+    let signatureId: String
+    let comparison: VerificationComparison
+    
+    struct VerificationComparison: Decodable {
+        let matchedCount: Int
+        let exactMatchedCount: Int
+        let totalCount: Int
+        let matchFraction: Double
+        let damagedPercent: Int
+        let signatureDetected: Bool
+        let isPristine: Bool
+        
+        func toAppResult() -> ImageHasher.ComparisonResult {
+            return ImageHasher.ComparisonResult(
+                matchedCount: matchedCount,
+                exactMatchedCount: exactMatchedCount,
+                totalCount: totalCount
+            )
+        }
+    }
+}
+
 struct RegisterSignatureRequest: Encodable {
-    let id: String                   // UUID string — the watermark payload
-    let creatorId: String            // AuthManager.shared.currentUser.userId
+    let id: String
+    let creatorId: String
     let displayName: String
     let email: String?
     let website: String?
@@ -68,8 +98,6 @@ struct RegisterSignatureRequest: Encodable {
     }
 }
 
-/// Returned by GET /signatures/{uuid}.
-/// A subset of the full Signature model — only what the server stores.
 struct SignatureResponse: Decodable {
     let id: String
     let creatorId: String
@@ -79,14 +107,13 @@ struct SignatureResponse: Decodable {
     let copyrightText: String?
     let socialHandles: [SocialHandlePayload]
     let notes: String?
-    let registeredAt: String         // ISO-8601 date string
+    let registeredAt: String
 
     struct SocialHandlePayload: Decodable {
         let platform: String
         let userInput: String
     }
 
-    /// Convert the server response back into the app's rich Signature model.
     func toSignature() -> Signature {
         let handles: [SocialHandle] = socialHandles.compactMap { payload in
             guard let platform = SocialPlatform(rawValue: payload.platform) else { return nil }
@@ -96,7 +123,7 @@ struct SignatureResponse: Decodable {
             id:                    id,
             creatorID:             creatorId,
             title:                 "Verified Profile",
-            isCurrent:             false,   // doesn't matter on the verify side
+            isCurrent:             false,
             displayName:           displayName,
             copyrightText:         copyrightText,
             email:                 email,
@@ -119,14 +146,8 @@ final class AxiomoraAPIClient {
 
     // ── Configuration ─────────────────────────────────────────────────────────
 
-    /// Your VPS address.  No trailing slash.
-    /// Change to https://your-domain.com in production.
-    private let baseURL = "http://172.16.10.201:8000"      // ← Use https only with a real TLS certificate
-
-    /// Optional bearer token for write endpoints (registration).
-    /// Store this in the Keychain in production — UserDefaults is acceptable
-    /// only for local development.
-    private let apiKey: String? = nil                    // ← SET THIS if your backend requires auth
+    private let baseURL = "http://172.16.10.201:8000"
+    private let apiKey: String? = nil
 
     // ── URLSession ─────────────────────────────────────────────────────────────
 
@@ -134,8 +155,12 @@ final class AxiomoraAPIClient {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest  = 15
         config.timeoutIntervalForResource = 30
-        // Allow plain HTTP to local/development servers.
-        // For production HTTPS servers this delegate is never called.
+        
+        // 🚨 THE FIX FOR -1009 ERRORS ON STARTUP
+        // This tells iOS to pause the network request and wait for the "Local Network"
+        // permission prompt to be accepted, rather than instantly failing.
+        config.waitsForConnectivity = true
+        
         return URLSession(configuration: config, delegate: ATSBypassDelegate(), delegateQueue: nil)
     }()
 
@@ -156,16 +181,23 @@ final class AxiomoraAPIClient {
     // =========================================================================
     // MARK: - Public API
     // =========================================================================
+    
+    func registerImageHashes(imageId: String, signatureId: String, tileHashes: [String]) async throws {
+        let payload = RegisterHashRequest(imageId: imageId, signatureId: signatureId, tileHashes: tileHashes)
+        let request = try buildRequest(method: "POST", path: "/hashes", body: payload)
+        let (data, response) = try await perform(request)
+        try checkHTTP(response, data: data)
+        print("[APIClient] ✓ Global hash registered on VPS for image \(imageId).")
+    }
 
-    // ── POST /signatures ───────────────────────────────────────────────────────
-
-    /// Register a new signature profile on the server.
-    ///
-    /// Call this once right after the user creates a `Signature` locally,
-    /// so the server can return the full profile when any verifier queries it.
-    ///
-    /// - Parameter signature: The local Signature model to upload.
-    /// - Throws: `APIError`
+    func verifyImageHashes(candidateHashes: [String]) async throws -> MatchResultResponse {
+        let payload = VerifyHashRequest(candidateHashes: candidateHashes)
+        let request = try buildRequest(method: "POST", path: "/verify-hash", body: payload)
+        let (data, response) = try await perform(request)
+        try checkHTTP(response, data: data)
+        return try decode(MatchResultResponse.self, from: data)
+    }
+    
     func registerSignature(_ signature: Signature) async throws {
         let payload = RegisterSignatureRequest(
             id:            signature.id,
@@ -186,9 +218,6 @@ final class AxiomoraAPIClient {
         print("[APIClient] ✓ Signature \(signature.id) registered on server.")
     }
 
-    // ── PUT /signatures/{uuid} ────────────────────────────────────────────────
-
-    /// Update an existing signature profile (called when the user edits their profile).
     func updateSignature(_ signature: Signature) async throws {
         let payload = RegisterSignatureRequest(
             id:            signature.id,
@@ -208,13 +237,25 @@ final class AxiomoraAPIClient {
         print("[APIClient] ✓ Signature \(signature.id) updated on server.")
     }
 
-    // ── GET /signatures/{uuid} ─────────────────────────────────────────────────
+    func patchSignature(_ signature: Signature) async throws {
+        let payload = RegisterSignatureRequest(
+            id:            signature.id,
+            creatorId:     signature.creatorID,
+            displayName:   signature.displayName,
+            email:         signature.email,
+            website:       signature.website,
+            copyrightText: signature.copyrightText,
+            socialHandles: signature.socialHandles.map {
+                .init(platform: $0.platform.rawValue, userInput: $0.userInput)
+            },
+            notes: signature.notes
+        )
+        let request = try buildRequest(method: "PATCH", path: "/signatures/\(signature.id)", body: payload)
+        let (data, response) = try await perform(request)
+        try checkHTTP(response, data: data)
+        print("[APIClient] ✓ Signature \(signature.id) patched on server.")
+    }
 
-    /// Look up a signature by the UUID extracted from a watermarked image.
-    ///
-    /// - Parameter uuid: The UUID string decoded from the watermark bits.
-    /// - Returns: The full `Signature` model, reconstructed from the server response.
-    /// - Throws: `APIError.notFound` if the UUID is not in the server database.
     func fetchSignature(uuid: String) async throws -> Signature {
         let request = try buildRequest(method: "GET", path: "/signatures/\(uuid)", body: Optional<String>.none)
         let (data, response) = try await perform(request)
@@ -268,7 +309,6 @@ final class AxiomoraAPIClient {
         do {
             return try decoder.decode(type, from: data)
         } catch {
-            // Log the raw response so decoding failures are easy to diagnose.
             let raw = String(data: data, encoding: .utf8) ?? "<binary>"
             print("[APIClient] Decode failed. Raw response: \(raw)")
             throw APIError.decodingError(error)
@@ -276,19 +316,10 @@ final class AxiomoraAPIClient {
     }
 }
 
-// ---------------------------------------------------------------------------
-// MARK: - ATS bypass for plain HTTP (development only)
-// ---------------------------------------------------------------------------
-// In production, delete this class and use HTTPS exclusively.
-// In Info.plist, add NSAppTransportSecurity > NSAllowsArbitraryLoads = YES
-// for local testing, OR use a proper TLS certificate on the server.
-
 private final class ATSBypassDelegate: NSObject, URLSessionDelegate {
     func urlSession(_ session: URLSession,
                     didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        // Accept self-signed certs in development.
-        // REMOVE THIS IN PRODUCTION.
         if let trust = challenge.protectionSpace.serverTrust {
             completionHandler(.useCredential, URLCredential(trust: trust))
         } else {

@@ -54,48 +54,51 @@ extension WatermarkDecoder {
     // MARK: - Hash fallback
 
     private func hashFallback(_ image: UIImage) async -> VerificationReport {
-
-        // 1. Compute pHash tiles for the candidate image.
+        // 1. Compute hashes
         guard let candidateHashes = ImageHasher.tileHashes(image) else {
             print("[Decoder+Hash] Image too small to tile-hash.")
             return noMatchReport()
         }
         print("[Decoder+Hash] Candidate: \(candidateHashes.count) tile hashes computed.")
 
-        // 2. Find best match in the on-device HashStore.
-        guard let match = HashStore.shared.bestMatch(for: candidateHashes) else {
-            return noMatchReport()
-        }
+        var targetSignatureId: String
+        var cmp: ImageHasher.ComparisonResult
 
-        let cmp = match.comparison
-        print("[Decoder+Hash] Match: \(cmp.matchedCount)/\(cmp.totalCount) tiles "
-            + "(\(cmp.damagedPercent)% damaged).")
-
-        // 3. Resolve Signature (Local First, then Server)
-        var signature: Signature? = SignatureManager.shared.loadSignatures()
-            .first { $0.id.lowercased() == match.record.signatureId.lowercased() }
-
-        if signature != nil {
-            print("[Decoder+Hash] ✓ Found signature locally for \(match.record.signatureId)")
+        // 2. Try Local First
+        if let localMatch = HashStore.shared.bestMatch(for: candidateHashes) {
+            print("[Decoder+Hash] Match found locally!")
+            targetSignatureId = localMatch.record.signatureId
+            cmp = localMatch.comparison
         } else {
+            // 3. If local fails, try the global VPS
+            print("[Decoder+Hash] Local match failed. Querying VPS...")
             do {
-                signature = try await AxiomoraAPIClient.shared.fetchSignature(uuid: match.record.signatureId)
-                print("[Decoder+Hash] ✓ Server returned signature for \(match.record.signatureId)")
-            } catch APIError.notFound {
-                print("[Decoder+Hash] signatureId \(match.record.signatureId) not found on server.")
+                let serverMatch = try await AxiomoraAPIClient.shared.verifyImageHashes(candidateHashes: candidateHashes)
+                print("[Decoder+Hash] ✓ Match found globally on VPS!")
+                targetSignatureId = serverMatch.signatureId
+                cmp = serverMatch.comparison.toAppResult()
             } catch {
-                print("[Decoder+Hash] Server error during hash fallback: \(error.localizedDescription)")
+                print("[Decoder+Hash] Global match failed: \(error.localizedDescription)")
+                return noMatchReport()
             }
         }
 
-        // 4. Decide status.
-        let status: VerificationStatus = cmp.isPristine ? .authentic : .tampered
+        // 4. Resolve Signature
+        var signature: Signature? = SignatureManager.shared.loadSignatures()
+            .first { $0.id.lowercased() == targetSignatureId.lowercased() }
 
-        var rep = makeHashReport(status: status,
-                                  uuid: match.record.signatureId,
-                                  signature: signature,
-                                  comparison: cmp)
-        return rep
+        if signature == nil {
+            do {
+                signature = try await AxiomoraAPIClient.shared.fetchSignature(uuid: targetSignatureId)
+                print("[Decoder+Hash] ✓ Server returned signature for \(targetSignatureId)")
+            } catch {
+                print("[Decoder+Hash] ⚠️ Signature fetch failed.")
+            }
+        }
+
+        // 5. Decide status and return
+        let status: VerificationStatus = cmp.isPristine ? .authentic : .tampered
+        return makeHashReport(status: status, uuid: targetSignatureId, signature: signature, comparison: cmp)
     }
 
     // MARK: - Helpers

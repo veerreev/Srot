@@ -295,12 +295,27 @@ extension PhotoManager {
                    let fileURL = saved.localFileURL,
                    let diskImage = UIImage(contentsOfFile: fileURL.path),
                    let tileHashes = ImageHasher.tileHashes(diskImage) {
+                    
+                    // 1. Save locally (Keep this for speed)
                     HashStore.shared.register(imageId: saved.id,
                                              signatureId: currentSignature.id,
                                              tileHashes: tileHashes)
-                    print("[PhotoManager] ✓ Hash registered: \(tileHashes.count) tiles for image \(saved.id)")
+                    print("[PhotoManager] ✓ Local hash registered: \(tileHashes.count) tiles")
+                    
+                    // 2. Upload to VPS (Global verification)
+                    Task {
+                        do {
+                            try await AxiomoraAPIClient.shared.registerImageHashes(
+                                imageId: saved.id,
+                                signatureId: currentSignature.id,
+                                tileHashes: tileHashes
+                            )
+                        } catch {
+                            print("[PhotoManager] ⚠️ Failed to upload hash to VPS: \(error)")
+                        }
+                    }
                 } else {
-                    print("[PhotoManager] ⚠️ Could not register hash — file unreadable or image too small.")
+                    print("[PhotoManager] ⚠️ Could not register hash — file unreadable.")
                 }
                 // ────────────────────────────────────────────────────────────
 

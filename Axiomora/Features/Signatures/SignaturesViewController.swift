@@ -258,7 +258,13 @@ extension SignaturesViewController: UICollectionViewDelegate {
 extension SignaturesViewController: NewSignatureDelegate {
     
     func didUpdateSignature(_ signature: Signature) {
-        
+        // Find the existing signature by id and replace it in the local array.
+        guard let index = signatures.firstIndex(where: { $0.id == signature.id }) else { return }
+        signatures[index] = signature
+        SignatureManager.shared.saveSignatures(signatures)
+        // Push the updated profile to the server so verifiers see the new data.
+        Task { await SignatureManager.shared.syncNewSignature(signature) }
+        collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
     }
 
     func didCreateSignature(_ signature: Signature) {
