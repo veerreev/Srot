@@ -11,14 +11,10 @@
 //
 //  All requests are JSON over HTTPS.  The client uses Swift Concurrency (async/await)
 //  so callers never need to think about threads or DispatchQueues.
-//
-//  CONFIGURATION
-//  ─────────────
-//  Change `baseURL` to your VPS address. During development you can point it
-//  at http://localhost:8000 with App Transport Security disabled for localhost.
-//  In production, always use HTTPS.
 
 import Foundation
+
+let BASEURL = "http://172.16.10.201:8000"
 
 // ---------------------------------------------------------------------------
 // MARK: - API Error
@@ -146,7 +142,7 @@ final class AxiomoraAPIClient {
 
     // ── Configuration ─────────────────────────────────────────────────────────
 
-    private let baseURL = "http://172.16.10.201:8000"
+    private let baseURL = BASEURL
     private let apiKey: String? = nil
 
     // ── URLSession ─────────────────────────────────────────────────────────────

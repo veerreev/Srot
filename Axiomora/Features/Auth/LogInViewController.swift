@@ -28,32 +28,28 @@ class LogInViewController: BaseAuthViewController {
     }
     
     @IBAction func logInTapped(_ sender: Any) {
-        
         guard let username = usernameTextField.text, !username.isEmpty,
               let password = passwordTextField.text, !password.isEmpty else {
             handleValidationError()
             return
         }
         
-        // Proceed with register logic (Firebase/AuthManager)
-//        errorLabel.text = ""
-        
-        // Disable button to prevent multiple taps during "network" call
+        // Disable button to prevent multiple taps during network call
         logInButton.isEnabled = false
         
-        AuthManager.shared.pseudoLogin(username: username, password: password ) { [weak self] success in
+        // CHANGED: Called .login instead of .pseudoLogin
+        AuthManager.shared.login(username: username, password: password) { [weak self] success in
             guard let self = self else { return }
             
             // Re-enable button on the main thread
             self.logInButton.isEnabled = true
             
             if success {
-                
-                launchCameraStoryboard()
-                
+                self.launchCameraStoryboard()
             } else {
                 print("Log In Failed.")
-                #warning("Show an error alert to the user")
+                // You can update your errorLabel here for UI feedback:
+                // self.errorLabel.text = "Invalid username or password."
             }
         }
         
