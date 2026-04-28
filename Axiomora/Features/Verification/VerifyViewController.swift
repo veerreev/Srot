@@ -18,6 +18,7 @@ class VerifyViewController: UIViewController {
     @IBOutlet weak var infoMessageLabel: UILabel!
     @IBOutlet weak var imageViewAspectRatio: NSLayoutConstraint!
     @IBOutlet weak var trashBarItem: UIBarButtonItem!
+    @IBOutlet var scannerOverlay: ScannerOverlayView!
     
     @IBOutlet weak var fluidBackgroundView: FluidBackgroundView!
     @IBOutlet weak var scannerOverlayView: ScannerOverlayView!
@@ -27,6 +28,7 @@ class VerifyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        scannerOverlay.layer.borderColor = UIColor.white.cgColor
         setupUI()
     }
     
@@ -72,19 +74,28 @@ class VerifyViewController: UIViewController {
         }
         
         verifyButton.isEnabled = false
-        fluidBackgroundView.startVerifyingAnimation()
-        scannerOverlayView.startScanning()
+        //fluidBackgroundView.startVerifyingAnimation()
+        scannerOverlayView.startScanning(with: imageView.image)
 
-        Task { @MainActor in
-                guard let image = imageView.image else { return }
-        
-                let report = await WatermarkDecoder.shared.decodeWithHashFallback(image)
-        
+        Task { [weak self] in
+            guard let self else { return }
+            guard let image = await MainActor.run(body: { self.imageView.image }) else {
+                await MainActor.run {
+                    self.fluidBackgroundView.stopVerifyingAnimation()
+                    self.scannerOverlayView.stopScanning()
+                    self.verifyButton.isEnabled = true
+                }
+                return
+            }
+
+            let report = await self.runVerification(for: image)
+
+            await MainActor.run {
                 self.fluidBackgroundView.stopVerifyingAnimation()
                 self.scannerOverlayView.stopScanning()
                 self.verifyButton.isEnabled = true
-        
                 self.presentVerificationResult(report)
+            }
         }
     }
     
@@ -101,7 +112,10 @@ class VerifyViewController: UIViewController {
             self.imageView.isHidden = true
         })
         
+        isImageSelected = false
         imageView.image = nil
+        scannerOverlayView.setSourceImage(nil)
+        scannerOverlayView.stopScanning()
         trashBarItem.isHidden = true
         verifyButton.isEnabled = false
         
@@ -211,8 +225,23 @@ extension VerifyViewController: PHPickerViewControllerDelegate {
         verifyButton.isEnabled = true
         trashBarItem.isHidden = false
         imageView.image =  image
+        scannerOverlayView.setSourceImage(image)
         imageView.layer.borderColor = Theme.Colors.white.cgColor
 
     }
 
+}
+
+private extension VerifyViewController {
+
+    func runVerification(for image: UIImage) async -> VerificationReport {
+        await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                Task {
+                    let report = await WatermarkDecoder.shared.decodeWithHashFallback(image)
+                    continuation.resume(returning: report)
+                }
+            }
+        }
+    }
 }
