@@ -43,6 +43,7 @@ class LogInViewController: BaseAuthViewController {
             self.logInButton.isEnabled = true
             
             if success {
+                UserDefaults.standard.set(true, forKey: "isLoggedIn")
                 self.launchCameraStoryboard()
             } else {
                 // Trigger the shake animation and show the exact error

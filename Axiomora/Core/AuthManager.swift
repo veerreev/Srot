@@ -36,6 +36,30 @@ class AuthManager {
         URLSession.shared.dataTask(with: url).resume()
     }
     
+    func fetchUserSignature(completion: @escaping (Bool, String?) -> Void) {
+        guard let userId = currentUser?.userId else {
+            completion(false, "User ID not found.")
+            return
+        }
+        guard let url = URL(string: "\(baseURL)/signatures/user/\(userId)") else { return }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(false, error.localizedDescription)
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                    completion(false, "No signature found for this account.")
+                    return
+                }
+                
+                completion(true, nil)
+            }
+        }.resume()
+    }
+    
     func register(username: String, password: String, email: String, completion: @escaping (Bool, String?) -> Void) {
         
         // 1. Check for Internet First!
@@ -115,6 +139,7 @@ class AuthManager {
                     return
                 }
                 
+                
                 do {
                     struct BackendUser: Codable { let id: String; let username: String; let email: String }
                     let backendUser = try JSONDecoder().decode(BackendUser.self, from: data)
@@ -127,6 +152,15 @@ class AuthManager {
                     defaults.set(true, forKey: UDKeys.isLoggedIn)
                     defaults.set(userResponse.userId, forKey: UDKeys.currentUserId)
                     defaults.set(userResponse.username, forKey: UDKeys.currentUsername)
+                    
+                    self.fetchUserSignature { success, fetchError in
+                        if success {
+                            completion(true, nil)
+                        } else {
+                            completion(true, "Logged in, but could not sync signature.")
+                        }
+                    }
+                    
                     
                     completion(true, nil)
                 } catch {

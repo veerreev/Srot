@@ -19,23 +19,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.window = window
             
             let hasSeenOnboarding = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")
-            let hasRegistered = UserDefaults.standard.bool(forKey: "hasRegistered")
+        let hasRegistered = UserDefaults.standard.bool(forKey: "hasRegistered")
+        let hasLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
         
-            if hasSeenOnboarding && hasRegistered {
+            if (hasSeenOnboarding && hasRegistered) || (hasLoggedIn) {
+                AuthManager.shared.pingServerForPermissions()
                 // Send them straight to the app
                 let storyboard = UIStoryboard(name: "CameraStoryboard", bundle: nil)
                 window.rootViewController = storyboard.instantiateInitialViewController()
             } else if hasSeenOnboarding {
+                AuthManager.shared.pingServerForPermissions()
                 // Send them to registration
                 let storyboard = UIStoryboard(name: "RegisterStoryboard", bundle: nil)
                 window.rootViewController = storyboard.instantiateInitialViewController()
             } else {
+                AuthManager.shared.pingServerForPermissions()
                 // Show the Splash Screens
                 let storyboard = UIStoryboard(name: "splashScreen1", bundle: nil)
                 window.rootViewController = storyboard.instantiateInitialViewController()
             }
         
-            AuthManager.shared.pingServerForPermissions()
             window.makeKeyAndVisible()
         }
 

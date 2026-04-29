@@ -21,8 +21,12 @@ class NetworkMonitor {
     }
     
     private init() {
+        self.status = monitor.currentPath.status
+        
         monitor.pathUpdateHandler = { [weak self] path in
-            self?.status = path.status
+            DispatchQueue.main.async {
+                self?.status = path.status
+            }
         }
         let queue = DispatchQueue(label: "NetworkMonitorQueue")
         monitor.start(queue: queue)
