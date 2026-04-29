@@ -5,37 +5,35 @@
 //  Created by Veer on 24/04/26.
 //
 
-
 import UIKit
+import CoreImage
 
-class ScannerOverlayView: UIView {
+final class ScannerOverlayView: UIView {
 
-    // MARK: - Sublayers
-
-    /// Dims the image behind the scanner.
+    private let blurredImageView = UIImageView()
     private let dimView = UIView()
+    private let tintView = UIView()
+    private let dotContainerLayer = CALayer()
 
-    /// Parent layer for the scan line — animating this moves the glow
-    /// and the bright centre line together as a single unit.
-    private let scanGroup = CALayer()
+    private let dotColor : UIColor = .systemBlue
+    private let overlayTintColor : UIColor = .systemBlue.withAlphaComponent(0.06)
+    private let dimAlpha: CGFloat = 0.7
+    private let blurRadius: CGFloat = 5.5
+    private let ciContext = CIContext(options: nil)
+    private let dotSize: CGFloat = 4.5
+    private let minimumColumnCount = 8
+    private let minimumRowCount = 12
+    private let targetHorizontalSpacing: CGFloat = 24
+    private let targetVerticalSpacing: CGFloat = 22
+    private let rowWaveDuration: CFTimeInterval = 0.95
+    private let rowWaveStep: CFTimeInterval = 0.12
+    private let baseDotOpacity: Float = 0.26
+    private let highlightedDotOpacity: Float = 0.95
+    private let highlightedDotScale: CGFloat = 2.3
 
-    /// Soft vertical glow gradient that surrounds the bright centre line.
-    private let scanGlowLayer = CAGradientLayer()
-
-    /// The crisp, bright neon centre line.
-    private let scanLineLayer = CALayer()
-
-    /// The four corner brackets drawn as a single shape layer.
-    private let bracketsLayer = CAShapeLayer()
-
-    // MARK: - Constants
-
-    private let glowHeight:   CGFloat       = 60
-    private let lineHeight:   CGFloat       = 2
-    private let bracketArm:   CGFloat       = 22
-    private let scanDuration: CFTimeInterval = 1.8
-
-    // MARK: - Init
+    private var isScanning = false
+    private var lastRenderedSize: CGSize = .zero
+    private var sourceImage: UIImage?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,154 +45,240 @@ class ScannerOverlayView: UIView {
         setup()
     }
 
-    // MARK: - Setup
-
     private func setup() {
         clipsToBounds = true
         backgroundColor = .clear
         isHidden = true
 
-        setupDimView()
-        setupBracketsLayer()
-        setupScanGroup()
-    }
+        blurredImageView.contentMode = .scaleAspectFill
+        blurredImageView.clipsToBounds = true
+        blurredImageView.isUserInteractionEnabled = false
+        blurredImageView.alpha = 0
+        addSubview(blurredImageView)
 
-    private func setupDimView() {
-        dimView.backgroundColor = .black
+        dimView.backgroundColor = Theme.Colors.black
         dimView.alpha = 0
+        dimView.isUserInteractionEnabled = false
         addSubview(dimView)
+
+        tintView.backgroundColor = overlayTintColor
+        tintView.alpha = 0
+        tintView.isUserInteractionEnabled = false
+        addSubview(tintView)
+
+        dotContainerLayer.opacity = 0
+        layer.addSublayer(dotContainerLayer)
     }
-
-    private func setupBracketsLayer() {
-        bracketsLayer.strokeColor   = UIColor.systemBlue.cgColor
-        bracketsLayer.fillColor     = UIColor.clear.cgColor
-        bracketsLayer.lineWidth     = 2
-        bracketsLayer.lineCap       = .square
-        // Neon glow on the brackets
-        bracketsLayer.shadowColor   = UIColor.systemBlue.cgColor
-        bracketsLayer.shadowRadius  = 8
-        bracketsLayer.shadowOpacity = 1
-        bracketsLayer.shadowOffset  = .zero
-        layer.addSublayer(bracketsLayer)
-    }
-
-    private func setupScanGroup() {
-        // Vertical gradient: fully transparent edges → soft blue glow → bright cyan-white peak
-        scanGlowLayer.type       = .axial
-        scanGlowLayer.startPoint = CGPoint(x: 0.5, y: 0)
-        scanGlowLayer.endPoint   = CGPoint(x: 0.5, y: 1)
-        scanGlowLayer.colors = [
-            UIColor.clear.cgColor,
-            UIColor.systemBlue.withAlphaComponent(0.08).cgColor,
-            UIColor.systemBlue.withAlphaComponent(0.55).cgColor,
-            UIColor(red: 0.55, green: 0.88, blue: 1.0, alpha: 1.0).cgColor,
-            UIColor.systemBlue.withAlphaComponent(0.55).cgColor,
-            UIColor.systemBlue.withAlphaComponent(0.08).cgColor,
-            UIColor.clear.cgColor
-        ]
-        scanGlowLayer.locations = [0, 0.18, 0.38, 0.5, 0.62, 0.82, 1.0]
-
-        // Crisp centre line — the shadow provides the extra neon bloom
-        scanLineLayer.backgroundColor = UIColor(red: 0.7, green: 0.93, blue: 1.0, alpha: 1.0).cgColor
-        scanLineLayer.shadowColor     = UIColor.systemBlue.cgColor
-        scanLineLayer.shadowRadius    = 6
-        scanLineLayer.shadowOpacity   = 1
-        scanLineLayer.shadowOffset    = .zero
-
-        scanGroup.addSublayer(scanGlowLayer)
-        scanGroup.addSublayer(scanLineLayer)
-        layer.addSublayer(scanGroup)
-    }
-
-    // MARK: - Layout
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        blurredImageView.frame = bounds
         dimView.frame = bounds
+        tintView.frame = bounds
+        dotContainerLayer.frame = bounds
 
-        bracketsLayer.frame = bounds
-        bracketsLayer.path  = makeBracketPath()
-
-        let w = bounds.width
-
-        // scanGroup starts at the top: position.y = glowHeight/2 (centre of the layer)
-        scanGroup.frame      = CGRect(x: 0, y: 0, width: w, height: glowHeight)
-        scanGlowLayer.frame  = CGRect(x: 0, y: 0, width: w, height: glowHeight)
-        scanLineLayer.frame  = CGRect(x: 0,
-                                      y: (glowHeight - lineHeight) / 2,
-                                      width: w,
-                                      height: lineHeight)
+        guard isScanning, bounds.size != lastRenderedSize else { return }
+        renderDotMatrix(animated: !UIAccessibility.isReduceMotionEnabled)
     }
 
-    // MARK: - Bracket path
-
-    private func makeBracketPath() -> CGPath {
-        let w   = bounds.width
-        let h   = bounds.height
-        let arm = bracketArm
-        let path = UIBezierPath()
-
-        // Top-left
-        path.move(to:    CGPoint(x: 0,       y: arm))
-        path.addLine(to: CGPoint(x: 0,       y: 0))
-        path.addLine(to: CGPoint(x: arm,     y: 0))
-
-        // Top-right
-        path.move(to:    CGPoint(x: w - arm, y: 0))
-        path.addLine(to: CGPoint(x: w,       y: 0))
-        path.addLine(to: CGPoint(x: w,       y: arm))
-
-        // Bottom-left
-        path.move(to:    CGPoint(x: 0,       y: h - arm))
-        path.addLine(to: CGPoint(x: 0,       y: h))
-        path.addLine(to: CGPoint(x: arm,     y: h))
-
-        // Bottom-right
-        path.move(to:    CGPoint(x: w - arm, y: h))
-        path.addLine(to: CGPoint(x: w,       y: h))
-        path.addLine(to: CGPoint(x: w,       y: h - arm))
-
-        return path.cgPath
+    func setSourceImage(_ image: UIImage?) {
+        sourceImage = image
+        blurredImageView.image = image.map(makeBlurredImage)
     }
 
-    // MARK: - Public API
+    func startScanning(with image: UIImage? = nil) {
+        guard !isScanning else { return }
 
-    func startScanning() {
-        isHidden = false
-
-        UIView.animate(withDuration: 0.35) {
-            self.dimView.alpha = 0.45
+        if let image {
+            setSourceImage(image)
+        } else if blurredImageView.image == nil, let sourceImage {
+            blurredImageView.image = makeBlurredImage(from: sourceImage)
         }
 
-        guard bounds.height > 0 else { return }
+        isScanning = true
+        isHidden = false
 
-        // Animate the scan group's vertical centre from the top to the bottom and back.
-        // position.y is the layer's centre, so glowHeight/2 = top edge flush with view top.
-        let anim = CABasicAnimation(keyPath: "position.y")
-        anim.fromValue      = glowHeight / 2
-        anim.toValue        = bounds.height - glowHeight / 2
-        anim.duration       = scanDuration
-        anim.autoreverses   = true
-        anim.repeatCount    = .infinity
-        anim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        blurredImageView.alpha = 0
+        dimView.alpha = 0
+        tintView.alpha = 0
+        dotContainerLayer.opacity = 0
 
-        scanGroup.add(anim, forKey: "scan")
+        renderDotMatrix(animated: !UIAccessibility.isReduceMotionEnabled)
+
+        UIView.animate(withDuration: 0.28, delay: 0, options: [.curveEaseOut]) {
+            self.blurredImageView.alpha = 1
+            self.dimView.alpha = self.dimAlpha
+            self.tintView.alpha = 1
+            self.dotContainerLayer.opacity = 1
+        }
     }
 
     func stopScanning(completion: (() -> Void)? = nil) {
-        scanGroup.removeAnimation(forKey: "scan")
+        guard isScanning else {
+            completion?()
+            return
+        }
 
-        UIView.animate(withDuration: 0.35, animations: {
+        isScanning = false
+        dotContainerLayer.sublayers?.forEach { $0.removeAllAnimations() }
+
+        UIView.animate(withDuration: 0.22, delay: 0, options: [.curveEaseInOut], animations: {
+            self.blurredImageView.alpha = 0
             self.dimView.alpha = 0
+            self.tintView.alpha = 0
+            self.dotContainerLayer.opacity = 0
         }) { _ in
+            self.dotContainerLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
+            self.lastRenderedSize = .zero
             self.isHidden = true
-            // Silently reset to top so the next startScanning() begins from there
-            CATransaction.begin()
-            CATransaction.setDisableActions(true)
-            self.scanGroup.position.y = self.glowHeight / 2
-            CATransaction.commit()
             completion?()
         }
+    }
+
+    private func renderDotMatrix(animated: Bool) {
+        guard bounds.width > 0, bounds.height > 0 else { return }
+
+        lastRenderedSize = bounds.size
+        dotContainerLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
+
+        let columnCount = max(minimumColumnCount, Int(bounds.width / targetHorizontalSpacing))
+        let rowCount = max(minimumRowCount, Int(bounds.height / targetVerticalSpacing))
+        let spacingX = bounds.width / CGFloat(columnCount + 1)
+        let spacingY = bounds.height / CGFloat(rowCount + 1)
+        let totalWaveDuration = Double(max(rowCount - 1, 0)) * rowWaveStep + rowWaveDuration
+
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+
+        for row in 0..<rowCount {
+            let rowLayer = makeRowLayer(
+                rowIndex: row,
+                columnCount: columnCount,
+                spacingX: spacingX,
+                spacingY: spacingY
+            )
+            dotContainerLayer.addSublayer(rowLayer)
+
+            guard animated else { continue }
+
+            addWaveAnimation(
+                to: rowLayer,
+                rowIndex: row,
+                totalDuration: totalWaveDuration
+            )
+        }
+
+        CATransaction.commit()
+    }
+
+    private func makeRowLayer(
+        rowIndex: Int,
+        columnCount: Int,
+        spacingX: CGFloat,
+        spacingY: CGFloat
+    ) -> CALayer {
+        let rowLayer = CALayer()
+        rowLayer.frame = bounds
+        rowLayer.opacity = 1
+
+        let y = spacingY * CGFloat(rowIndex + 1)
+
+        for column in 0..<columnCount {
+            let x = spacingX * CGFloat(column + 1)
+            let dotLayer = CALayer()
+            dotLayer.bounds = CGRect(x: 0, y: 0, width: dotSize, height: dotSize)
+            dotLayer.position = CGPoint(x: x, y: y)
+            dotLayer.backgroundColor = dotColor.cgColor
+            dotLayer.cornerRadius = dotSize / 2
+            dotLayer.borderWidth = 0.45
+            dotLayer.borderColor = UIColor.white.withAlphaComponent(0.14).cgColor
+            dotLayer.shadowColor = dotColor.cgColor
+            dotLayer.shadowOpacity = 0.06
+            dotLayer.shadowRadius = 0.8
+            dotLayer.shadowOffset = .zero
+            dotLayer.opacity = baseDotOpacity
+            rowLayer.addSublayer(dotLayer)
+        }
+
+        return rowLayer
+    }
+
+    private func addWaveAnimation(
+        to layer: CALayer,
+        rowIndex: Int,
+        totalDuration: CFTimeInterval
+    ) {
+        let rowStart = Double(rowIndex) * rowWaveStep
+        let rowPeak = rowStart + rowWaveDuration * 0.42
+        let rowEnd = rowStart + rowWaveDuration
+        let rowStartFraction = min(max(rowStart / totalDuration, 0), 0.98)
+        let rowPeakFraction = min(max(rowPeak / totalDuration, rowStartFraction), 0.995)
+        let rowEndFraction = min(max(rowEnd / totalDuration, rowPeakFraction), 0.999)
+
+        let keyTimes: [NSNumber] = [
+            0,
+            NSNumber(value: rowStartFraction),
+            NSNumber(value: rowPeakFraction),
+            NSNumber(value: rowEndFraction),
+            1
+        ]
+
+        layer.sublayers?.forEach { dotLayer in
+            let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
+            opacityAnimation.values = [
+                baseDotOpacity,
+                baseDotOpacity,
+                highlightedDotOpacity,
+                baseDotOpacity,
+                baseDotOpacity
+            ]
+            opacityAnimation.keyTimes = keyTimes
+
+            let scaleAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+            scaleAnimation.values = [1, 1, highlightedDotScale, 1, 1]
+            scaleAnimation.keyTimes = keyTimes
+
+            let group = CAAnimationGroup()
+            group.animations = [opacityAnimation, scaleAnimation]
+            group.duration = totalDuration
+            group.repeatCount = .infinity
+            group.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            group.isRemovedOnCompletion = false
+
+            dotLayer.add(group, forKey: "rowWave")
+        }
+    }
+
+    private func makeBlurredImage(from image: UIImage) -> UIImage {
+        let normalizedImage = image.normalized()
+        guard let ciImage = CIImage(image: normalizedImage) else { return normalizedImage }
+
+        let clampedImage = ciImage.clampedToExtent()
+
+        guard let blurFilter = CIFilter(name: "CIGaussianBlur"),
+              let colorFilter = CIFilter(name: "CIColorControls") else {
+            return normalizedImage
+        }
+
+        blurFilter.setValue(clampedImage, forKey: kCIInputImageKey)
+        blurFilter.setValue(blurRadius, forKey: kCIInputRadiusKey)
+
+        guard let blurredOutput = blurFilter.outputImage?.cropped(to: ciImage.extent) else {
+            return normalizedImage
+        }
+
+        colorFilter.setValue(blurredOutput, forKey: kCIInputImageKey)
+        colorFilter.setValue(0.96, forKey: kCIInputSaturationKey)
+        colorFilter.setValue(1.02, forKey: kCIInputContrastKey)
+        colorFilter.setValue(-0.01, forKey: kCIInputBrightnessKey)
+
+        let finalImage = colorFilter.outputImage?.cropped(to: ciImage.extent) ?? blurredOutput
+
+        guard let cgImage = ciContext.createCGImage(finalImage, from: ciImage.extent) else {
+            return normalizedImage
+        }
+
+        return UIImage(cgImage: cgImage, scale: normalizedImage.scale, orientation: .up)
     }
 }

@@ -95,6 +95,9 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="32"/>
                                             </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RDR-n2-0jI">
@@ -153,6 +156,7 @@
                         <outlet property="imageViewAspectRatio" destination="vOr-pX-RoK" id="SXa-65-Rzs"/>
                         <outlet property="infoMessageLabel" destination="X4V-I2-g4g" id="rK7-wR-hmh"/>
                         <outlet property="plusImage" destination="taQ-n7-uiu" id="Xyy-vl-10S"/>
+                        <outlet property="scannerOverlay" destination="QiX-9P-rf2" id="FQZ-eH-8aA"/>
                         <outlet property="scannerOverlayView" destination="QiX-9P-rf2" id="a7j-pw-d6x"/>
                         <outlet property="trashBarItem" destination="USA-yS-7gc" id="Q2D-UE-R0k"/>
                         <outlet property="uploadViewBackground" destination="l5S-SF-nlK" id="M0U-DZ-n2G"/>
@@ -176,10 +180,10 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.2196078431372549" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
