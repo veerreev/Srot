@@ -34,7 +34,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let storyboard = UIStoryboard(name: "splashScreen1", bundle: nil)
                 window.rootViewController = storyboard.instantiateInitialViewController()
             }
-            
+        
+            AuthManager.shared.pingServerForPermissions()
             window.makeKeyAndVisible()
         }
 

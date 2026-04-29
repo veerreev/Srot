@@ -48,13 +48,11 @@ class RegisterViewController: BaseAuthViewController {
         let email    = emailTextField.text!.trimmingCharacters(in: .whitespaces)
         let password = passwordTextField.text!
 
-        // Disable button to prevent multiple taps during network call
         registerButton.isEnabled = false
+        clearError()
 
-        // CHANGED: Called .register instead of .pseudoRegister
-        AuthManager.shared.register(username: username, password: password, email: email) { [weak self] success in
+        AuthManager.shared.register(username: username, password: password, email: email) { [weak self] success, errorMessage in
             guard let self = self else { return }
-
             self.registerButton.isEnabled = true
 
             if success {
@@ -62,9 +60,9 @@ class RegisterViewController: BaseAuthViewController {
                 OnboardingManager.shared.beginOnboarding()
                 self.launchCameraStoryboard()
             } else {
-                print("Registration Failed.")
-                // You can use your existing showError method here:
-                self.showError("Registration failed. Username or email might be taken.")
+                // Show the exact error (Offline, Taken, etc.)
+                self.handleValidationError()
+                self.showError(errorMessage ?? "An unknown error occurred.")
             }
         }
     }

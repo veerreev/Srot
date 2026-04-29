@@ -36,20 +36,19 @@ class LogInViewController: BaseAuthViewController {
         
         // Disable button to prevent multiple taps during network call
         logInButton.isEnabled = false
+        errorLabel.text = "" // Clear previous errors
         
-        // CHANGED: Called .login instead of .pseudoLogin
-        AuthManager.shared.login(username: username, password: password) { [weak self] success in
+        AuthManager.shared.login(username: username, password: password) { [weak self] success, errorMessage in
             guard let self = self else { return }
-            
-            // Re-enable button on the main thread
             self.logInButton.isEnabled = true
             
             if success {
                 self.launchCameraStoryboard()
             } else {
-                print("Log In Failed.")
-                // You can update your errorLabel here for UI feedback:
-                // self.errorLabel.text = "Invalid username or password."
+                // Trigger the shake animation and show the exact error
+                self.triggerErrorFeedback(on: self.logInButton)
+                self.errorLabel.text = errorMessage
+                self.errorLabel.isHidden = false
             }
         }
         
