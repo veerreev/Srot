@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="48" id="KGk-i7-Jjw" customClass="PlatformCell" customModule="Axiomora" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="48"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="48"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="behance" translatesAutoresizingMaskIntoConstraints="NO" id="MFP-br-GmZ" userLabel="PlatformIcon">
+                        <rect key="frame" x="12" y="10" width="28" height="28"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="MFP-br-GmZ" secondAttribute="height" multiplier="1:1" id="Pou-YS-jPi"/>
+                            <constraint firstAttribute="height" constant="28" id="obX-1f-5PC"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1HK-KL-a3K" userLabel="PlatformLabel">
+                        <rect key="frame" x="52" y="13.666666666666664" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qVJ-Ea-gnT">
+                        <rect key="frame" x="48" y="47" width="272" height="1"/>
+                        <color key="backgroundColor" name="primary_blue"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="Pvs-Dq-Jaj"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" name="secondary_blue"/>
+                <constraints>
+                    <constraint firstItem="MFP-br-GmZ" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="HhG-wn-Guw"/>
+                    <constraint firstAttribute="trailing" secondItem="qVJ-Ea-gnT" secondAttribute="trailing" id="U08-Wu-ups"/>
+                    <constraint firstItem="1HK-KL-a3K" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="WMO-VU-TS4"/>
+                    <constraint firstAttribute="bottom" secondItem="qVJ-Ea-gnT" secondAttribute="bottom" id="WmX-hN-adD"/>
+                    <constraint firstItem="MFP-br-GmZ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="egL-mr-Wuf"/>
+                    <constraint firstItem="1HK-KL-a3K" firstAttribute="leading" secondItem="MFP-br-GmZ" secondAttribute="trailing" constant="12" id="p6O-0h-ezZ"/>
+                    <constraint firstItem="qVJ-Ea-gnT" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="48" id="zmW-sQ-xbn"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="platformIcon" destination="MFP-br-GmZ" id="7H8-zd-9cY"/>
+                <outlet property="platformLabel" destination="1HK-KL-a3K" id="kGB-8L-3oc"/>
+                <outlet property="separatorView" destination="qVJ-Ea-gnT" id="ly2-Bj-8oZ"/>
+            </connections>
+            <point key="canvasLocation" x="277.86259541984731" y="144.36619718309859"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="behance" width="512" height="512"/>
+        <namedColor name="primary_blue">
+            <color red="0.15294117647058825" green="0.20000000000000001" blue="0.32549019607843138" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+        <namedColor name="secondary_blue">
+            <color red="0.11764705882352941" green="0.15294117647058825" blue="0.24705882352941178" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
+    </resources>
+</document>
