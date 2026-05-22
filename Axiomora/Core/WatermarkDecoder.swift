@@ -4,11 +4,6 @@
 //
 //  WatermarkDecoder.swift
 //  Axiomora
-//
-//  Serverless wrapper for Demo:
-//  1. Calls WatermarkManager (Vision Framework)
-//  2. Bypasses the server, looks up the profile in SignatureManager directly.
-//  3. Returns the VerificationReport for the UI.
 
 import UIKit
 
@@ -23,7 +18,7 @@ final class WatermarkDecoder {
     /// Always returns a report — never throws. Call from any async context.
     func decode(_ image: UIImage) async -> VerificationReport {
 
-        // ── Step 1: Run the Vision Pivot Matcher ───────────────────────────────
+        // ── Step 1: Run the Vision Matcher (Hits Supabase Database) ───────────────
         let decodedUUID: UUID?
         do {
             decodedUUID = try await WatermarkManager.shared.decode(image: image)
