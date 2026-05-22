@@ -5,12 +5,6 @@
 //  Created by Pradumn Kapil on 15/05/26.
 //
 //
-//  WatermarkManager.swift
-//  Axiomora
-//
-//  DEMO PIVOT: On-device "InvisMark" using Vision Feature Prints & Concentric Cropping.
-//  Targets iOS 15+ (uses VNGenerateImageFeaturePrintRequest).
-//
 
 import Foundation
 import Vision
@@ -60,7 +54,11 @@ actor MockBackendDatabase {
 public final class WatermarkManager {
 
     public static let shared = WatermarkManager()
+    
     private let minImageSide = 512
+    
+    // Core Image context used for stripping colors from the image
+    private let ciContext = CIContext(options: nil)
 
     private init() {}
 
@@ -77,7 +75,7 @@ public final class WatermarkManager {
             throw WatermarkError.imageResolutionTooSmall
         }
 
-        // Extract 3 different structural perspectives of the image
+        // Extract 3 different structural perspectives of the image (automatically converted to Grayscale)
         let crops = extractConcentricCrops(from: cgImage)
         let featurePrints = try await generateFeaturePrints(for: crops)
         
@@ -95,15 +93,15 @@ public final class WatermarkManager {
             throw WatermarkError.imageConversionFailed
         }
 
-        // Extract the same 3 perspectives from the screenshot
+        // Extract the same 3 perspectives from the screenshot (automatically converted to Grayscale)
         let queryCrops = extractConcentricCrops(from: cgImage)
         let queryPrints = try await generateFeaturePrints(for: queryCrops)
         let database = await MockBackendDatabase.shared.getAllRecords()
         
         var bestMatchUUID: UUID? = nil
         
-        // 25.0 allows for slight compression shifts, but the Safe-Zone crop
-        // will usually match with a distance < 5.0 since UI is cropped out.
+        // 25.0 allows for slight compression shifts. Because color is removed,
+        // distance scores for filters will plummet back down to < 5.0.
         var absoluteLowestDistance: Float = 25.0
         
         for (storedUUID, storedPrints) in database {
@@ -112,7 +110,7 @@ public final class WatermarkManager {
                     var distance: Float = .infinity
                     try queryPrint.computeDistance(&distance, to: storedPrint)
                     
-                    // If ANY of our crops match ANY of their crops, we track the lowest distance
+                    // If ANY of our crops match ANY of their crops, track the lowest distance
                     if distance < absoluteLowestDistance {
                         absoluteLowestDistance = distance
                         bestMatchUUID = storedUUID
@@ -130,12 +128,24 @@ public final class WatermarkManager {
         return finalUUID
     }
 
-    // MARK: - Cropping Logic (The UI Bypass)
+    // MARK: - Cropping & Grayscale Logic (Filter Immunity)
 
     /// Returns 3 variations of the image: Full, Center Square, and Tight "Safe Zone".
-    /// This guarantees that UI panels, black bars, and notches get cropped out in at least one view.
+    /// Every crop is converted to pure grayscale to ensure Apple/Instagram filters don't break the match.
     private func extractConcentricCrops(from cgImage: CGImage) -> [CGImage] {
-        var crops: [CGImage] = [cgImage] // 1. The Full Image
+        var crops: [CGImage] = []
+        
+        // Helper to strip color before adding it to the list
+        func addColorBlindCrop(_ crop: CGImage) {
+            if let grayCrop = convertToGrayscale(crop) {
+                crops.append(grayCrop)
+            } else {
+                crops.append(crop) // Fallback to color if CI fails (rare)
+            }
+        }
+        
+        // 1. The Full Image
+        addColorBlindCrop(cgImage)
         
         let w = CGFloat(cgImage.width)
         let h = CGFloat(cgImage.height)
@@ -144,17 +154,33 @@ public final class WatermarkManager {
         // 2. Center Square (Chops off top/bottom letterbox bars on tall screenshots)
         let centerRect = CGRect(x: (w - minSide)/2, y: (h - minSide)/2, width: minSide, height: minSide)
         if let centerCrop = cgImage.cropping(to: centerRect) {
-            crops.append(centerCrop)
+            addColorBlindCrop(centerCrop)
         }
         
-        // 3. Safe Zone Inner Square (60% size - Completely bypasses floating UI, dynamic island, etc)
+        // 3. Safe Zone Inner Square (60% size - Bypasses floating UI, dynamic island, text overlays)
         let safeSide = minSide * 0.6
         let safeRect = CGRect(x: (w - safeSide)/2, y: (h - safeSide)/2, width: safeSide, height: safeSide)
         if let safeCrop = cgImage.cropping(to: safeRect) {
-            crops.append(safeCrop)
+            addColorBlindCrop(safeCrop)
         }
         
         return crops
+    }
+    
+    /// Converts an image to pure grayscale using CoreImage. This makes the Vision framework
+    /// completely ignore color filters (Vivid, Warm, Cool, etc.).
+    private func convertToGrayscale(_ cgImage: CGImage) -> CGImage? {
+        let ciImage = CIImage(cgImage: cgImage)
+        guard let filter = CIFilter(name: "CIColorControls") else { return nil }
+        filter.setValue(ciImage, forKey: kCIInputImageKey)
+        // Set saturation to 0 to completely remove all color data
+        filter.setValue(0.0, forKey: kCIInputSaturationKey)
+        
+        guard let output = filter.outputImage,
+              let grayCG = ciContext.createCGImage(output, from: output.extent) else {
+            return nil
+        }
+        return grayCG
     }
 
     // MARK: - Vision Logic
@@ -191,3 +217,4 @@ extension WatermarkManager {
         return uuid != nil
     }
 }
+
