@@ -116,7 +116,7 @@ class SignaturesViewController: UIViewController {
         if noneSelected {
             signatures[0].isCurrent = true
             SignatureManager.shared.saveSignatures(signatures)
-            Task { await SignatureManager.shared.syncNewSignature(signatures[0]) }
+            AuthManager.shared.uploadSignature(signatures[0])
         }
     }
 
@@ -239,7 +239,7 @@ extension SignaturesViewController: UICollectionViewDelegate {
             self.signatures[indexPath.item] = updated
             SignatureManager.shared.saveSignatures(self.signatures)
             // Sync only the updated signature — its profile fields may have changed.
-            Task { await SignatureManager.shared.syncNewSignature(updated) }
+            AuthManager.shared.uploadSignature(signatures[0])
             self.collectionView.reloadItems(at: [indexPath])
         }
         
@@ -263,7 +263,7 @@ extension SignaturesViewController: NewSignatureDelegate {
         signatures[index] = signature
         SignatureManager.shared.saveSignatures(signatures)
         // Push the updated profile to the server so verifiers see the new data.
-        Task { await SignatureManager.shared.syncNewSignature(signature) }
+        AuthManager.shared.uploadSignature(signature)
         collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
     }
 
@@ -282,7 +282,7 @@ extension SignaturesViewController: NewSignatureDelegate {
 
         signatures.append(newSignature)
         SignatureManager.shared.saveSignatures(signatures)
-        Task { await SignatureManager.shared.syncNewSignature(newSignature) }
+        AuthManager.shared.uploadSignature(signature)
 
         let newIndex = IndexPath(item: signatures.count - 1, section: 0)
         collectionView.insertItems(at: [newIndex])

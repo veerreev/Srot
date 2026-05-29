@@ -66,8 +66,8 @@ public final class WatermarkManager {
     private let ciContext = CIContext(options: nil)
 
     // TODO: ⚠️ REPLACE THESE WITH YOUR ACTUAL SUPABASE URL AND ANON KEY
-    private let supabaseURL = URL(string: "https://YOUR_PROJECT_ID.supabase.co/rest/v1/image_fingerprints")!
-    private let supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY"
+    private let supabaseURL = URL(string: "https://mdmdecsljntrhxkyhjds.supabase.co/rest/v1/image_fingerprints")!
+    private let supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kbWRlY3Nsam50cmh4a3loamRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwNzU0NTAsImV4cCI6MjA5NDY1MTQ1MH0.K7JTxmMRDvZR5lAQi3nnG3kF2Lf8hZmVwB3RAP2DAkI"
 
     private init() {}
 
