@@ -192,7 +192,7 @@ extension SettingsViewController: UIImagePickerControllerDelegate, UINavigationC
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
 
-        if let image = info[.originalImage] as? UIImage {
+        if let _ = info[.originalImage] as? UIImage {
             print("Profile image selected")
         }
 

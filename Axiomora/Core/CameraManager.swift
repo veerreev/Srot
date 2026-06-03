@@ -157,15 +157,18 @@ final class CameraManager: NSObject {
     }
     
     func capturePhoto() {
-        sessionQueue.async { [weak self] in
-            guard let self = self, self.isConfigured else { return }
-            
-            let settings = configurePhotoCaptureSettings()
-            
-            self.photoOutput.capturePhoto(with: settings, delegate: self)
+            sessionQueue.async { [weak self] in
+                guard let self = self, self.isConfigured else { return }
+                
+                let settings = self.configurePhotoCaptureSettings()
+                
+                // Hop to the Main Actor to safely pass 'self' as the isolated delegate
+                Task { @MainActor [weak self] in
+                    guard let self = self else { return }
+                    self.photoOutput.capturePhoto(with: settings, delegate: self)
+                }
+            }
         }
-    }
-    
     /// Flash
     func toggleFlash() -> String {
         isFlashEnabled = !isFlashEnabled

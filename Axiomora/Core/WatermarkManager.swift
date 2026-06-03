@@ -261,9 +261,8 @@ extension WatermarkManager {
         UIImageWriteToSavedPhotosAlbum(watermarked, nil, nil, nil)
         return embeddedUUID
     }
-
+    
     public func hasWatermark(image: UIImage) async -> Bool {
-        guard let uuid = try? await decode(image: image) else { return false }
-        return uuid != nil
+        return (try? await decode(image: image)) != nil
     }
 }

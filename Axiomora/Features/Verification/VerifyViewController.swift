@@ -206,7 +206,7 @@ extension VerifyViewController: PHPickerViewControllerDelegate {
             
             guard let self = self, let selectedImage = image as? UIImage else { return }
             
-            #warning("Replace with Task")
+//            #warning("Replace with Task")
             DispatchQueue.main.async {
                 self.isImageSelected = true
                 self.handleSelectedImage(selectedImage)

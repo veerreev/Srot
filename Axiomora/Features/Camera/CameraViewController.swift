@@ -119,7 +119,7 @@ class CameraViewController: UIViewController {
         }
     }
     
-    #warning("Why do we need to specify this explicitly?")
+//    #warning("Why do we need to specify this explicitly?")
     @MainActor
     private func setupPreviewLayer() {
         let layer = viewModel.createPreviewLayer()
@@ -266,7 +266,7 @@ class CameraViewController: UIViewController {
     
     // MARK: - Aspect Ratio
     
-    #warning("Why do we need to specify this explicitly?")
+//    #warning("Why do we need to specify this explicitly?")
     @MainActor
     private func applyAspectRatio(_ ratio: CameraAspectRatio) {
         guard let previewLayer = previewLayer else { return }
@@ -358,14 +358,14 @@ class CameraViewController: UIViewController {
         flashView.alpha = 1.0
         self.livePreviewView.addSubview(flashView)
         
-        #warning("Learn what is 'completion'")
+//        #warning("Learn what is 'completion'")
         UIView.animate(withDuration: 0.25, delay: 0, options: .curveEaseOut, animations: {
             flashView.alpha = 0.0
         }, completion: { _ in
             flashView.removeFromSuperview()
         })
         
-        #warning("Learn Animate")
+//        #warning("Learn Animate")
         UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
             self.captureButton.transform = CGAffineTransform(scaleX: 0.90, y: 0.90)
         }, completion: { _ in

@@ -11,6 +11,8 @@ class SingleImageZoomViewController: UIViewController {
 
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var scrollView: UIScrollView!
+    @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
    
     var image: Image? // This is the single image this page is responsible for displaying.
     // Set by SingleImagePageViewController before this VC appears.
@@ -48,10 +50,9 @@ class SingleImageZoomViewController: UIViewController {
         
         let normalizedImage = uiImage.normalized()
         imageView.image = normalizedImage        
-        // Set the imageView frame to the actual image size.
-        // This is what makes the scroll view content the right size.
-        imageView.frame = CGRect(origin: .zero, size: normalizedImage.size)
-        scrollView.contentSize = normalizedImage.size
+        imageViewWidthConstraint.constant = normalizedImage.size.width
+        imageViewHeightConstraint.constant = normalizedImage.size.height
+        view.layoutIfNeeded()
         
         updateMinZoomScale()
         centerImageInScrollView()

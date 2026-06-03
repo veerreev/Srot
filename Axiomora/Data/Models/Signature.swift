@@ -8,7 +8,7 @@
 import Foundation
 
 // defining supported platforms.
-#warning("The user might want to add more social platforms in the future.")
+//#warning("The user might want to add more social platforms in the future.")
 
 enum SocialPlatform: String, Codable, CaseIterable {
     case instagram = "Instagram"

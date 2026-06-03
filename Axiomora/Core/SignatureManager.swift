@@ -22,7 +22,7 @@ class SignatureManager {
     
     func saveSignatures(_ signatures: [Signature]) {
         // Pushing file I/O to a background thread so the UI never stutters
-        #warning("Replace with async/await")
+//        #warning("Replace with async/await")
         DispatchQueue.global(qos: .background).async {
             do {
                 let data = try JSONEncoder().encode(signatures)

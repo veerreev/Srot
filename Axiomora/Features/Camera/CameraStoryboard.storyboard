@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aiF-Cb-4yE">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="aiF-Cb-4yE">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -188,11 +188,11 @@
                                         </constraints>
                                         <blurEffect style="regular"/>
                                     </visualEffectView>
-                                    <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dMt-bi-Hdb">
-                                        <rect key="frame" x="56.666666666666657" y="100" width="280" height="64"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dMt-bi-Hdb">
+                                        <rect key="frame" x="56.666666666666657" y="120" width="280" height="44"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="▲" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="inj-Wb-GW7" userLabel="▲">
-                                                <rect key="frame" x="219.00000000000003" y="23" width="12" height="17"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="▲" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="inj-Wb-GW7" userLabel="▲">
+                                                <rect key="frame" x="219.00000000000003" y="-21.333333333333329" width="12" height="17"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="17" id="JHr-Lx-hkf"/>
                                                 </constraints>
@@ -200,7 +200,7 @@
                                                 <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-i9-rgl" userLabel="BubbleView">
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-i9-rgl" userLabel="BubbleView">
                                                 <rect key="frame" x="8" y="-8" width="252" height="52"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You must create a signature before capturing." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="pQT-ai-Aer">
@@ -228,9 +228,9 @@
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
+                                            <constraint firstItem="h7c-i9-rgl" firstAttribute="top" secondItem="dMt-bi-Hdb" secondAttribute="top" constant="-8" id="I7n-qG-FXn"/>
                                             <constraint firstItem="inj-Wb-GW7" firstAttribute="bottom" secondItem="h7c-i9-rgl" secondAttribute="top" constant="3.75" id="Pfk-4u-XXS"/>
                                             <constraint firstAttribute="width" constant="280" id="by5-Xo-ORg"/>
-                                            <constraint firstItem="h7c-i9-rgl" firstAttribute="centerX" secondItem="dMt-bi-Hdb" secondAttribute="centerX" id="fe1-vI-zgU"/>
                                             <constraint firstAttribute="trailing" secondItem="h7c-i9-rgl" secondAttribute="trailing" constant="20" id="pZS-T1-Vq0"/>
                                         </constraints>
                                     </view>
@@ -260,6 +260,7 @@
                                     <constraint firstItem="dMt-bi-Hdb" firstAttribute="top" secondItem="pOB-QB-rPk" secondAttribute="top" constant="120" id="ouc-hN-vje"/>
                                     <constraint firstItem="HUx-BC-hHN" firstAttribute="leading" secondItem="pOB-QB-rPk" secondAttribute="leading" constant="20" id="t6T-DC-qWo"/>
                                     <constraint firstItem="IPn-ia-8kF" firstAttribute="centerX" secondItem="pOB-QB-rPk" secondAttribute="centerX" id="uNb-2Q-lR0"/>
+                                    <constraint firstAttribute="bottom" secondItem="dMt-bi-Hdb" secondAttribute="bottom" constant="688" id="uW7-dK-byK"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -358,7 +359,7 @@
             <color red="0.21176470588235294" green="0.27450980392156865" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

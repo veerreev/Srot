@@ -200,63 +200,66 @@ final class AuthManager {
     // MARK: - Signature Syncing
     
     /// Pulls the user's signatures from the Supabase database and stores them locally on the device.
-    private func syncSignatures(token: String, completion: @escaping () -> Void) {
-        guard let url = URL(string: "\(supabaseURL)/rest/v1/signatures?select=*") else {
-            completion()
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.setValue(supabaseAnonKey, forHTTPHeaderField: "apikey")
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            defer { completion() } // Always complete, even on error
-            
-            guard let data = data, error == nil else {
-                print("[AuthManager] Signature sync failed: \(error?.localizedDescription ?? "Unknown")")
+        private func syncSignatures(token: String, completion: @escaping () -> Void) {
+            guard let url = URL(string: "\(supabaseURL)/rest/v1/signatures?select=*") else {
+                completion()
                 return
             }
             
-            do {
-                guard let jsonArray = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
-                    print("[AuthManager] Sync failed: response is not a valid JSON array.")
-                    return
-                }
-                
-                var fetchedSignatures: [Signature] = []
-                let decoder = JSONDecoder()
-                
-                for dict in jsonArray {
-                    // MAGIC DECODE: We extract the exact 1:1 Swift JSON from the payload column
-                    if let payload = dict["payload"] as? [String: Any] {
-                        do {
-                            let payloadData = try JSONSerialization.data(withJSONObject: payload, options: [])
-                            let signature = try decoder.decode(Signature.self, from: payloadData)
-                            fetchedSignatures.append(signature)
-                        } catch {
-                            print("[AuthManager] Failed to decode a signature payload: \(error)")
-                        }
-                    } else {
-                        print("[AuthManager] Skipping a signature because 'payload' column is missing.")
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue(supabaseAnonKey, forHTTPHeaderField: "apikey")
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                // 1. Explicitly hop to the Main Actor to safely decode the isolated Signature struct
+                Task { @MainActor in
+                    defer { completion() } // Always complete, even on error
+                    
+                    guard let data = data, error == nil else {
+                        print("[AuthManager] Signature sync failed: \(error?.localizedDescription ?? "Unknown")")
+                        return
                     }
-                }
-                
-                // CRITICAL RACE CONDITION FIX: Write synchronously
-                let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-                if let fileURL = paths.first?.appendingPathComponent("saved_signatures.json") {
-                    let fileData = try JSONEncoder().encode(fetchedSignatures)
-                    try fileData.write(to: fileURL, options: .atomic)
-                    print("[AuthManager] ✓ Synced and written \(fetchedSignatures.count) signatures directly to disk.")
-                }
-                
-            } catch {
-                print("[AuthManager] Failed to parse Supabase array: \(error)")
-            }
-        }.resume()
-    }
-    
+                    
+                    do {
+                        guard let jsonArray = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else {
+                            print("[AuthManager] Sync failed: response is not a valid JSON array.")
+                            return
+                        }
+                        
+                        var fetchedSignatures: [Signature] = []
+                        let decoder = JSONDecoder()
+                        
+                        for dict in jsonArray {
+                            // MAGIC DECODE: We extract the exact 1:1 Swift JSON from the payload column
+                            if let payload = dict["payload"] as? [String: Any] {
+                                do {
+                                    let payloadData = try JSONSerialization.data(withJSONObject: payload, options: [])
+                                    // 2. This is now safe because it runs on the Main Actor
+                                    let signature = try decoder.decode(Signature.self, from: payloadData)
+                                    fetchedSignatures.append(signature)
+                                } catch {
+                                    print("[AuthManager] Failed to decode a signature payload: \(error)")
+                                }
+                            } else {
+                                print("[AuthManager] Skipping a signature because 'payload' column is missing.")
+                            }
+                        }
+                        
+                        // CRITICAL RACE CONDITION FIX: Write synchronously
+                        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+                        if let fileURL = paths.first?.appendingPathComponent("saved_signatures.json") {
+                            let fileData = try JSONEncoder().encode(fetchedSignatures)
+                            try fileData.write(to: fileURL, options: .atomic)
+                            print("[AuthManager] ✓ Synced and written \(fetchedSignatures.count) signatures directly to disk.")
+                        }
+                        
+                    } catch {
+                        print("[AuthManager] Failed to parse Supabase array: \(error)")
+                    }
+                } // End of MainActor Task
+            }.resume()
+        }
     // MARK: - Signature Cloud Upload Pipeline
     
     public func uploadSignature(_ signature: Signature) {

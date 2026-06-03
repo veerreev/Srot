@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -18,24 +18,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mGc-Hb-egi" customClass="FluidBackgroundView" customModule="Axiomora" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="264" height="852"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="GRo-kk-lKo">
-                                <rect key="frame" x="32" y="138.66666666666669" width="200" height="574.66666666666652"/>
+                                <rect key="frame" x="32" y="212.33333333333334" width="329" height="427.66666666666663"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Axiomora Icon Image" translatesAutoresizingMaskIntoConstraints="NO" id="rb5-3V-ed8">
-                                        <rect key="frame" x="0.0" y="0.0" width="200" height="100"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="329" height="100"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="100" id="INZ-sy-A7k"/>
-                                            <constraint firstAttribute="width" constant="200" id="L9Y-BZ-XQZ"/>
                                         </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="NKc-PY-IEj">
-                                        <rect key="frame" x="0.0" y="164.00000000000003" width="200" height="84"/>
+                                        <rect key="frame" x="0.0" y="163.99999999999997" width="329" height="84"/>
                                         <subviews>
                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ply-XG-55S" customClass="RoundedTextField" customModule="Axiomora" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="200" height="34"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="329" height="34"/>
                                                 <color key="backgroundColor" name="auth_text_field_background"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -45,7 +44,7 @@
                                                 </connections>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cfz-CT-I3Z" customClass="RoundedTextField" customModule="Axiomora" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="50" width="200" height="34"/>
+                                                <rect key="frame" x="0.0" y="50" width="329" height="34"/>
                                                 <color key="backgroundColor" name="auth_text_field_background"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -54,10 +53,10 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="vpy-p0-Wdk">
-                                        <rect key="frame" x="0.0" y="312" width="200" height="262.66666666666674"/>
+                                        <rect key="frame" x="0.0" y="312" width="329" height="115.66666666666669"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cEL-dp-Csm">
-                                                <rect key="frame" x="75" y="0.0" width="50" height="17"/>
+                                                <rect key="frame" x="139.66666666666666" y="0.0" width="50" height="17"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="17" id="zxm-gt-zPb"/>
                                                 </constraints>
@@ -66,7 +65,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HXt-Em-tA2">
-                                                <rect key="frame" x="4" y="33" width="192" height="33.333333333333343"/>
+                                                <rect key="frame" x="4" y="33" width="321" height="33.333333333333343"/>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="tinted" title="Log In">
                                                     <fontDescription key="titleFontDescription" style="UICTFontTextStyleCallout"/>
@@ -76,16 +75,16 @@
                                                 </connections>
                                             </button>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="af9-3l-rMu">
-                                                <rect key="frame" x="0.0" y="82.333333333333329" width="200" height="180.33333333333337"/>
+                                                <rect key="frame" x="36.333333333333343" y="82.333333333333258" width="256.33333333333326" height="33.333333333333343"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Don't have an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jLu-dS-q6n">
-                                                        <rect key="frame" x="0.0" y="0.0" width="170.33333333333334" height="180.33333333333334"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Don't have an account?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jLu-dS-q6n">
+                                                        <rect key="frame" x="0.0" y="0.0" width="170.33333333333334" height="33.333333333333336"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V4J-hm-vBQ">
-                                                        <rect key="frame" x="172.33333333333334" y="0.0" width="27.666666666666657" height="180.33333333333334"/>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V4J-hm-vBQ">
+                                                        <rect key="frame" x="172.33333333333331" y="0.0" width="84" height="33.333333333333336"/>
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="plain" title="Register">
                                                             <fontDescription key="titleFontDescription" style="UICTFontTextStyleCallout"/>

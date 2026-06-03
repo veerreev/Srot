@@ -100,7 +100,7 @@ class SignaturesViewController: UIViewController {
         
         let shouldShow = !signatures[currentCenteredIndex].isCurrent && signatures.count > 1
         
-        #warning("Learn animate")
+//        #warning("Learn animate")
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5) {
             self.selectButton.alpha = shouldShow ? 1 : 0
             self.selectButton.transform = shouldShow ? .identity : CGAffineTransform(translationX: 0, y: 8)

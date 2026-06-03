@@ -117,13 +117,12 @@ final class HashStore {
 
     /// Remove the tile record for a specific image (call when image is deleted).
     func remove(imageId: String) {
-        queue.sync(flags: .barrier) {
-            self.records.removeValue(forKey: imageId)
+            queue.sync(flags: .barrier) {
+                _ = self.records.removeValue(forKey: imageId) // Fix is here
+            }
+            let snapshot = queue.sync { records }
+            DispatchQueue.global(qos: .utility).async { self.persistSnapshot(snapshot) }
         }
-        let snapshot = queue.sync { records }
-        DispatchQueue.global(qos: .utility).async { self.persistSnapshot(snapshot) }
-    }
-
     /// Remove all tile records associated with a given signature
     /// (call when the user deletes a signature profile).
     func removeAll(forSignatureId signatureId: String) {

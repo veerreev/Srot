@@ -235,40 +235,39 @@ extension PhotoManager {
 extension PhotoManager {
     
     func applyWatermarkAndSave(image: UIImage, completion: @escaping (Bool, Image?, Error?) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
+            // 1. Replace DispatchQueue.global with a single Task
+            Task { [weak self] in
+                guard let self = self else { return }
 
-            var watermarkedImage: UIImage!
-            var currentSignature: Signature!
-
-            // ── Find current signature ─────────────────────────────────────
-            let signatures = SignatureManager.shared.loadSignatures()
-            guard let found = signatures.first(where: { $0.isCurrent }) else {
-                DispatchQueue.main.async {
-                    let error = NSError(
-                        domain: "PhotoManager",
-                        code: 2,
-                        userInfo: [NSLocalizedDescriptionKey: "No current signature selected. Please set a signature before capturing."]
-                    )
-                    completion(false, nil, error)
+                // ── Find current signature ─────────────────────────────────────
+                let signatures = SignatureManager.shared.loadSignatures()
+                
+                // 2. Declare as a 'let' constant so it is safe to capture later
+                guard let currentSignature = signatures.first(where: { $0.isCurrent }) else {
+                    await MainActor.run {
+                        let error = NSError(
+                            domain: "PhotoManager",
+                            code: 2,
+                            userInfo: [NSLocalizedDescriptionKey: "No current signature selected. Please set a signature before capturing."]
+                        )
+                        completion(false, nil, error)
+                    }
+                    return
                 }
-                return
-            }
-            currentSignature = found
 
-            // ── Embed watermark via Vision Feature Prints ──────────────────
-            Task {
+                // ── Embed watermark via Vision Feature Prints ──────────────────
+                // 3. Declare watermarkedImage as a 'let'. It will be initialized in the do block.
+                let watermarkedImage: UIImage
+                
                 do {
-                    // Convert the signature ID to a UUID
                     let targetUUID = UUID(uuidString: currentSignature.id)
                     
-                    // The encode method returns a tuple: (UIImage, UUID)
                     let (encodedImage, returnedUUID) = try await WatermarkManager.shared.encode(
                         image: image,
                         uuid: targetUUID
                     )
                     
-                    watermarkedImage = encodedImage
+                    watermarkedImage = encodedImage // Safely initialized here
                     print("[PhotoManager] ✓ Watermark encoded/stored for \(returnedUUID.uuidString)")
                 } catch {
                     print("Watermark Engine Error: \(error.localizedDescription)")
@@ -276,24 +275,28 @@ extension PhotoManager {
                     return
                 }
 
-                let finishSave: (String?) -> Void = { locationString in
-                    let savedImage: Image?
-                    do {
-                        savedImage = try self.saveImage(
-                            watermarkedImage,
-                            creatorId:        AuthManager.shared.currentUser?.userId ?? "unknown",
-                            signatureId:      currentSignature.id,
-                            device:           UIDevice.current.name,
-                            capturedLocation: locationString
-                        )
-                        print("\(currentSignature.id) embedded")
-                    } catch {
-                        print("PhotoManager: Failed to save to in-app gallery — \(error)")
-                        DispatchQueue.main.async { completion(false, nil, error) }
-                        return
-                    }
-                    self.saveToLibrary(image: watermarkedImage) { success, error in
-                        DispatchQueue.main.async { completion(success, savedImage, error) }
+                // 4. Define finishSave. It can now safely capture the 'let' constants.
+                let finishSave: @Sendable (String?) -> Void = { locationString in
+                    Task { @MainActor in
+                        let savedImage: Image?
+                        do {
+                            savedImage = try self.saveImage(
+                                watermarkedImage,
+                                creatorId:        AuthManager.shared.currentUser?.userId ?? "unknown",
+                                signatureId:      currentSignature.id,
+                                device:           UIDevice.current.name, // Safely accessed on MainActor
+                                capturedLocation: locationString
+                            )
+                            print("\(currentSignature.id) embedded")
+                        } catch {
+                            print("PhotoManager: Failed to save to in-app gallery — \(error)")
+                            completion(false, nil, error)
+                            return
+                        }
+                        
+                        self.saveToLibrary(image: watermarkedImage) { success, error in
+                            DispatchQueue.main.async { completion(success, savedImage, error) }
+                        }
                     }
                 }
 
@@ -305,10 +308,8 @@ extension PhotoManager {
                 } else {
                     finishSave(nil)
                 }
-            } // end Task
+            }
         }
-    }
-    
     private func saveToLibrary(image: UIImage, completion: @escaping (Bool, Error?) -> Void) {
         
         PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
@@ -365,7 +366,7 @@ extension PhotoManager {
         case .notDetermined, .denied, .restricted:
             return .denied
             
-        #warning("Limited access is not handled")
+//        #warning("Limited access is not handled")
         case .limited:
             return .limited
             

@@ -15,18 +15,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" maximumZoomScale="4" translatesAutoresizingMaskIntoConstraints="NO" id="RM2-gI-Bzh">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" maximumZoomScale="4" translatesAutoresizingMaskIntoConstraints="NO" id="RM2-gI-Bzh">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9oD-FZ-jR2">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9oD-FZ-jR2">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="393" id="nSm-4O-0Ib"/>
+                                            <constraint firstAttribute="height" constant="852" id="vqP-v4-SKp"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <viewLayoutGuide key="contentLayoutGuide" id="sZ2-cP-2dg"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="RRR-xf-PCu"/>
+                                <constraints>
+                                    <constraint firstItem="9oD-FZ-jR2" firstAttribute="leading" secondItem="sZ2-cP-2dg" secondAttribute="leading" id="2UX-Tz-ovS"/>
+                                    <constraint firstItem="9oD-FZ-jR2" firstAttribute="top" secondItem="sZ2-cP-2dg" secondAttribute="top" id="A4r-5S-tDF"/>
+                                    <constraint firstItem="sZ2-cP-2dg" firstAttribute="bottom" secondItem="9oD-FZ-jR2" secondAttribute="bottom" id="Nve-jy-k07"/>
+                                    <constraint firstItem="sZ2-cP-2dg" firstAttribute="trailing" secondItem="9oD-FZ-jR2" secondAttribute="trailing" id="vBw-W3-Tpv"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="delegate" destination="Y6W-OH-hqX" id="aqD-NE-fkV"/>
                                 </connections>
@@ -42,6 +51,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="imageViewHeightConstraint" destination="vqP-v4-SKp" id="UAz-Aq-wKX"/>
+                        <outlet property="imageViewWidthConstraint" destination="nSm-4O-0Ib" id="wMd-nA-ATW"/>
                         <outlet property="imageView" destination="9oD-FZ-jR2" id="y1S-Yc-KDe"/>
                         <outlet property="scrollView" destination="RM2-gI-Bzh" id="OJZ-Na-D8W"/>
                     </connections>
