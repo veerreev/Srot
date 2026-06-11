@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,12 +11,12 @@
         <!--Splash Screen1 View Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController id="Y6W-OH-hqX" customClass="splashScreen1ViewController" customModule="Axiomora" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Y6W-OH-hqX" customClass="splashScreen1ViewController" customModule="Sign_It" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eb9-x7-k16" customClass="FluidBackgroundView" customModule="Axiomora" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eb9-x7-k16" customClass="FluidBackgroundView" customModule="Sign_It" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
                                     <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="4" translatesAutoresizingMaskIntoConstraints="NO" id="s7X-0z-nI9">
@@ -64,7 +64,7 @@ across the web</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iof-3F-V9Y">
-                                        <rect key="frame" x="168" y="717" width="57" height="35"/>
+                                        <rect key="frame" x="32" y="717" width="329" height="35"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Skip"/>
                                         <connections>
@@ -96,9 +96,9 @@ across the web</string>
                                     <constraint firstItem="DY1-VB-dlK" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="32" id="YY8-ys-pFx"/>
                                     <constraint firstItem="ecc-WW-cnw" firstAttribute="top" secondItem="eb9-x7-k16" secondAttribute="top" constant="350" id="fh7-vP-O45"/>
                                     <constraint firstAttribute="bottom" secondItem="iof-3F-V9Y" secondAttribute="bottom" constant="100" id="i3R-i7-8ZF"/>
-                                    <constraint firstAttribute="trailing" secondItem="iof-3F-V9Y" secondAttribute="trailing" constant="168" id="lHz-iO-MeP"/>
+                                    <constraint firstAttribute="trailing" secondItem="iof-3F-V9Y" secondAttribute="trailing" constant="32" id="lHz-iO-MeP"/>
                                     <constraint firstAttribute="trailing" secondItem="DY1-VB-dlK" secondAttribute="trailing" constant="32" id="uha-Kc-rKu"/>
-                                    <constraint firstItem="iof-3F-V9Y" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="168" id="vID-su-IPL"/>
+                                    <constraint firstItem="iof-3F-V9Y" firstAttribute="leading" secondItem="eb9-x7-k16" secondAttribute="leading" constant="32" id="vID-su-IPL"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="zgJ-cT-H0Z" appends="YES" id="lcx-Iw-bfW"/>

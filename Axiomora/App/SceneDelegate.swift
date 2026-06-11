@@ -15,6 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
+        window.overrideUserInterfaceStyle = .dark
         self.window = window
         
         let hasSeenOnboarding = UserDefaults.standard.bool(forKey: "hasSeenOnboarding")

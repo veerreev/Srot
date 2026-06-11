@@ -12,18 +12,18 @@
 
 /* Begin PBXFileReference section */
 		368E016D2F610B4200E255CD /* Remember.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Remember.txt; sourceTree = "<group>"; };
-		D69154F02F2DBEAD004CE209 /* Axiomora.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Axiomora.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D69154F02F2DBEAD004CE209 /* Sign-It.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sign-It.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D62096B52F31F098004D1127 /* Exceptions for "App" folder in "Axiomora" target */ = {
+		D62096B52F31F098004D1127 /* Exceptions for "App" folder in "SignIt" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
+			target = D69154EF2F2DBEAD004CE209 /* SignIt */;
 		};
-		D638C63D2F3A00DF00C11CA6 /* Exceptions for "Core" folder in "Axiomora" target */ = {
+		D638C63D2F3A00DF00C11CA6 /* Exceptions for "Core" folder in "SignIt" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AuthManager.swift,
@@ -42,7 +42,7 @@
 				"WatermarkDecoder+Hash.swift",
 				WatermarkManager.swift,
 			);
-			target = D69154EF2F2DBEAD004CE209 /* Axiomora */;
+			target = D69154EF2F2DBEAD004CE209 /* SignIt */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -50,7 +50,7 @@
 		D62096B02F31F098004D1127 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D62096B52F31F098004D1127 /* Exceptions for "App" folder in "Axiomora" target */,
+				D62096B52F31F098004D1127 /* Exceptions for "App" folder in "SignIt" target */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -73,7 +73,7 @@
 		D691552B2F2DDD76004CE209 /* Core */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D638C63D2F3A00DF00C11CA6 /* Exceptions for "Core" folder in "Axiomora" target */,
+				D638C63D2F3A00DF00C11CA6 /* Exceptions for "Core" folder in "SignIt" target */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -113,7 +113,7 @@
 		D69154F12F2DBEAD004CE209 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D69154F02F2DBEAD004CE209 /* Axiomora.app */,
+				D69154F02F2DBEAD004CE209 /* Sign-It.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,9 +121,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D69154EF2F2DBEAD004CE209 /* Axiomora */ = {
+		D69154EF2F2DBEAD004CE209 /* SignIt */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D69155032F2DBEAE004CE209 /* Build configuration list for PBXNativeTarget "Axiomora" */;
+			buildConfigurationList = D69155032F2DBEAE004CE209 /* Build configuration list for PBXNativeTarget "SignIt" */;
 			buildPhases = (
 				D69154EC2F2DBEAD004CE209 /* Sources */,
 				D69154ED2F2DBEAD004CE209 /* Frameworks */,
@@ -140,11 +140,11 @@
 				D691550A2F2DC5F9004CE209 /* Features */,
 				D69155482F2DDF32004CE209 /* Data */,
 			);
-			name = Axiomora;
+			name = SignIt;
 			packageProductDependencies = (
 			);
 			productName = Axiomora;
-			productReference = D69154F02F2DBEAD004CE209 /* Axiomora.app */;
+			productReference = D69154F02F2DBEAD004CE209 /* Sign-It.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -162,7 +162,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D69154EB2F2DBEAD004CE209 /* Build configuration list for PBXProject "Axiomora" */;
+			buildConfigurationList = D69154EB2F2DBEAD004CE209 /* Build configuration list for PBXProject "SignIt" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -176,7 +176,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D69154EF2F2DBEAD004CE209 /* Axiomora */,
+				D69154EF2F2DBEAD004CE209 /* SignIt */,
 			);
 		};
 /* End PBXProject section */
@@ -222,15 +222,17 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access to your photo library is needed to select an image for signature verification.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.SignIt;
+				PRODUCT_NAME = "Sign-It";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -248,7 +250,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = V355U252P3;
+				DEVELOPMENT_TEAM = BL4G455K39;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = SignIt;
@@ -260,15 +262,17 @@
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Access to your photo library is needed to select an image for signature verification.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.TeamN.Axiomora;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.TeamN.Sign-It";
+				PRODUCT_NAME = "Sign-It";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -405,7 +409,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D69154EB2F2DBEAD004CE209 /* Build configuration list for PBXProject "Axiomora" */ = {
+		D69154EB2F2DBEAD004CE209 /* Build configuration list for PBXProject "SignIt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D69155062F2DBEAE004CE209 /* Debug */,
@@ -414,7 +418,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D69155032F2DBEAE004CE209 /* Build configuration list for PBXNativeTarget "Axiomora" */ = {
+		D69155032F2DBEAE004CE209 /* Build configuration list for PBXNativeTarget "SignIt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D69155042F2DBEAE004CE209 /* Debug */,
