@@ -1,8 +1,8 @@
-# SignIt
-SignIt is an advanced iOS application designed for digital image authentication and integrity. By leveraging digital watermarking, cryptographic signatures, and machine learning, the platform allows users to capture, sign, and verify the authenticity of visual content in an era of increasing digital manipulation.
+# Srot (Earlier Axiomora)
+Srot is an advanced iOS application designed for digital image authentication and integrity. By leveraging digital watermarking, cryptographic signatures, and machine learning, the platform allows users to capture, sign, and verify the authenticity of visual content in an era of increasing digital manipulation.
 
 ## Features
- AI-Powered Watermarking: Integrates a custom CoreML model (AxiomoraEncoder) to embed robust digital watermarks into images.
+ AI-Powered Watermarking: Integrates a custom CoreML model (AxiomarkEncoder) to embed robust digital watermarks into images.
 
  Cryptographic Signatures: A dedicated SignatureManager and WatermarkEmbedder system for attaching unique user identifiers to media.
 
@@ -45,3 +45,4 @@ Build and run on a physical iOS device for full camera functionality.
 
 ## Security & Privacy
 Axiomora is built with a focus on user privacy. All image processing and watermark embedding are handled locally on-device using CoreML, ensuring that sensitive metadata and original content remain under the user's control.
+
